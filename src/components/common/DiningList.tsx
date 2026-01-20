@@ -5,7 +5,7 @@ import { useDinings } from '../../hooks/useDining';
 import { useProperty } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';import { useTheme } from '../../context/ThemeContext';import type { DiningUIData } from '../../types/dining';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 interface DiningListProps {
@@ -176,9 +176,9 @@ export const DiningList: FC<DiningListProps> = memo(({
                 {dining.name}
               </Title>
             </header>
-            <Paragraph style={descriptionStyle} className="dining-description">
+            <p style={descriptionStyle} className="dining-description">
               {dining.description}
-            </Paragraph>
+            </p>
           </div>
         </article>
         );

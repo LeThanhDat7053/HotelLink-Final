@@ -7,7 +7,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import type { RoomUIData } from '../../types/room';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 interface RoomListProps {
@@ -187,9 +187,9 @@ export const RoomList: FC<RoomListProps> = memo(({
                 {room.name}
               </Title>
             </header>
-            <Paragraph style={descriptionStyle} className="room-description">
+            <p style={descriptionStyle} className="room-description">
               {room.description}
-            </Paragraph>
+            </p>
           </div>
         </article>
         );

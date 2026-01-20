@@ -8,7 +8,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
 import type { OfferUIData } from '../../types/offer';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 // Translations cho Offers UI
@@ -284,9 +284,9 @@ export const OfferList: FC<OfferListProps> = memo(({
           </div>
 
           {/* Description */}
-          <Paragraph style={descriptionStyle} className="offer-description">
+          <p style={descriptionStyle} className="offer-description">
             {offer.description}
-          </Paragraph>
+          </p>
 
           {/* Meta info: Date range, Min nights */}
           <div style={metaStyle}>

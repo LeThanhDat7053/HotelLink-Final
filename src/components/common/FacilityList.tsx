@@ -5,7 +5,7 @@ import { useFacilities } from '../../hooks/useFacility';
 import { useProperty } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';import { useTheme } from '../../context/ThemeContext';import type { FacilityUIData } from '../../types/facility';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 interface FacilityListProps {
@@ -172,9 +172,9 @@ export const FacilityList: FC<FacilityListProps> = memo(({
                 {facility.name}
               </Title>
             </header>
-            <Paragraph style={descriptionStyle} className="facility-description">
+            <p style={descriptionStyle} className="facility-description">
               {facility.description}
-            </Paragraph>
+            </p>
           </div>
         </article>
         );

@@ -5,7 +5,7 @@ import { useServices } from '../../hooks/useService';
 import { useProperty } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';import { useTheme } from '../../context/ThemeContext';import type { ServiceUIData } from '../../types/service';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 const { useBreakpoint } = Grid;
 
 interface ServiceListProps {
@@ -172,9 +172,9 @@ export const ServiceList: FC<ServiceListProps> = memo(({
                 {service.name}
               </Title>
             </header>
-            <Paragraph style={descriptionStyle} className="service-description">
+            <p style={descriptionStyle} className="service-description">
               {service.description}
-            </Paragraph>
+            </p>
           </div>
         </article>
         );
