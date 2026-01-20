@@ -3,6 +3,7 @@ import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Flex, Grid } from 'antd';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import { getMenuTranslations } from '../../constants/translations';
 import { getLocalizedPath } from '../../constants/routes';
 
@@ -30,13 +31,12 @@ const footerStyle: CSSProperties = {
   borderRadius: 12,
 };
 
-const linkStyle: CSSProperties = {
+const linkStyleBase: CSSProperties = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   flex: 1,
   height: '100%',
-  color: '#ecc56d',
   fontSize: 13,
   textDecoration: 'none',
   transition: 'all 0.3s ease',
@@ -46,6 +46,7 @@ const linkStyle: CSSProperties = {
 export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
   const screens = useBreakpoint();
   const { locale } = useLanguage();
+  const { primaryColor } = useTheme();
 
   // Lấy translations theo locale hiện tại
   const t = useMemo(() => getMenuTranslations(locale), [locale]);
@@ -54,7 +55,7 @@ export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
   const footerLinks: FooterLink[] = useMemo(() => [
     { path: '/thu-vien-anh', label: t.gallery },
     { path: '/noi-quy-khach-san', label: t.regulation },
-    { path: '/tin-tuc-su-kien', label: t.news },
+    { path: '/uu-dai', label: t.offers },
   ], [t]);
 
   const responsiveFooterStyle: CSSProperties = {
@@ -67,7 +68,8 @@ export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
   };
 
   const responsiveLinkStyle: CSSProperties = {
-    ...linkStyle,
+    ...linkStyleBase,
+    color: primaryColor,
     fontSize: screens.md ? 13 : screens.sm ? 12 : 11,
   };
 
@@ -84,15 +86,15 @@ export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
           to={getLocalizedPath(link.path, locale)}
           style={{
             ...responsiveLinkStyle,
-            borderRight: index === footerLinks.length - 1 ? 'none' : linkStyle.borderRight,
+            borderRight: index === footerLinks.length - 1 ? 'none' : linkStyleBase.borderRight,
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(236, 197, 109, 0.2)';
+            e.currentTarget.style.background = `${primaryColor}33`;
             e.currentTarget.style.color = '#fff';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.color = '#ecc56d';
+            e.currentTarget.style.color = primaryColor;
           }}
         >
           {link.label}

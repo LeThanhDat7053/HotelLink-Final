@@ -1,17 +1,22 @@
 import type { FC } from 'react';
-import { useState, useCallback, useMemo } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useParams } from 'react-router-dom';
+import { useState, useCallback, useMemo, lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout, Grid, Skeleton } from 'antd';
 import { ROUTES, extractCleanPath } from './constants/routes';
-import { Header, InfoBox, BottomBar, RoomsView, DiningView, FacilityView, ServiceView, PolicyContent, ContactContent, BookingForm, GalleryContent, RegulationContent, AboutContent,   PropertyPostsContent } from './components/common';
-import { PropertyProvider, usePropertyData, LanguageProvider, usePropertyContext } from './context';
+import { Header, InfoBox, BottomBar, RoomsView, DiningView, FacilityView, ServiceView, PolicyContent, ContactContent, BookingForm, GalleryContent, RegulationContent, AboutContent, PropertyPostsContent, SEOMeta } from './components/common';
+import { OfferView } from './components/common/OfferView';
+import { PropertyProvider, usePropertyData, LanguageProvider, usePropertyContext, ThemeProvider } from './context';
+import { ThemeInjector } from './components/ThemeInjector';
 import { useIntroductionContent, usePropertyPosts, usePolicy, useRegulation, useContact } from './hooks';
 import { useVrHotelSettings } from './hooks/useVR360';
 import { useLocale } from './context/LanguageContext';
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import APITestPage from './pages/APITestPage';
-import RoomsPage from './pages/RoomsPage';
+import { getMediaType } from './utils/mediaHelper';
+
+// Lazy load pages để tối ưu performance
+const HomePage = lazy(() => import('./pages/HomePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const APITestPage = lazy(() => import('./pages/APITestPage'));
+const RoomsPage = lazy(() => import('./pages/RoomsPage'));
 
 const { Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -29,6 +34,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/lien-he': 'Liên Hệ',
   '/thu-vien-anh': 'Thư Viện Ảnh',
   '/noi-quy-khach-san': 'Nội Quy Khách Sạn',
+  '/uu-dai': 'Ưu Đãi',
 };
 
 // Layout wrapper component
@@ -45,6 +51,8 @@ const AppLayout: FC = () => {
   const [diningDetailVrLink, setDiningDetailVrLink] = useState<string | null>(null);
   const [facilityDetailVrLink, setFacilityDetailVrLink] = useState<string | null>(null);
   const [serviceDetailVrLink, setServiceDetailVrLink] = useState<string | null>(null);
+  const [offerDetailVrLink, setOfferDetailVrLink] = useState<string | null>(null);
+  const [offerTitle, setOfferTitle] = useState<string | null>(null);
   
   const screens = useBreakpoint();
   
@@ -58,22 +66,28 @@ const AppLayout: FC = () => {
   }, [location.pathname]);
   
   // Fetch property posts cho trang chủ để lấy title
-  const { getFirstPostTitle, loading: postsLoading } = usePropertyPosts(propertyId);
+  const { getFirstPostTitle } = usePropertyPosts(propertyId);
   
   // Fetch introduction data cho trang giới thiệu
-  const { content: introContent, vr360Link: introVr360Link, loading: introLoading } = useIntroductionContent(propertyId, locale);
+  const { content: introContent, vr360Link: introVr360Link } = useIntroductionContent(propertyId, locale);
   
   // Fetch VR hotel settings cho trang phòng nghỉ
-  const { settings: vrHotelSettings, loading: settingsLoading } = useVrHotelSettings(propertyId);
+  const { settings: vrHotelSettings } = useVrHotelSettings(propertyId);
   
   // Fetch policy data cho trang chính sách
-  const { content: policyContent, vr360Link: policyVr360Link, loading: policyLoading } = usePolicy(propertyId || 0, locale);
+  const { content: policyContent, vr360Link: policyVr360Link } = usePolicy(propertyId || 0, locale);
   
   // Fetch regulation data cho trang nội quy
   const { content: regulationContent, vr360Link: regulationVr360Link, loading: regulationLoading, error: regulationError } = useRegulation(propertyId || 0, locale);
   
   // Fetch contact data cho trang liên hệ
   const { content: contactContent, vr360Link: contactVr360Link, loading: contactLoading, error: contactError } = useContact(propertyId || 0, locale);
+  
+  // Auto expand menu when location changes
+  useEffect(() => {
+    // Khi chuyển trang, tự động mở header và nội dung
+    setIsMenuExpanded(true);
+  }, [location.pathname]);
   
   // Check if current page is Rooms page, Dining page, Facility page, Service page, Policy page, Contact page or Booking page
   const isHomePage = getCleanPath === '/';
@@ -87,6 +101,7 @@ const AppLayout: FC = () => {
   const isBookingPage = getCleanPath === '/dat-phong';
   const isGalleryPage = getCleanPath === '/thu-vien-anh';
   const isRegulationPage = getCleanPath === '/noi-quy-khach-san';
+  const isOffersPage = getCleanPath === '/uu-dai' || getCleanPath.startsWith('/uu-dai/');
   
   // Lấy title cho page hiện tại
   const getPageTitle = () => {
@@ -110,6 +125,7 @@ const AppLayout: FC = () => {
     if (isDiningPage && diningTitle) return diningTitle;
     if (isFacilityPage && facilityTitle) return facilityTitle;
     if (isServicePage && serviceTitle) return serviceTitle;
+    if (isOffersPage && offerTitle) return offerTitle;
     return PAGE_TITLES[getCleanPath] || '';
   };
   const pageTitle = getPageTitle();
@@ -151,6 +167,14 @@ const AppLayout: FC = () => {
     setServiceDetailVrLink(vrLink);
   }, []);
   
+  const handleOfferVrLinkChange = useCallback((vrLink: string | null) => {
+    setOfferDetailVrLink(vrLink);
+  }, []);
+  
+  const handleOfferTitleChange = useCallback((title: string) => {
+    setOfferTitle(title);
+  }, []);
+  
   // Xác định VR360 URL theo từng trang (ưu tiên detail link nếu có)
   let vr360Url = defaultVr360Url;
   
@@ -171,6 +195,9 @@ const AppLayout: FC = () => {
     vr360Url = serviceDetailVrLink || vrHotelSettings?.pages?.services?.vr360_link || defaultVr360Url;
   } else if (isFacilityPage) {
     vr360Url = facilityDetailVrLink || vrHotelSettings?.pages?.facilities?.vr360_link || defaultVr360Url;
+  } else if (isOffersPage) {
+    // Ưu tiên detail link từ offer, fallback về page link từ settings
+    vr360Url = offerDetailVrLink || vrHotelSettings?.pages?.offers?.vr360_link || defaultVr360Url;
   }
   
   // Debug logs (commented out to reduce spam)
@@ -180,10 +207,8 @@ const AppLayout: FC = () => {
   // console.log('[App] rooms vr360_link:', vrHotelSettings?.pages?.rooms?.vr360_link);
   // console.log('[App] Final vr360Url:', vr360Url);
   
-  const isVr360Loading = 
-    isAboutPage ? (loading || introLoading) :
-    isRoomsPage ? (loading || settingsLoading) :
-    loading;
+  // Xác định loại media (image hay vr360)
+  const mediaType = useMemo(() => getMediaType(vr360Url || ''), [vr360Url]);
   
   // Desktop: InfoBox hiện khi menu mở
   // Mobile: InfoBox hiện khi menu đóng
@@ -204,6 +229,12 @@ const AppLayout: FC = () => {
         position: 'relative' 
       }}
     >
+      {/* Theme Injector - Apply dynamic colors */}
+      <ThemeInjector />
+      
+      {/* SEO Meta Tags - Pure API driven, no props */}
+      <SEOMeta />
+      
       {/* Main Content - VR360 Tour Background */}
       <Content 
         id="primary" 
@@ -214,7 +245,7 @@ const AppLayout: FC = () => {
         }}
       >
         <div style={{ width: '100%', height: '100%' }}>
-          {/* VR360 iframe - Full Screen */}
+          {/* VR360/Image - Full Screen */}
           {loading ? (
             <div style={{ 
               width: '100%', 
@@ -229,20 +260,39 @@ const AppLayout: FC = () => {
               </Skeleton.Node>
             </div>
           ) : vr360Url ? (
-            <iframe
-              key={vr360Url} // Force re-render when URL changes
-              src={vr360Url}
-              style={{ 
-                position: 'absolute', 
-                top: 0, 
-                left: 0, 
-                width: '100vw', 
-                height: '100vh',
-                border: 0 
-              }}
-              title={`${propertyName} VR360 Tour`}
-              allowFullScreen
-            />
+            mediaType === 'image' ? (
+              // Nếu là ảnh, dùng img tag với object-fit cover
+              <img
+                key={vr360Url}
+                src={vr360Url}
+                alt={`${propertyName} Background`}
+                style={{ 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  width: '100vw', 
+                  height: '100vh',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                }}
+              />
+            ) : (
+              // Nếu là VR360 hoặc unknown, dùng iframe
+              <iframe
+                key={vr360Url}
+                src={vr360Url}
+                style={{ 
+                  position: 'absolute', 
+                  top: 0, 
+                  left: 0, 
+                  width: '100vw', 
+                  height: '100vh',
+                  border: 0 
+                }}
+                title={`${propertyName} VR360 Tour`}
+                allowFullScreen
+              />
+            )
           ) : (
             <div style={{ 
               width: '100%', 
@@ -291,48 +341,68 @@ const AppLayout: FC = () => {
         {isGalleryPage && <GalleryContent />}
         {/* Hiển thị RegulationContent nếu đang ở trang nội quy */}
         {isRegulationPage && <RegulationContent content={regulationContent} loading={regulationLoading} error={regulationError} />}
+        {/* Hiển thị OfferView nếu đang ở trang ưu đãi */}
+        {isOffersPage && <OfferView onTitleChange={handleOfferTitleChange} onVrLinkChange={handleOfferVrLinkChange} />}
       </InfoBox>
 
       {/* Footer & Copyright - Fixed Bottom */}
       <BottomBar />
 
-      {/* Hidden Routes - for navigation logic */}
-      <Routes>
-        <Route path={ROUTES.HOME} element={<HomePage />} />
-        <Route path={`/:lang${ROUTES.HOME}`} element={<HomePage />} />
-        <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-        <Route path={`/:lang${ROUTES.ABOUT}`} element={<AboutPage />} />
-        <Route path="/api-test" element={<APITestPage />} />
-        <Route path="/:lang/api-test" element={<APITestPage />} />
-        <Route path="/gioi-thieu" element={<div />} />
-        <Route path="/:lang/gioi-thieu" element={<div />} />
-        <Route path="/phong-nghi" element={<RoomsPage />} />
-        <Route path="/:lang/phong-nghi" element={<RoomsPage />} />
-        <Route path="/phong-nghi/:code" element={<RoomsPage />} />
-        <Route path="/:lang/phong-nghi/:code" element={<RoomsPage />} />
-        <Route path="/dat-phong" element={<div />} />
-        <Route path="/:lang/dat-phong" element={<div />} />
-        <Route path="/am-thuc" element={<div />} />
-        <Route path="/:lang/am-thuc" element={<div />} />
-        <Route path="/am-thuc/:code" element={<div />} />
-        <Route path="/:lang/am-thuc/:code" element={<div />} />
-        <Route path="/tien-ich" element={<div />} />
-        <Route path="/:lang/tien-ich" element={<div />} />
-        <Route path="/tien-ich/:code" element={<div />} />
-        <Route path="/:lang/tien-ich/:code" element={<div />} />
-        <Route path="/dich-vu" element={<div />} />
-        <Route path="/:lang/dich-vu" element={<div />} />
-        <Route path="/dich-vu/:code" element={<div />} />
-        <Route path="/:lang/dich-vu/:code" element={<div />} />
-        <Route path="/lien-he" element={<div />} />
-        <Route path="/:lang/lien-he" element={<div />} />
-        <Route path="/chinh-sach" element={<div />} />
-        <Route path="/:lang/chinh-sach" element={<div />} />
-        <Route path="/thu-vien-anh" element={<div />} />
-        <Route path="/:lang/thu-vien-anh" element={<div />} />
-        <Route path="/noi-quy-khach-san" element={<div />} />
-        <Route path="/:lang/noi-quy-khach-san" element={<div />} />
-      </Routes>
+      {/* Hidden Routes - for navigation logic with Suspense */}
+      <Suspense fallback={
+        <div style={{ 
+          position: 'fixed', 
+          top: '50%', 
+          left: '50%', 
+          transform: 'translate(-50%, -50%)',
+          zIndex: 9999
+        }}>
+          <Skeleton.Node active style={{ width: 200, height: 200 }}>
+            <span style={{ color: '#888' }}>Đang tải...</span>
+          </Skeleton.Node>
+        </div>
+      }>
+        <Routes>
+          <Route path={ROUTES.HOME} element={<HomePage />} />
+          <Route path={`/:lang${ROUTES.HOME}`} element={<HomePage />} />
+          <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+          <Route path={`/:lang${ROUTES.ABOUT}`} element={<AboutPage />} />
+          <Route path="/api-test" element={<APITestPage />} />
+          <Route path="/:lang/api-test" element={<APITestPage />} />
+          <Route path="/gioi-thieu" element={<div />} />
+          <Route path="/:lang/gioi-thieu" element={<div />} />
+          <Route path="/phong-nghi" element={<RoomsPage />} />
+          <Route path="/:lang/phong-nghi" element={<RoomsPage />} />
+          <Route path="/phong-nghi/:code" element={<RoomsPage />} />
+          <Route path="/:lang/phong-nghi/:code" element={<RoomsPage />} />
+          <Route path="/dat-phong" element={<div />} />
+          <Route path="/:lang/dat-phong" element={<div />} />
+          <Route path="/am-thuc" element={<div />} />
+          <Route path="/:lang/am-thuc" element={<div />} />
+          <Route path="/am-thuc/:code" element={<div />} />
+          <Route path="/:lang/am-thuc/:code" element={<div />} />
+          <Route path="/tien-ich" element={<div />} />
+          <Route path="/:lang/tien-ich" element={<div />} />
+          <Route path="/tien-ich/:code" element={<div />} />
+          <Route path="/:lang/tien-ich/:code" element={<div />} />
+          <Route path="/dich-vu" element={<div />} />
+          <Route path="/:lang/dich-vu" element={<div />} />
+          <Route path="/dich-vu/:code" element={<div />} />
+          <Route path="/:lang/dich-vu/:code" element={<div />} />
+          <Route path="/lien-he" element={<div />} />
+          <Route path="/:lang/lien-he" element={<div />} />
+          <Route path="/chinh-sach" element={<div />} />
+          <Route path="/:lang/chinh-sach" element={<div />} />
+          <Route path="/thu-vien-anh" element={<div />} />
+          <Route path="/:lang/thu-vien-anh" element={<div />} />
+          <Route path="/noi-quy-khach-san" element={<div />} />
+          <Route path="/:lang/noi-quy-khach-san" element={<div />} />
+          <Route path="/uu-dai" element={<div />} />
+          <Route path="/:lang/uu-dai" element={<div />} />
+          <Route path="/uu-dai/:code" element={<div />} />
+          <Route path="/:lang/uu-dai/:code" element={<div />} />
+        </Routes>
+      </Suspense>
     </Layout>
   );
 };
@@ -342,7 +412,9 @@ const LanguageWrapper: FC<{ children: React.ReactNode }> = ({ children }) => {
   const { property } = usePropertyContext();
   return (
     <LanguageProvider propertyId={property?.id || null}>
-      {children}
+      <ThemeProvider>
+        {children}
+      </ThemeProvider>
     </LanguageProvider>
   );
 };

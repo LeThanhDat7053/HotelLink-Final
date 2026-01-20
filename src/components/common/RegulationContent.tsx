@@ -1,6 +1,7 @@
 import type { FC, CSSProperties } from 'react';
 import { memo } from 'react';
 import { Typography, Grid, Spin, Alert } from 'antd';
+import { useTheme } from '../../context/ThemeContext';
 import type { RegulationUIData } from '../../types/regulation';
 
 const { Paragraph } = Typography;
@@ -20,6 +21,7 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
   error = null
 }) => {
   const screens = useBreakpoint();
+  const { primaryColor } = useTheme();
 
   // Container styles
   const containerStyle: CSSProperties = {
@@ -50,14 +52,6 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
   const paragraphStyle: CSSProperties = {
     ...regulationListStyle,
     whiteSpace: 'pre-line' as const,
-  };
-
-  const signatureStyle: CSSProperties = {
-    textAlign: 'right' as const,
-    color: '#fff',
-    fontWeight: 'bold',
-    marginTop: 16,
-    fontSize: screens.md ? 14 : 12,
   };
 
   // Loading state
@@ -121,7 +115,7 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
           width: 2px;
         }
         .regulation-content .nicescroll-bg::-webkit-scrollbar-thumb {
-          background: rgba(236, 197, 109, 0.5);
+          background: ${primaryColor}80;
         }
         .regulation-content .nicescroll-bg::-webkit-scrollbar-track {
           background: rgba(251, 228, 150, 0);

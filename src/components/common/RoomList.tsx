@@ -4,6 +4,7 @@ import { Image, Typography, Grid, Spin, Alert } from 'antd';
 import { useRooms } from '../../hooks/useRooms';
 import { useProperty } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import type { RoomUIData } from '../../types/room';
 
 const { Title, Paragraph } = Typography;
@@ -15,7 +16,6 @@ interface RoomListProps {
   limit?: number;
   roomType?: string;
   status?: string;
-  highlightCode?: string;
 }
 
 export const RoomList: FC<RoomListProps> = memo(({ 
@@ -24,11 +24,11 @@ export const RoomList: FC<RoomListProps> = memo(({
   limit = 100,
   roomType,
   status = 'available',
-  highlightCode,
 }) => {
   const screens = useBreakpoint();
   const { propertyId } = useProperty();
   const { locale } = useLanguage();
+  const { primaryColor } = useTheme();
 
   // Memoize params để tránh re-render vô hạn
   const params = useMemo(() => ({
@@ -81,7 +81,7 @@ export const RoomList: FC<RoomListProps> = memo(({
   };
 
   const titleStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     fontSize: screens.md ? 15 : 13,
     fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
     margin: 0,
@@ -148,8 +148,12 @@ export const RoomList: FC<RoomListProps> = memo(({
 
   return (
     <div className={`room-list ${className}`} style={wrapperStyle}>
-      {rooms.map((room, index) => (
-        <article 
+      {rooms.map((room, index) => {
+        // Generate dynamic fallback SVG with primaryColor
+        const fallbackSvg = `data:image/svg+xml;base64,${btoa(`<svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="70" fill="#1a1a2e"/><text x="50" y="40" fill="${primaryColor}" text-anchor="middle" font-size="10">Room</text></svg>`)}`;
+        
+        return (
+          <article 
           key={room.id} 
           className="room-item"
           style={{
@@ -168,7 +172,7 @@ export const RoomList: FC<RoomListProps> = memo(({
               height="100%"
               style={{ objectFit: 'cover' }}
               preview={false}
-              fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiB2aWV3Qm94PSIwIDAgMTAwIDcwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiMxYTFhMmUiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZpbGw9IiNFQ0M1NkQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPlJvb208L3RleHQ+PC9zdmc+"
+              fallback={fallbackSvg}
             />
           </div>
 
@@ -188,7 +192,8 @@ export const RoomList: FC<RoomListProps> = memo(({
             </Paragraph>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 });

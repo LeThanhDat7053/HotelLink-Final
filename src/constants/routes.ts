@@ -17,6 +17,7 @@ export const ROUTES = {
   CONTACT: '/lien-he',
   GALLERY: '/thu-vien-anh',
   NEWS: '/tin-tuc-su-kien',
+  OFFERS: '/uu-dai',
   BOOKING: '/dat-phong',
 } as const;
 

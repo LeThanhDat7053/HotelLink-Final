@@ -572,6 +572,10 @@ export interface VrHotelSettingsResponse {
       vr_title: string;
       vr360_link: string;
     };
+    offers: {
+      vr_title: string;
+      vr360_link: string;
+    };
     services: {
       vr_title: string;
       vr360_link: string;
@@ -581,4 +585,65 @@ export interface VrHotelSettingsResponse {
       vr360_link: string;
     };
   };
+}
+
+// ============= MEDIA API TYPES =============
+export interface MediaResponse {
+  id: number;
+  tenant_id: number;
+  uploader_id: number | null;
+  kind: 'image' | 'video' | 'document';
+  mime_type: string;
+  file_key: string;
+  original_filename: string;
+  width: number | null;
+  height: number | null;
+  size_bytes: number;
+  alt_text: string | null;
+  created_at: string;
+}
+
+export interface GetMediaParams {
+  skip?: number;
+  limit?: number;
+  source?: string;
+  folder?: string;
+  entity_type?: string;
+}
+
+// ============= VR360 TYPES =============
+export interface VR360Link {
+  id: number;
+  property_id: number;
+  category: string;
+  vr360_link: string;
+  created_at: string;
+  updated_at: string;
+  title?: string;
+  description?: string;
+  thumbnailUrl?: string;
+  vrUrl?: string;
+  order?: number;
+  isActive?: boolean;
+}
+
+export interface VR360ListParams {
+  limit?: number;
+  offset?: number;
+  category?: string;
+  page?: number;
+  roomId?: string;
+  facilityId?: string;
+  isActive?: boolean;
+}
+
+export type VR360CategoryType = 'rooms' | 'dining' | 'facilities' | 'services';
+
+export interface CreateVR360LinkDTO {
+  category: VR360CategoryType;
+  vr360_link: string;
+}
+
+export interface UpdateVR360LinkDTO {
+  vr360_link?: string;
 }

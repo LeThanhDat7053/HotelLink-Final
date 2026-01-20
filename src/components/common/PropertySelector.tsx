@@ -14,25 +14,20 @@ interface PropertySelectorProps {
 }
 
 export const PropertySelector: React.FC<PropertySelectorProps> = ({ className }) => {
-  const { properties, propertyId, selectProperty, loading } = usePropertyContext();
+  const { loading } = usePropertyContext();
 
-  // Không hiển thị nếu chỉ có 1 property
-  if (properties.length <= 1) {
+  // Placeholder - không hiển thị gì
+  if (!loading) {
     return null;
   }
 
   return (
     <Select
       className={className}
-      value={propertyId}
-      onChange={selectProperty}
       loading={loading}
       style={{ minWidth: 200 }}
-      options={properties.map(p => ({
-        value: p.id,
-        label: p.property_name,
-      }))}
-      placeholder="Chọn khách sạn"
+      options={[]}
+      placeholder="Đang tải..."
     />
   );
 };

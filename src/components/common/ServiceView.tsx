@@ -76,7 +76,6 @@ export const ServiceView: FC<ServiceViewProps> = memo(({
         onBack={handleBack}
         onVrLinkChange={onVrLinkChange}
         className={className}
-        serviceCode={code}
       />
     );
   }
@@ -86,7 +85,6 @@ export const ServiceView: FC<ServiceViewProps> = memo(({
     <ServiceList 
       onServiceClick={handleServiceClick}
       className={className}
-      highlightCode={code}
     />
   );
 });

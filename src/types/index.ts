@@ -31,3 +31,6 @@ export * from './regulation';
 
 // Re-export contact types
 export * from './contact';
+
+// Re-export offer types
+export * from './offer';

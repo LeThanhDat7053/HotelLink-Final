@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { memo, useState, useCallback, useEffect, useMemo } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { RoomList } from './RoomList';
 import { RoomDetail } from './RoomDetail';
@@ -87,7 +87,6 @@ export const RoomsView: FC<RoomsViewProps> = memo(({
     <RoomList 
       onRoomClick={handleRoomClick}
       className={className}
-      highlightCode={code}
     />
   );
 });

@@ -1,12 +1,59 @@
 import api from '../api';
-import type { MediaFileResponse } from '../types/api';
+import type { MediaFileResponse, MediaResponse, GetMediaParams } from '../types/api';
 
 /**
  * Media Service - Quản lý media files (upload ảnh, video)
+ * Backend: GET /api/v1/media/ - List media files
  * Backend: POST /api/v1/media/upload
  */
 
 export const mediaService = {
+  /**
+   * Get media files with filtering
+   * @param params - Query parameters for filtering
+   * @returns Array of media files
+   */
+  async getMedia(params?: GetMediaParams): Promise<MediaResponse[]> {
+    const { data } = await api.get<MediaResponse[]>('/media/', { 
+      params: {
+        skip: params?.skip || 0,
+        limit: params?.limit || 100,
+        source: params?.source,
+        folder: params?.folder,
+        entity_type: params?.entity_type,
+      }
+    });
+    return data;
+  },
+
+  /**
+   * Get media files for VR Hotel gallery (source = 'vr_hotel')
+   * Automatically filters by current tenant
+   */
+  async getVRHotelMedia(params?: Omit<GetMediaParams, 'source'>): Promise<MediaResponse[]> {
+    return this.getMedia({
+      ...params,
+      source: 'vr_hotel',
+    });
+  },
+
+  /**
+   * Get media URL for display from CDN
+   * Returns the view URL for the media file (no auth required)
+   */
+  getMediaUrl(mediaId: number): string {
+    // URL format: /media/{media_id}/view
+    return `${import.meta.env.VITE_API_BASE_URL}/media/${mediaId}/view`;
+  },
+
+  /**
+   * Get media URL from file_key
+   */
+  getMediaUrlByFileKey(fileKey: string): string {
+    // Có thể có endpoint khác cho file_key, tạm thời dùng format này
+    return `${import.meta.env.VITE_API_BASE_URL}/media/file/${fileKey}`;
+  },
+
   /**
    * Upload file
    */
@@ -30,7 +77,7 @@ export const mediaService = {
   },
 
   /**
-   * Lấy danh sách media files
+   * Lấy danh sách media files (legacy method)
    */
   async getMediaFiles(params?: { skip?: number; limit?: number }): Promise<MediaFileResponse[]> {
     const { data } = await api.get('/media/', { params });
@@ -71,9 +118,9 @@ export const mediaService = {
   },
 
   /**
-   * Get media URL for display
+   * Get media URL for display (legacy method)
    */
-  getMediaUrl(fileKey: string): string {
+  getMediaUrlLegacy(fileKey: string): string {
     return `${import.meta.env.VITE_API_BASE_URL}/media/${fileKey}`;
   },
 

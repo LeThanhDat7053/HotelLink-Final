@@ -66,7 +66,6 @@ const getVrHotelSettings = async (params: VrHotelSettingsParams): Promise<VrHote
       'x-property-id': params.propertyId.toString(),
     },
   });
-  console.log('[getVrHotelSettings] API response:', response.data);
   return response.data;
 };
 

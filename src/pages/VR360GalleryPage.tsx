@@ -10,25 +10,20 @@
 
 import React, { useState } from 'react';
 import { useVR360Links } from '../hooks/useVR360';
-import type { VR360CategoryType } from '../types/hotel';
+import type { VR360CategoryType } from '../types/api';
 import { VR360Gallery } from '../components/common';
 
 // Category options
 const VR360_CATEGORIES: VR360CategoryType[] = [
-  'ROOM', 'LOBBY', 'RESTAURANT', 'POOL', 'GYM', 'SPA', 'ROOFTOP', 'EXTERIOR', 'OTHER'
+  'rooms', 'dining', 'facilities', 'services'
 ];
 
 // Category labels
 const categoryLabels: Record<VR360CategoryType, string> = {
-  'ROOM': 'Phòng',
-  'LOBBY': 'Sảnh',
-  'RESTAURANT': 'Nhà hàng',
-  'POOL': 'Hồ bơi',
-  'GYM': 'Phòng gym',
-  'SPA': 'Spa',
-  'ROOFTOP': 'Rooftop',
-  'EXTERIOR': 'Ngoại thất',
-  'OTHER': 'Khác',
+  'rooms': 'Phòng',
+  'dining': 'Ẩm thực',
+  'facilities': 'Tiện ích',
+  'services': 'Dịch vụ',
 };
 
 export const VR360GalleryPage: React.FC = () => {

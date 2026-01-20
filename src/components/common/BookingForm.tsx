@@ -1,11 +1,11 @@
 import type { FC, CSSProperties } from 'react';
 import { memo, useState, useEffect } from 'react';
-import { Typography, Input, Select, DatePicker, InputNumber, Button, Form, message, Grid } from 'antd';
+import { Input, Select, DatePicker, InputNumber, Button, Form, message, Grid } from 'antd';
 import { useSearchParams } from 'react-router-dom';
-import { usePropertyData } from '../../context/PropertyContext';
+import { useTheme } from '../../context/ThemeContext';
 import dayjs from 'dayjs';
 
-const { Title } = Typography;
+
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 const { useBreakpoint } = Grid;
@@ -103,10 +103,10 @@ interface BookingFormProps {
 }
 
 export const BookingForm: FC<BookingFormProps> = memo(({ className = '' }) => {
+  const { primaryColor } = useTheme();
   const [form] = Form.useForm<BookingFormData>();
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
-  const { propertyName } = usePropertyData();
   const screens = useBreakpoint();
   const [validationStatus, setValidationStatus] = useState<string>('');
 
@@ -131,7 +131,7 @@ export const BookingForm: FC<BookingFormProps> = memo(({ className = '' }) => {
     }
   };
 
-  const handleSubmit = async (values: BookingFormData) => {
+  const handleSubmit = async () => {
     setLoading(true);
     try {
       // TODO: Kết nối API đặt phòng
@@ -158,15 +158,6 @@ export const BookingForm: FC<BookingFormProps> = memo(({ className = '' }) => {
     overflowX: 'hidden',
     maxWidth: '100%',
     paddingBottom: 6,
-  };
-
-  const titleStyle: CSSProperties = {
-    color: '#ecc56d',
-    fontSize: screens.md ? 16 : 14,
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    marginBottom: 16,
-    textAlign: 'center',
   };
 
   const labelStyle: CSSProperties = {
@@ -459,7 +450,7 @@ export const BookingForm: FC<BookingFormProps> = memo(({ className = '' }) => {
           width: 2px;
         }
         .booking-form .nicescroll-bg::-webkit-scrollbar-thumb {
-          background: rgba(236, 197, 109, 0.5);
+          background: ${primaryColor}80;
         }
         .booking-form .nicescroll-bg::-webkit-scrollbar-track {
           background: rgba(251, 228, 150, 0);

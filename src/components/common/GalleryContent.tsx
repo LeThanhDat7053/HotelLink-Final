@@ -1,185 +1,50 @@
 import type { FC, CSSProperties } from 'react';
-import { memo, useState, useCallback } from 'react';
-import { Typography, Grid } from 'antd';
+import { memo, useState, useCallback, useMemo } from 'react';
+import { Grid, Spin, Alert } from 'antd';
+import { useTheme } from '../../context/ThemeContext';
+import { useGallery } from '../../hooks/useGallery';
+import { mediaService } from '../../services/mediaService';
 import { ImageGalleryViewer } from './ImageGalleryViewer';
 
-const { Title } = Typography;
 const { useBreakpoint } = Grid;
-
-// Gallery categories data
-interface GalleryCategory {
-  id: string;
-  title: string;
-  thumbnail: string;
-  images: string[];
-}
-
-// Mock data - sẽ được thay bằng API sau
-const GALLERY_CATEGORIES: GalleryCategory[] = [
-  {
-    id: 'maris-hotel',
-    title: 'Maris Hotel',
-    thumbnail: 'https://marishotel.vn/wp-content/uploads/2023/04/02-300x146.jpg',
-    images: [
-      'https://marishotel.vn/wp-content/uploads/2023/04/02.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/01.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/03-5.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/09-6.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/02-2.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/03-3.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/01-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/08-2.jpg',
-    ],
-  },
-  {
-    id: 'meeting-room',
-    title: 'Phòng họp',
-    thumbnail: 'https://marishotel.vn/wp-content/uploads/2023/04/01-1-300x146.jpg',
-    images: [
-      'https://marishotel.vn/wp-content/uploads/2023/04/01-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/02-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/03-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/08.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/07.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/06.jpg',
-    ],
-  },
-  {
-    id: 'cuisine',
-    title: 'Ẩm thực',
-    thumbnail: 'https://marishotel.vn/wp-content/uploads/2023/04/02-2-300x146.jpg',
-    images: [
-      'https://marishotel.vn/wp-content/uploads/2023/04/02-2.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/03-2.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/04-2.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/01-2.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/05-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/06-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/14.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/12.jpg',
-    ],
-  },
-  {
-    id: 'pool',
-    title: 'Hồ bơi',
-    thumbnail: 'https://marishotel.vn/wp-content/uploads/2023/04/12-1-300x146.jpg',
-    images: [
-      'https://marishotel.vn/wp-content/uploads/2023/04/12-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/11-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/13-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/10-1.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/01-4.jpg',
-      'https://marishotel.vn/wp-content/uploads/2023/04/08-2.jpg',
-    ],
-  },
-];
-
-interface GalleryItemProps {
-  category: GalleryCategory;
-  onClick: () => void;
-}
-
-const GalleryItem: FC<GalleryItemProps> = memo(({ category, onClick }) => {
-  const screens = useBreakpoint();
-  const [isHovered, setIsHovered] = useState(false);
-
-  const itemStyle: CSSProperties = {
-    width: screens.md ? '50%' : '100%',
-    float: 'left' as const,
-    padding: screens.md ? 5 : 3,
-    position: 'relative' as const,
-  };
-
-  const imageContainerStyle: CSSProperties = {
-    position: 'relative' as const,
-    width: '100%',
-    paddingBottom: '48.75%', // Aspect ratio ~2.05:1
-    overflow: 'hidden',
-    cursor: 'zoom-in',
-    borderRadius: 2,
-  };
-
-  const imageStyle: CSSProperties = {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover' as const,
-    transition: 'transform 0.3s ease, opacity 0.3s ease',
-    transform: isHovered ? 'scale(1.05)' : 'scale(1)',
-    opacity: isHovered ? 0.85 : 1,
-  };
-
-  const overlayStyle: CSSProperties = {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: isHovered ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
-    transition: 'background 0.3s ease',
-    pointerEvents: 'none' as const,
-  };
-
-  const titleStyle: CSSProperties = {
-    color: '#fff',
-    fontSize: screens.md ? 14 : 12,
-    fontWeight: 600,
-    textAlign: 'center' as const,
-    marginTop: 8,
-    marginBottom: 4,
-    textTransform: 'none' as const,
-  };
-
-  return (
-    <div style={itemStyle}>
-      <div 
-        style={imageContainerStyle}
-        onClick={onClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <img 
-          src={category.thumbnail} 
-          alt={category.title}
-          style={imageStyle}
-          loading="lazy"
-        />
-        <div style={overlayStyle} />
-      </div>
-      <Title level={5} style={titleStyle}>
-        {category.title}
-      </Title>
-    </div>
-  );
-});
-
-GalleryItem.displayName = 'GalleryItem';
 
 interface GalleryContentProps {
   className?: string;
-  categories?: GalleryCategory[];
 }
 
 export const GalleryContent: FC<GalleryContentProps> = memo(({ 
   className = '',
-  categories = GALLERY_CATEGORIES 
 }) => {
+  const { primaryColor } = useTheme();
   const screens = useBreakpoint();
-  const [selectedCategory, setSelectedCategory] = useState<GalleryCategory | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [galleryVisible, setGalleryVisible] = useState(false);
 
-  // Open gallery viewer
-  const handleCategoryClick = useCallback((category: GalleryCategory) => {
-    setSelectedCategory(category);
+  // Fetch media từ API (source='vr_hotel', chỉ images)
+  const { media, loading, error } = useGallery({
+    params: {
+      limit: 100,
+    },
+  });
+
+  // Transform media thành array of image URLs
+  const allImages = useMemo(() => {
+    if (media.length === 0) return [];
+    
+    const urls = media.map(m => mediaService.getMediaUrl(m.id));
+    console.log('[GalleryContent] Generated URLs:', urls);
+    return urls;
+  }, [media]);
+
+  // Open gallery viewer at specific index
+  const handleImageClick = useCallback((index: number) => {
+    setSelectedImageIndex(index);
     setGalleryVisible(true);
   }, []);
 
   // Close gallery viewer
   const handleCloseGallery = useCallback(() => {
     setGalleryVisible(false);
-    setSelectedCategory(null);
   }, []);
 
   // Container styles
@@ -194,36 +59,104 @@ export const GalleryContent: FC<GalleryContentProps> = memo(({
     paddingBottom: 6,
   };
 
-  const galleryRowStyle: CSSProperties = {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    margin: screens.md ? -5 : -3,
-    width: screens.md ? 'calc(100% + 10px)' : 'calc(100% + 6px)',
+  const galleryGridStyle: CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: screens.md ? 'repeat(4, 1fr)' : 'repeat(2, 1fr)',
+    gap: screens.md ? 10 : 6,
+    padding: screens.md ? 5 : 3,
   };
+
+  const imageItemStyle: CSSProperties = {
+    position: 'relative' as const,
+    paddingBottom: '75%', // Aspect ratio 4:3
+    overflow: 'hidden',
+    cursor: 'pointer',
+    borderRadius: 4,
+    background: 'rgba(0, 0, 0, 0.3)',
+  };
+
+  const imageStyle: CSSProperties = {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover' as const,
+    transition: 'transform 0.3s ease',
+  };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className={`gallery-content ${className}`} style={{ textAlign: 'center', padding: '40px 0' }}>
+        <Spin size="large" />
+        <p style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: 16 }}>Đang tải thư viện ảnh...</p>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className={`gallery-content ${className}`}>
+        <Alert
+          type="error"
+          message="Không thể tải thư viện ảnh. Vui lòng thử lại sau."
+          style={{ background: 'rgba(255, 77, 79, 0.1)', border: '1px solid rgba(255, 77, 79, 0.3)' }}
+        />
+      </div>
+    );
+  }
+
+  // Empty state
+  if (allImages.length === 0) {
+    return (
+      <div className={`gallery-content ${className}`}>
+        <Alert
+          type="info"
+          message="Chưa có ảnh nào trong thư viện."
+          style={{ background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={`gallery-content ${className}`}>
       <div className="nicescroll-bg" style={containerStyle}>
-        <div style={galleryRowStyle}>
-          {categories.map((category) => (
-            <GalleryItem
-              key={category.id}
-              category={category}
-              onClick={() => handleCategoryClick(category)}
-            />
+        <div style={galleryGridStyle}>
+          {allImages.map((imageUrl, index) => (
+            <div
+              key={index}
+              style={imageItemStyle}
+              onClick={() => handleImageClick(index)}
+              onMouseEnter={(e) => {
+                const img = e.currentTarget.querySelector('img');
+                if (img) img.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                const img = e.currentTarget.querySelector('img');
+                if (img) img.style.transform = 'scale(1)';
+              }}
+            >
+              <img
+                src={imageUrl}
+                alt={`Gallery ${index + 1}`}
+                style={imageStyle}
+                loading="lazy"
+              />
+            </div>
           ))}
         </div>
       </div>
 
       {/* Image Gallery Viewer */}
-      {selectedCategory && (
-        <ImageGalleryViewer
-          images={selectedCategory.images}
-          visible={galleryVisible}
-          onClose={handleCloseGallery}
-          initialIndex={0}
-        />
-      )}
+      <ImageGalleryViewer
+        images={allImages}
+        visible={galleryVisible}
+        onClose={handleCloseGallery}
+        initialIndex={selectedImageIndex}
+      />
 
       {/* Custom scrollbar styles */}
       <style>{`
@@ -231,7 +164,7 @@ export const GalleryContent: FC<GalleryContentProps> = memo(({
           width: 2px;
         }
         .gallery-content .nicescroll-bg::-webkit-scrollbar-thumb {
-          background: rgba(236, 197, 109, 0.5);
+          background: ${primaryColor}80;
         }
         .gallery-content .nicescroll-bg::-webkit-scrollbar-track {
           background: rgba(251, 228, 150, 0);

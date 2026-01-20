@@ -318,16 +318,13 @@ export const useVrHotelSettings = (propertyId: number | null) => {
 
   const fetchSettings = useCallback(async () => {
     if (!propertyId) {
-      console.log('[useVrHotelSettings] No propertyId, skipping');
       return;
     }
 
     setLoading(true);
     setError(null);
     try {
-      console.log('[useVrHotelSettings] Fetching settings for propertyId:', propertyId);
       const data = await vr360Service.getVrHotelSettings({ propertyId });
-      console.log('[useVrHotelSettings] Fetched data:', data);
       setSettings(data);
     } catch (err) {
       console.error('[useVrHotelSettings] Error:', err);

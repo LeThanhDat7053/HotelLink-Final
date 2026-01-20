@@ -38,3 +38,7 @@ export { usePolicy } from './usePolicy';
 export { useRegulation } from './useRegulation';
 
 export { useContact } from './useContact';
+
+export { useOffers, useOfferDetail } from './useOffers';
+
+export { useGallery } from './useGallery';

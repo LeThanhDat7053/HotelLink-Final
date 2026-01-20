@@ -7,10 +7,12 @@
  * - Modal fullscreen
  * - Thumbnail preview
  * - Loading states
+ * - Image display với cover style
  */
 
-import React, { useState } from 'react';
-import type { VR360Link } from '../../types/hotel';
+import React, { useState, useMemo } from 'react';
+import type { VR360Link } from '../../types/api';
+import { getMediaType } from '../../utils/mediaHelper';
 
 interface VR360ViewerProps {
   link: VR360Link;
@@ -31,10 +33,8 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
   const [hasError, setHasError] = useState(false);
   const [showViewer, setShowViewer] = useState(autoLoad);
 
-  const handleLoadStart = () => {
-    setIsLoading(true);
-    setHasError(false);
-  };
+  // Xác định loại media (image hay vr360)
+  const mediaType = useMemo(() => getMediaType(link.vrUrl || ''), [link.vrUrl]);
 
   const handleLoadComplete = () => {
     setIsLoading(false);
@@ -88,14 +88,14 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
     );
   }
 
-  // Hiển thị iframe VR360 viewer
+  // Hiển thị VR360 iframe hoặc image viewer
   return (
     <div className={`relative ${className}`}>
       {/* Loading spinner */}
       {isLoading && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center z-10 rounded-lg">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <span className="ml-3 text-gray-600">Đang tải VR360...</span>
+          <span className="ml-3 text-gray-600">Đang tải...</span>
         </div>
       )}
 
@@ -105,7 +105,7 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
           <svg className="w-16 h-16 text-red-500 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <p className="text-red-600 font-semibold mb-2">Không thể tải VR360</p>
+          <p className="text-red-600 font-semibold mb-2">Không thể tải nội dung</p>
           <p className="text-red-500 text-sm mb-3">Vui lòng thử lại sau</p>
           <button 
             onClick={() => {
@@ -119,17 +119,28 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
         </div>
       )}
 
-      {/* VR360 iframe */}
-      <iframe
-        src={link.vrUrl}
-        title={link.title}
-        className="w-full h-full min-h-[400px] border-0 rounded-lg"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; xr-spatial-tracking"
-        allowFullScreen
-        onLoad={handleLoadComplete}
-        onLoadStart={handleLoadStart}
-        onError={handleError}
-      />
+      {/* Content: Image hoặc VR360 iframe */}
+      {mediaType === 'image' ? (
+        // Hiển thị ảnh với object-fit cover
+        <img
+          src={link.vrUrl}
+          alt={link.title}
+          className="w-full h-full min-h-[400px] object-cover object-center rounded-lg"
+          onLoad={handleLoadComplete}
+          onError={handleError}
+        />
+      ) : (
+        // Hiển thị VR360 iframe
+        <iframe
+          src={link.vrUrl}
+          title={link.title}
+          className="w-full h-full min-h-[400px] border-0 rounded-lg"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; xr-spatial-tracking"
+          allowFullScreen
+          onLoad={handleLoadComplete}
+          onError={handleError}
+        />
+      )}
       
       {/* Info bar */}
       <div className="absolute top-4 left-4 right-4 bg-white bg-opacity-90 rounded-lg p-3 shadow-lg">

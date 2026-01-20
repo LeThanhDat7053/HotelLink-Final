@@ -2,7 +2,7 @@
  * Service Hooks - React hooks cho service data fetching
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { serviceService } from '../services/serviceService';
 import type { ServiceUIData, GetServicesParams } from '../types/service';
 

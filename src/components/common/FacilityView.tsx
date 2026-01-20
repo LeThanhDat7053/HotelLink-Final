@@ -77,7 +77,6 @@ export const FacilityView: FC<FacilityViewProps> = memo(({
         onBack={handleBack}
         onVrLinkChange={onVrLinkChange}
         className={className}
-        facilityCode={code}
       />
     );
   }
@@ -87,7 +86,6 @@ export const FacilityView: FC<FacilityViewProps> = memo(({
     <FacilityList 
       onFacilityClick={handleFacilityClick}
       className={className}
-      highlightCode={code}
     />
   );
 });

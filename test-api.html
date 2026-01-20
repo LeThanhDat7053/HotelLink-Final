@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test API Connection - HotelLink</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 30px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+    h1 {
+      color: #ecc56d;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    .test-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-left: 4px solid #ecc56d;
+    }
+    h2 {
+      color: #ecc56d;
+      margin-top: 0;
+      font-size: 18px;
+    }
+    button {
+      background: #ecc56d;
+      color: #1a1a2e;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #d4ad5a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(236, 197, 109, 0.3);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .result {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+      padding: 15px;
+      margin-top: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .result.success {
+      border: 2px solid #4caf50;
+    }
+    .result.error {
+      border: 2px solid #f44336;
+    }
+    .result.warning {
+      border: 2px solid #ff9800;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .status-badge.success {
+      background: #4caf50;
+      color: white;
+    }
+    .status-badge.error {
+      background: #f44336;
+      color: white;
+    }
+    .status-badge.pending {
+      background: #ff9800;
+      color: white;
+    }
+    img.preview {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 2px solid #ecc56d;
+    }
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid rgba(236, 197, 109, 0.3);
+      border-top-color: #ecc56d;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .info-box {
+      background: rgba(33, 150, 243, 0.1);
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+    .info-box strong {
+      color: #2196f3;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Test API Connection</h1>
+  <div class="subtitle">Kiểm tra kết nối API VR Hotel Settings & Media</div>
+
+  <div class="info-box">
+    <strong>ℹ️ Hướng dẫn:</strong> Click các nút bên dưới để test từng phần của API. 
+    Kết quả sẽ hiển thị ngay bên dưới mỗi test. Mở <strong>DevTools Console (F12)</strong> để xem chi tiết hơn.
+  </div>
+
+  <!-- Test 1: VR Hotel Settings -->
+  <div class="test-section">
+    <h2>1️⃣ Test VR Hotel Settings API</h2>
+    <button onclick="testVrHotelSettings()">🚀 Test API</button>
+    <span id="status-settings"></span>
+    <div id="result-settings" class="result" style="display: none;"></div>
+  </div>
+
+  <!-- Test 2: Favicon Media -->
+  <div class="test-section">
+    <h2>2️⃣ Test Favicon Media Endpoint</h2>
+    <button onclick="testFaviconMedia()">🖼️ Test Favicon</button>
+    <span id="status-favicon"></span>
+    <div id="result-favicon" class="result" style="display: none;"></div>
+    <img id="preview-favicon" class="preview" style="display: none;" alt="Favicon Preview">
+  </div>
+
+  <!-- Test 3: Logo Media -->
+  <div class="test-section">
+    <h2>3️⃣ Test Logo Media Endpoint</h2>
+    <button onclick="testLogoMedia()">🏨 Test Logo</button>
+    <span id="status-logo"></span>
+    <div id="result-logo" class="result" style="display: none;"></div>
+    <img id="preview-logo" class="preview" style="display: none;" alt="Logo Preview">
+  </div>
+
+  <!-- Test 4: Current Page Meta Tags -->
+  <div class="test-section">
+    <h2>4️⃣ Kiểm tra Meta Tags trong HTML</h2>
+    <button onclick="checkMetaTags()">🏷️ Check Meta Tags</button>
+    <span id="status-meta"></span>
+    <div id="result-meta" class="result" style="display: none;"></div>
+  </div>
+
+  <!-- Test All -->
+  <div class="test-section" style="text-align: center; border-left: 4px solid #4caf50;">
+    <button onclick="testAll()" style="background: #4caf50; font-size: 18px; padding: 15px 40px;">
+      ⚡ RUN ALL TESTS
+    </button>
+  </div>
+
+  <script>
+    const API_BASE_URL = 'https://travel.link360.vn/api/v1';
+    const PROPERTY_ID = 1;
+
+    // Helper functions
+    function showStatus(elementId, status, message = '') {
+      const el = document.getElementById(elementId);
+      el.innerHTML = '';
+      
+      if (status === 'loading') {
+        el.innerHTML = '<span class="loading"></span>';
+      } else if (status === 'success') {
+        el.innerHTML = `<span class="status-badge success">✅ SUCCESS</span>`;
+      } else if (status === 'error') {
+        el.innerHTML = `<span class="status-badge error">❌ FAILED</span>`;
+      }
+    }
+
+    function showResult(elementId, content, type = 'success') {
+      const el = document.getElementById(elementId);
+      el.style.display = 'block';
+      el.textContent = content;
+      el.className = `result ${type}`;
+    }
+
+    // Test 1: VR Hotel Settings
+    async function testVrHotelSettings() {
+      console.log('🔍 [TEST] Starting VR Hotel Settings test...');
+      showStatus('status-settings', 'loading');
+      
+      try {
+        const response = await fetch(`${API_BASE_URL}/vr-hotel/settings`, {
+          headers: {
+            'x-property-id': PROPERTY_ID.toString(),
+            'Accept': 'application/json'
+          }
+        });
+
+        console.log('📡 Response status:', response.status);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('✅ API Response:', data);
+
+        showStatus('status-settings', 'success');
+        showResult('result-settings', 
+          `✅ API Response (Status ${response.status}):\n\n` +
+          JSON.stringify(data, null, 2) +
+          `\n\n📌 Key Data:\n` +
+          `- Primary Color: ${data.primary_color}\n` +
+          `- Logo Media ID: ${data.logo_media_id}\n` +
+          `- Favicon Media ID: ${data.favicon_media_id}\n` +
+          `- SEO Languages: ${Object.keys(data.seo || {}).join(', ')}`,
+          'success'
+        );
+
+        return data;
+      } catch (error) {
+        console.error('❌ Error:', error);
+        showStatus('status-settings', 'error');
+        showResult('result-settings', 
+          `❌ ERROR:\n${error.message}\n\n` +
+          `Please check:\n` +
+          `1. API endpoint is accessible\n` +
+          `2. CORS is configured correctly\n` +
+          `3. Property ID ${PROPERTY_ID} exists`,
+          'error'
+        );
+        throw error;
+      }
+    }
+
+    // Test 2: Favicon Media
+    async function testFaviconMedia() {
+      console.log('🔍 [TEST] Starting Favicon Media test...');
+      showStatus('status-favicon', 'loading');
+      
+      try {
+        // First get settings to get the correct media_id
+        const settings = await fetch(`${API_BASE_URL}/vr-hotel/settings`, {
+          headers: { 'x-property-id': PROPERTY_ID.toString() }
+        }).then(r => r.json());
+
+        const faviconId = settings.favicon_media_id;
+        console.log('🖼️ Favicon Media ID:', faviconId);
+
+        const faviconUrl = `${API_BASE_URL}/media/${faviconId}/view`;
+        console.log('📡 Testing URL:', faviconUrl);
+
+        const response = await fetch(faviconUrl);
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Content-Type:', response.headers.get('content-type'));
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        showStatus('status-favicon', 'success');
+        showResult('result-favicon',
+          `✅ Favicon loaded successfully!\n\n` +
+          `URL: ${faviconUrl}\n` +
+          `Status: ${response.status} ${response.statusText}\n` +
+          `Content-Type: ${response.headers.get('content-type')}\n` +
+          `Size: ${response.headers.get('content-length') || 'unknown'} bytes`,
+          'success'
+        );
+
+        // Show preview
+        const previewEl = document.getElementById('preview-favicon');
+        previewEl.src = faviconUrl;
+        previewEl.style.display = 'block';
+
+      } catch (error) {
+        console.error('❌ Error:', error);
+        showStatus('status-favicon', 'error');
+        showResult('result-favicon',
+          `❌ ERROR:\n${error.message}\n\n` +
+          `Favicon media endpoint không khả dụng. Kiểm tra:\n` +
+          `1. Media ID có tồn tại không\n` +
+          `2. Backend /media/{id}/view endpoint working\n` +
+          `3. File có tồn tại trên server không`,
+          'error'
+        );
+      }
+    }
+
+    // Test 3: Logo Media
+    async function testLogoMedia() {
+      console.log('🔍 [TEST] Starting Logo Media test...');
+      showStatus('status-logo', 'loading');
+      
+      try {
+        const settings = await fetch(`${API_BASE_URL}/vr-hotel/settings`, {
+          headers: { 'x-property-id': PROPERTY_ID.toString() }
+        }).then(r => r.json());
+
+        const logoId = settings.logo_media_id;
+        console.log('🏨 Logo Media ID:', logoId);
+
+        const logoUrl = `${API_BASE_URL}/media/${logoId}/view`;
+        console.log('📡 Testing URL:', logoUrl);
+
+        const response = await fetch(logoUrl);
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Content-Type:', response.headers.get('content-type'));
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        showStatus('status-logo', 'success');
+        showResult('result-logo',
+          `✅ Logo loaded successfully!\n\n` +
+          `URL: ${logoUrl}\n` +
+          `Status: ${response.status} ${response.statusText}\n` +
+          `Content-Type: ${response.headers.get('content-type')}\n` +
+          `Size: ${response.headers.get('content-length') || 'unknown'} bytes`,
+          'success'
+        );
+
+        // Show preview
+        const previewEl = document.getElementById('preview-logo');
+        previewEl.src = logoUrl;
+        previewEl.style.display = 'block';
+
+      } catch (error) {
+        console.error('❌ Error:', error);
+        showStatus('status-logo', 'error');
+        showResult('result-logo',
+          `❌ ERROR:\n${error.message}\n\n` +
+          `Logo media endpoint không khả dụng. Kiểm tra:\n` +
+          `1. Media ID có tồn tại không\n` +
+          `2. Backend /media/{id}/view endpoint working\n` +
+          `3. File có tồn tại trên server không`,
+          'error'
+        );
+      }
+    }
+
+    // Test 4: Check Meta Tags
+    function checkMetaTags() {
+      console.log('🔍 [TEST] Checking meta tags in current page...');
+      showStatus('status-meta', 'loading');
+
+      setTimeout(() => {
+        try {
+          const favicon = document.querySelector('link[rel="icon"]')?.href || 'NOT FOUND';
+          const ogImage = document.querySelector('meta[property="og:image"]')?.content || 'NOT FOUND';
+          const ogTitle = document.querySelector('meta[property="og:title"]')?.content || 'NOT FOUND';
+          const metaDesc = document.querySelector('meta[name="description"]')?.content || 'NOT FOUND';
+          const ogDesc = document.querySelector('meta[property="og:description"]')?.content || 'NOT FOUND';
+
+          const allFound = favicon !== 'NOT FOUND' && 
+                          ogImage !== 'NOT FOUND' && 
+                          ogTitle !== 'NOT FOUND';
+
+          showStatus('status-meta', allFound ? 'success' : 'error');
+          showResult('result-meta',
+            `📋 META TAGS IN CURRENT PAGE:\n\n` +
+            `🔗 Favicon:\n${favicon}\n\n` +
+            `🖼️ OG Image:\n${ogImage}\n\n` +
+            `📝 OG Title:\n${ogTitle}\n\n` +
+            `📄 Meta Description:\n${metaDesc}\n\n` +
+            `📄 OG Description:\n${ogDesc}\n\n` +
+            `${allFound ? '✅ All meta tags are present!' : '⚠️ Some meta tags are missing!'}\n\n` +
+            `NOTE: If meta tags are NOT FOUND, it means:\n` +
+            `1. React app hasn't rendered yet, OR\n` +
+            `2. ThemeContext data is still loading, OR\n` +
+            `3. SEOMeta component not rendering properly`,
+            allFound ? 'success' : 'warning'
+          );
+
+          console.log('📋 Meta Tags:', {
+            favicon, ogImage, ogTitle, metaDesc, ogDesc
+          });
+        } catch (error) {
+          console.error('❌ Error:', error);
+          showStatus('status-meta', 'error');
+          showResult('result-meta', `❌ ERROR:\n${error.message}`, 'error');
+        }
+      }, 500); // Small delay to ensure DOM is ready
+    }
+
+    // Run all tests
+    async function testAll() {
+      console.log('⚡ [TEST ALL] Starting all tests...');
+      
+      try {
+        await testVrHotelSettings();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        await testFaviconMedia();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        await testLogoMedia();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        checkMetaTags();
+        
+        console.log('✅ [TEST ALL] All tests completed!');
+      } catch (error) {
+        console.error('❌ [TEST ALL] Some tests failed:', error);
+      }
+    }
+
+    // Auto-run on page load
+    console.log('🔍 Test page loaded. Click buttons to test API connection.');
+    console.log('API Base URL:', API_BASE_URL);
+    console.log('Property ID:', PROPERTY_ID);
+  </script>
+</body>
+</html>

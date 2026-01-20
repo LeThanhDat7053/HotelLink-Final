@@ -56,9 +56,10 @@ export interface RoomResponse {
   capacity: number; // Sức chứa (số người)
   size_sqm: number; // Diện tích (m²)
   price_per_night: number; // Giá phòng/đêm
+  vr_link: string | null; // VR360 link từ top level (DÙNG CÁI NÀY)
   status: string; // available, occupied, maintenance, etc.
   amenities_json: string[]; // Danh sách tiện nghi
-  attributes_json: RoomAttributes; // Metadata (VR link, etc.)
+  attributes_json: RoomAttributes; // Metadata (có vr_link nhưng BỎ QUA)
   display_order: number;
   translations: RoomTranslations; // Dữ liệu đa ngôn ngữ
   media: RoomMedia[]; // Danh sách media

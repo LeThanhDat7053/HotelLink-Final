@@ -13,6 +13,9 @@ export { FacilityView } from './FacilityView';
 export { ServiceList } from './ServiceList';
 export { ServiceDetail } from './ServiceDetail';
 export { ServiceView } from './ServiceView';
+export { OfferList } from './OfferList';
+export { OfferDetail } from './OfferDetail';
+export { OfferView } from './OfferView';
 export { PolicyContent } from './PolicyContent';
 export { ContactContent } from './ContactContent';
 export { AboutContent } from './AboutContent';
@@ -22,14 +25,7 @@ export { GalleryContent } from './GalleryContent';
 export { RegulationContent } from './RegulationContent';
 export { PropertySelector } from './PropertySelector';
 export { PropertyPostsContent } from './PropertyPostsContent';
-
-// Legacy types exports (deprecated - use types from '@/types/room' instead)
-export type { DiningItem } from './DiningList';
-export type { DiningDetailData } from './DiningDetail';
-export type { FacilityItem } from './FacilityList';
-export type { FacilityDetailData } from './FacilityDetail';
-export type { ServiceItem } from './ServiceList';
-export type { ServiceDetailData } from './ServiceDetail';
+export { SEOMeta } from './SEOMeta';
 
 export { default as VR360Viewer, VR360Modal, VR360Gallery } from './VR360Viewer';
 

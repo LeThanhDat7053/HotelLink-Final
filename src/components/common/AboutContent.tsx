@@ -8,14 +8,13 @@
 
 import type { FC, CSSProperties } from 'react';
 import { memo } from 'react';
-import { Typography, Grid, Skeleton, Alert, Button } from 'antd';
+import { Typography, Skeleton, Alert, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import { useIntroductionContent } from '../../hooks/useIntroduction';
 import { usePropertyData } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';
 
-const { Title, Paragraph } = Typography;
-const { useBreakpoint } = Grid;
+const { Paragraph } = Typography;
 
 interface AboutContentProps {
   className?: string;
@@ -24,8 +23,6 @@ interface AboutContentProps {
 export const AboutContent: FC<AboutContentProps> = memo(({ 
   className = ''
 }) => {
-  const screens = useBreakpoint();
-  
   // Lấy locale từ LanguageContext
   const { locale } = useLanguage();
   
@@ -43,16 +40,6 @@ export const AboutContent: FC<AboutContentProps> = memo(({
     fontSize: 14,
     lineHeight: '22px',
     textAlign: 'justify' as const,
-  };
-
-  // Title styles
-  const titleStyle: CSSProperties = {
-    color: '#ecc56d',
-    fontSize: screens.md ? 18 : 16,
-    fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
-    fontWeight: 'bold',
-    marginBottom: 12,
-    marginTop: 0,
   };
 
   // Paragraph style
@@ -174,7 +161,7 @@ export const AboutContent: FC<AboutContentProps> = memo(({
     <div className={`about-content ${className}`} style={containerStyle}>
       {/* Short Description */}
       {content.shortDescription && (
-        <Paragraph style={{ ...paragraphStyle, fontStyle: 'italic', color: '#ecc56d' }}>
+        <Paragraph style={{ ...paragraphStyle, fontStyle: 'italic', color: 'rgba(255, 255, 255, 0.9)' }}>
           {content.shortDescription}
         </Paragraph>
       )}

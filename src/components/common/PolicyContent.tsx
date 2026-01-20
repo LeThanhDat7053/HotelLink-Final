@@ -1,19 +1,17 @@
 import type { FC, CSSProperties } from 'react';
 import { memo } from 'react';
-import { Typography, Grid, Spin, Alert } from 'antd';
+import { Typography, Spin, Alert } from 'antd';
 import { usePolicy } from '../../hooks/usePolicy';
 import { useProperty } from '../../context/PropertyContext';
 import { useLanguage } from '../../context/LanguageContext';
 
-const { Title, Paragraph } = Typography;
-const { useBreakpoint } = Grid;
+const { Paragraph } = Typography;
 
 interface PolicyContentProps {
   className?: string;
 }
 
 export const PolicyContent: FC<PolicyContentProps> = memo(({ className = '' }) => {
-  const screens = useBreakpoint();
   const { propertyId } = useProperty();
   const { locale } = useLanguage();
 
@@ -30,26 +28,6 @@ export const PolicyContent: FC<PolicyContentProps> = memo(({ className = '' }) =
     textAlign: 'justify' as const,
   };
 
-  // Title styles
-  const titleStyle: CSSProperties = {
-    color: '#ecc56d',
-    fontSize: screens.md ? 18 : 16,
-    fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
-    fontWeight: 'bold',
-    marginBottom: 12,
-    marginTop: 20,
-  };
-
-  const firstTitleStyle: CSSProperties = {
-    ...titleStyle,
-    marginTop: 0,
-  };
-
-  const subTitleStyle: CSSProperties = {
-    ...titleStyle,
-    fontSize: screens.md ? 16 : 14,
-  };
-
   // Paragraph style
   const paragraphStyle: CSSProperties = {
     color: 'rgba(255, 255, 255, 0.8)',
@@ -57,24 +35,6 @@ export const PolicyContent: FC<PolicyContentProps> = memo(({ className = '' }) =
     lineHeight: '22px',
     textAlign: 'justify' as const,
     marginBottom: 12,
-  };
-
-  // List styles
-  const listStyle: CSSProperties = {
-    paddingLeft: 20,
-    marginBottom: 12,
-  };
-
-  const listItemStyle: CSSProperties = {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: 14,
-    lineHeight: '22px',
-    marginBottom: 6,
-  };
-
-  const linkStyle: CSSProperties = {
-    color: '#ecc56d',
-    textDecoration: 'none',
   };
 
   if (loading) {

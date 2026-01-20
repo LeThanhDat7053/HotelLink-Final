@@ -17,6 +17,7 @@ export interface MenuTranslations {
   gallery: string;         // Thư viện ảnh
   regulation: string;      // Nội quy khách sạn
   news: string;            // Tin tức & Sự kiện
+  offers: string;          // Ưu đãi
 }
 
 // Translations cho 20 ngôn ngữ
@@ -34,6 +35,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Thư viện ảnh',
     regulation: 'Nội quy khách sạn',
     news: 'Tin tức & Sự kiện',
+    offers: 'Ưu đãi',
   },
 
   // English
@@ -49,6 +51,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Gallery',
     regulation: 'Hotel Regulations',
     news: 'News & Events',
+    offers: 'Offers',
   },
 
   // Arabic - العربية
@@ -64,6 +67,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'معرض الصور',
     regulation: 'لوائح الفندق',
     news: 'الأخبار والفعاليات',
+    offers: 'العروض',
   },
 
   // German - Deutsch
@@ -79,6 +83,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galerie',
     regulation: 'Hotelregeln',
     news: 'Nachrichten & Events',
+    offers: 'Angebote',
   },
 
   // Spanish - Español
@@ -94,6 +99,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galería',
     regulation: 'Normas del hotel',
     news: 'Noticias y Eventos',
+    offers: 'Ofertas',
   },
 
   // French - Français
@@ -109,6 +115,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galerie',
     regulation: 'Règlement de l\'hôtel',
     news: 'Actualités & Événements',
+    offers: 'Offres',
   },
 
   // Hindi - हिंदी
@@ -124,6 +131,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'गैलरी',
     regulation: 'होटल नियम',
     news: 'समाचार और कार्यक्रम',
+    offers: 'ऑफर',
   },
 
   // Indonesian - Bahasa Indonesia
@@ -139,6 +147,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galeri',
     regulation: 'Peraturan Hotel',
     news: 'Berita & Acara',
+    offers: 'Penawaran',
   },
 
   // Italian - Italiano
@@ -154,6 +163,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galleria',
     regulation: 'Regolamento dell\'hotel',
     news: 'Notizie & Eventi',
+    offers: 'Offerte',
   },
 
   // Japanese - 日本語
@@ -169,6 +179,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'ギャラリー',
     regulation: 'ホテル規則',
     news: 'ニュース＆イベント',
+    offers: 'オファー',
   },
 
   // Korean - 한국어
@@ -184,6 +195,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '갤러리',
     regulation: '호텔 규정',
     news: '뉴스 & 이벤트',
+    offers: '혜택',
   },
 
   // Malay - Bahasa Melayu
@@ -199,6 +211,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galeri',
     regulation: 'Peraturan Hotel',
     news: 'Berita & Acara',
+    offers: 'Tawaran',
   },
 
   // Portuguese - Português
@@ -214,6 +227,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galeria',
     regulation: 'Regulamento do Hotel',
     news: 'Notícias & Eventos',
+    offers: 'Ofertas',
   },
 
   // Russian - Русский
@@ -229,6 +243,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Галерея',
     regulation: 'Правила отеля',
     news: 'Новости и события',
+    offers: 'Предложения',
   },
 
   // Tamil - தமிழ்
@@ -244,6 +259,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'படத்தொகுப்பு',
     regulation: 'ஹோட்டல் விதிகள்',
     news: 'செய்திகள் & நிகழ்வுகள்',
+    offers: 'சலுகைகள்',
   },
 
   // Thai - ภาษาไทย
@@ -259,6 +275,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'แกลเลอรี่',
     regulation: 'กฎของโรงแรม',
     news: 'ข่าว & กิจกรรม',
+    offers: 'ข้อเสนอ',
   },
 
   // Filipino/Tagalog
@@ -274,6 +291,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: 'Galeria',
     regulation: 'Mga Patakaran ng Hotel',
     news: 'Balita at Kaganapan',
+    offers: 'Mga Alok',
   },
 
   // Cantonese - 廣語 (Hong Kong) - hk code
@@ -289,6 +307,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '圖片庫',
     regulation: '酒店規則',
     news: '新聞與活動',
+    offers: '優惠',
   },
 
   // Cantonese - 粵語 - yue code (API code)
@@ -304,6 +323,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '圖片庫',
     regulation: '酒店規則',
     news: '新聞與活動',
+    offers: '優惠',
   },
 
   // Chinese Simplified - 简体中文
@@ -319,6 +339,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '图片库',
     regulation: '酒店规则',
     news: '新闻与活动',
+    offers: '优惠',
   },
   
   // Alias for zh-CN
@@ -334,6 +355,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '图片库',
     regulation: '酒店规则',
     news: '新闻与活动',
+    offers: '优惠',
   },
 
   // Chinese Traditional - 中文（繁體）
@@ -349,6 +371,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     gallery: '圖片庫',
     regulation: '酒店規則',
     news: '新聞與活動',
+    offers: '優惠',
   },
 };
 
@@ -375,6 +398,7 @@ export const PATH_TO_TRANSLATION_KEY: Record<string, keyof MenuTranslations> = {
   '/thu-vien-anh': 'gallery',
   '/noi-quy-khach-san': 'regulation',
   '/tin-tuc-su-kien': 'news',
+  '/uu-dai': 'offers',
 };
 
 export default MENU_TRANSLATIONS;

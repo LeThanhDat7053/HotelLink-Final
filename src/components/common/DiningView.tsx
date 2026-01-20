@@ -77,7 +77,6 @@ export const DiningView: FC<DiningViewProps> = memo(({
         onBack={handleBack}
         onVrLinkChange={onVrLinkChange}
         className={className}
-        diningCode={code}
       />
     );
   }
@@ -87,7 +86,6 @@ export const DiningView: FC<DiningViewProps> = memo(({
     <DiningList 
       onDiningClick={handleDiningClick}
       className={className}
-      highlightCode={code}
     />
   );
 });

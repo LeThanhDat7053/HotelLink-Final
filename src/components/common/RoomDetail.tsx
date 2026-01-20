@@ -10,6 +10,7 @@ import {
   UserOutlined,
   DollarOutlined,
 } from '@ant-design/icons';
+import { useTheme } from '../../context/ThemeContext';
 import { ImageGalleryViewer } from './ImageGalleryViewer';
 import type { RoomUIData } from '../../types/room';
 
@@ -25,18 +26,6 @@ interface RoomDetailProps {
   className?: string;
   roomCode?: string;
 }
-// Icon mapping helper
-const getIcon = (iconType: string) => {
-  const iconStyle = { fontSize: 14, marginRight: 8, color: '#ecc56d' };
-  switch (iconType) {
-    case 'capacity': return <UserOutlined style={iconStyle} />;
-    case 'area': return <ExpandOutlined style={iconStyle} />;
-    case 'floor': return <HomeOutlined style={iconStyle} />;
-    case 'bed': return <RestOutlined style={iconStyle} />;
-    case 'price': return <DollarOutlined style={iconStyle} />;
-    default: return <HomeOutlined style={iconStyle} />;
-  }
-};
 
 export const RoomDetail: FC<RoomDetailProps> = memo(({ 
   room,
@@ -45,12 +34,25 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
   error = null,
   onBack,
   className = '',
-  roomCode,
 }) => {
   const screens = useBreakpoint();
   const navigate = useNavigate();
+  const { primaryColor } = useTheme();
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+
+  // Icon mapping helper with dynamic color
+  const iconStyle = { fontSize: 14, marginRight: 8, color: primaryColor };
+  const getIcon = (iconType: string) => {
+    switch (iconType) {
+      case 'capacity': return <UserOutlined style={iconStyle} />;
+      case 'area': return <ExpandOutlined style={iconStyle} />;
+      case 'floor': return <HomeOutlined style={iconStyle} />;
+      case 'bed': return <RestOutlined style={iconStyle} />;
+      case 'price': return <DollarOutlined style={iconStyle} />;
+      default: return <HomeOutlined style={iconStyle} />;
+    }
+  };
 
   const openGallery = useCallback((index: number) => {
     setGalleryIndex(index);
@@ -110,12 +112,12 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
     gap: 12,
     marginBottom: 16,
     padding: '12px 16px',
-    background: 'rgba(236, 197, 109, 0.15)',
+    background: `${primaryColor}26`,
     borderRadius: 8,
   };
 
   const priceTextStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     fontSize: screens.md ? 15 : 13,
     margin: 0,
   };
@@ -130,13 +132,13 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
   };
 
   const sectionTitleStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     fontSize: screens.md ? 14 : 12,
     fontWeight: 500,
     marginTop: 16,
     marginBottom: 10,
     paddingBottom: 6,
-    borderBottom: '1px solid rgba(153, 113, 42, 0.5)',
+    borderBottom: `1px solid ${primaryColor}80`,
   };
 
   const amenitiesListStyle: CSSProperties = {
@@ -184,7 +186,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
             icon={<ArrowLeftOutlined />}
             onClick={onBack}
             style={{ 
-              color: '#ecc56d', 
+              color: primaryColor, 
               padding: '0 0 8px 0',
               fontSize: screens.md ? 13 : 11,
             }}
@@ -211,7 +213,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
             icon={<ArrowLeftOutlined />}
             onClick={onBack}
             style={{ 
-              color: '#ecc56d', 
+              color: primaryColor, 
               padding: '0 0 8px 0',
               fontSize: screens.md ? 13 : 11,
             }}
@@ -243,7 +245,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
           icon={<ArrowLeftOutlined />}
           onClick={onBack}
           style={{ 
-            color: '#ecc56d', 
+            color: primaryColor, 
             padding: '0 0 8px 0',
             fontSize: screens.md ? 13 : 11,
           }}
@@ -259,36 +261,38 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
           {room.description}
         </Paragraph>
 
-        {/* Price & Booking */}
-        <div style={priceContainerStyle}>
-          <Text style={priceTextStyle}>
-            Giá phòng: <strong>{formattedPrice}</strong>/đêm
-          </Text>
-          <Button 
-            type="primary"
-            size="small"
-            onClick={handleBooking}
-            style={{ 
-              background: '#ecc56d', 
-              borderColor: '#ecc56d',
-              color: '#000',
-              fontWeight: 500,
-              fontSize: screens.md ? 12 : 10,
-            }}
-          >
-            Đặt ngay
-          </Button>
-        </div>
+        {/* Price & Booking - Chỉ hiển thị khi giá > 0 */}
+        {room.price > 0 && (
+          <div style={priceContainerStyle}>
+            <Text style={priceTextStyle}>
+              Giá phòng: <strong>{formattedPrice}</strong>/đêm
+            </Text>
+            <Button 
+              type="primary"
+              size="small"
+              onClick={handleBooking}
+              style={{ 
+                background: primaryColor, 
+                borderColor: primaryColor,
+                color: '#000',
+                fontWeight: 500,
+                fontSize: screens.md ? 12 : 10,
+              }}
+            >
+              Đặt ngay
+            </Button>
+          </div>
+        )}
 
         {/* Room Info */}
         <div className="room-info">
-          {room.capacity && (
+          {room.capacity > 0 && (
             <div style={roomInfoStyle}>
               {getIcon('capacity')}
               <span>Sức chứa: <strong>{room.capacity} người</strong></span>
             </div>
           )}
-          {room.size && (
+          {room.size > 0 && (
             <div style={roomInfoStyle}>
               {getIcon('area')}
               <span>Diện tích: <strong>{room.size}m²</strong></span>
@@ -318,7 +322,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
                   <span style={{ 
                     position: 'absolute', 
                     left: 0, 
-                    color: '#ecc56d' 
+                    color: primaryColor 
                   }}>•</span>
                   {amenity}
                 </li>
@@ -370,7 +374,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
           width: 2px;
         }
         .room-detail .nicescroll-bg::-webkit-scrollbar-thumb {
-          background: rgba(236, 197, 109, 0.5);
+          background: ${primaryColor}80;
         }
         .room-detail .nicescroll-bg::-webkit-scrollbar-track {
           background: rgba(251, 228, 150, 0);

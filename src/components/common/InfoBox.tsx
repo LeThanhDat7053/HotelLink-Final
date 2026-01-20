@@ -1,7 +1,8 @@
 import type { FC, ReactNode } from 'react';
-import { Children } from 'react';
+import { Children, memo } from 'react';
 import { Card, Typography, Divider, Grid, Skeleton } from 'antd';
 import { usePropertyData } from '../../context/PropertyContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const { Title } = Typography;
 const { useBreakpoint } = Grid;
@@ -14,13 +15,14 @@ interface InfoBoxProps {
   isVisible?: boolean;
 }
 
-export const InfoBox: FC<InfoBoxProps> = ({ 
+export const InfoBox: FC<InfoBoxProps> = memo(({ 
   className = '',
   title,
   content,
   children,
   isVisible = true
 }) => {
+  const { primaryColor } = useTheme();
   const screens = useBreakpoint();
   const { propertyName, description, loading } = usePropertyData();
   
@@ -66,7 +68,7 @@ export const InfoBox: FC<InfoBoxProps> = ({
           <Title
             level={2}
             style={{
-              color: '#ecc56d',
+              color: primaryColor,
               fontSize: screens.md ? 21 : screens.sm ? 19 : 17,
               fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
               textTransform: 'uppercase',
@@ -88,11 +90,13 @@ export const InfoBox: FC<InfoBoxProps> = ({
       }} />
 
       {/* Page Content */}
-      <div style={{ 
-        padding: screens.md ? '18px 15px 30px 30px' : '15px 10px 20px 20px', 
-        maxHeight: screens.md ? 318 : 250, 
-        overflowY: 'auto' 
-      }}>
+      <div 
+        className="info-box-content"
+        style={{ 
+          padding: screens.md ? '18px 15px 30px 30px' : '15px 10px 20px 20px', 
+          maxHeight: screens.md ? 318 : 250, 
+          overflowY: 'auto' 
+        }}>
         {loading ? (
           <Skeleton active paragraph={{ rows: 4 }} />
         ) : hasChildren ? (
@@ -113,6 +117,6 @@ export const InfoBox: FC<InfoBoxProps> = ({
       </div>
     </Card>
   );
-};
+});
 
 InfoBox.displayName = 'InfoBox';

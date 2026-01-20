@@ -53,33 +53,6 @@ export interface AboutSection {
   images: string[];
 }
 
-// VR360 types
-export interface VR360Link {
-  id: string;
-  title: string;
-  description?: string;
-  vrUrl: string; // URL to VR360 viewer/iframe
-  thumbnailUrl?: string;
-  category: VR360CategoryType;
-  roomId?: string; // Optional: link to specific room
-  facilityId?: string; // Optional: link to facility
-  order: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type VR360CategoryType = 
-  | 'ROOM' 
-  | 'LOBBY' 
-  | 'RESTAURANT' 
-  | 'POOL' 
-  | 'GYM' 
-  | 'SPA' 
-  | 'ROOFTOP' 
-  | 'EXTERIOR' 
-  | 'OTHER';
-
 export interface RoomType {
   id: string;
   name: string;
@@ -90,7 +63,6 @@ export interface RoomType {
   bedType: string;
   images: string[];
   amenities: string[];
-  vr360Links?: VR360Link[]; // VR360 links for this room
   isAvailable: boolean;
   createdAt: string;
   updatedAt: string;
@@ -102,7 +74,6 @@ export interface Facility {
   description: string;
   category: string;
   images: string[];
-  vr360Links?: VR360Link[]; // VR360 links for this facility
   isAvailable: boolean;
 }
 
@@ -116,28 +87,3 @@ export interface CreateHotelInfoDTO {
 }
 
 export interface UpdateHotelInfoDTO extends Partial<CreateHotelInfoDTO> {}
-
-// VR360 DTOs
-export interface CreateVR360LinkDTO {
-  title: string;
-  description?: string;
-  vrUrl: string;
-  thumbnailUrl?: string;
-  category: VR360CategoryType;
-  roomId?: string;
-  facilityId?: string;
-  order?: number;
-}
-
-export interface UpdateVR360LinkDTO extends Partial<CreateVR360LinkDTO> {
-  isActive?: boolean;
-}
-
-export interface VR360ListParams {
-  category?: VR360CategoryType;
-  roomId?: string;
-  facilityId?: string;
-  isActive?: boolean;
-  page?: number;
-  limit?: number;
-}

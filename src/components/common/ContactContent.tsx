@@ -1,14 +1,8 @@
 import type { FC, CSSProperties } from 'react';
-import { memo, useState, useCallback } from 'react';
-import { Form, Input, Button, message, Spin, Alert } from 'antd';
+import { memo } from 'react';
+import { Spin, Alert } from 'antd';
+import { useTheme } from '../../context/ThemeContext';
 import type { ContactUIData } from '../../types/contact';
-
-interface ContactFormValues {
-  fullName: string;
-  phone: string;
-  email?: string;
-  message: string;
-}
 
 interface ContactContentProps {
   className?: string;
@@ -23,8 +17,7 @@ export const ContactContent: FC<ContactContentProps> = memo(({
   loading: dataLoading = false,
   error = null
 }) => {
-  const [form] = Form.useForm<ContactFormValues>();
-  const [submitting, setSubmitting] = useState(false);
+  const { primaryColor } = useTheme();
 
   // Container styles
   const containerStyle: CSSProperties = {
@@ -52,16 +45,9 @@ export const ContactContent: FC<ContactContentProps> = memo(({
     lineHeight: '22px',
   };
 
-  // Contact form container styles (thẻ 3)
-  const contactFormStyle: CSSProperties = {
-    float: 'left' as const,
-    width: '100%',
-    marginTop: 16,
-  };
-
   // Link styles
   const linkStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     textDecoration: 'none',
   };
 
@@ -70,71 +56,6 @@ export const ContactContent: FC<ContactContentProps> = memo(({
     color: '#fff',
     fontWeight: 'bold',
   };
-
-  // Input/Textarea styles
-  const inputStyle: CSSProperties = {
-    width: '100%',
-    maxWidth: '100%',
-    fontSize: 13,
-    resize: 'none' as const,
-    padding: '1px 10px 3px 10px',
-    background: 'none',
-    color: '#fff',
-    border: '1px solid rgba(236, 197, 109, 0.5)',
-    outline: 'none',
-    height: 38,
-    borderRadius: 2,
-  };
-
-  const textareaStyle: CSSProperties = {
-    ...inputStyle,
-    height: 80,
-    padding: '8px 10px',
-  };
-
-  // Submit button styles - theo CSS cf-send
-  const submitButtonStyle: CSSProperties = {
-    position: 'relative',
-    float: 'left',
-    width: '100%',
-    height: 42,
-    lineHeight: '44px',
-    marginTop: 5,
-    padding: 0,
-    color: '#fff',
-    textTransform: 'uppercase',
-    background: '#ECC56D',
-    border: 'none',
-    fontSize: 18,
-    letterSpacing: 2,
-    fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
-    borderRadius: 6,
-    overflow: 'hidden',
-    cursor: 'pointer',
-    transition: 'all 300ms linear',
-  };
-
-  // Form field wrapper style
-  const formFieldStyle: CSSProperties = {
-    marginBottom: 12,
-  };
-
-  const handleSubmit = useCallback(async (values: ContactFormValues) => {
-    setSubmitting(true);
-    try {
-      // TODO: Gọi API gửi form liên hệ
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      message.success('Gửi tin nhắn thành công! Chúng tôi sẽ liên hệ lại sớm nhất.');
-      form.resetFields();
-    } catch (error) {
-      message.error('Có lỗi xảy ra. Vui lòng thử lại sau.');
-    } finally {
-      setSubmitting(false);
-    }
-  }, [form]);
 
   // Loading state
   if (dataLoading) {

@@ -3,8 +3,7 @@ import { memo, useMemo } from 'react';
 import { Image, Typography, Grid, Spin, Alert } from 'antd';
 import { useFacilities } from '../../hooks/useFacility';
 import { useProperty } from '../../context/PropertyContext';
-import { useLanguage } from '../../context/LanguageContext';
-import type { FacilityUIData } from '../../types/facility';
+import { useLanguage } from '../../context/LanguageContext';import { useTheme } from '../../context/ThemeContext';import type { FacilityUIData } from '../../types/facility';
 
 const { Title, Paragraph } = Typography;
 const { useBreakpoint } = Grid;
@@ -25,6 +24,7 @@ export const FacilityList: FC<FacilityListProps> = memo(({
   const screens = useBreakpoint();
   const { propertyId } = useProperty();
   const { locale } = useLanguage();
+  const { primaryColor } = useTheme();
 
   // Memoize params để tránh re-render vô hạn
   const params = useMemo(() => ({
@@ -76,7 +76,7 @@ export const FacilityList: FC<FacilityListProps> = memo(({
   };
 
   const titleStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     fontSize: screens.md ? 15 : 13,
     fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
     margin: 0,
@@ -111,7 +111,7 @@ export const FacilityList: FC<FacilityListProps> = memo(({
     return (
       <Alert
         title="Lỗi"
-        message={error}
+        message={error instanceof Error ? error.message : 'Có lỗi xảy ra'}
         type="error"
         showIcon
         style={{ margin: '16px 0' }}
@@ -133,8 +133,12 @@ export const FacilityList: FC<FacilityListProps> = memo(({
 
   return (
     <div className={`facility-list ${className}`} style={wrapperStyle}>
-      {facilities.map((facility, index) => (
-        <article 
+      {facilities.map((facility, index) => {
+        // Generate dynamic fallback SVG with primaryColor
+        const fallbackSvg = `data:image/svg+xml;base64,${btoa(`<svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="70" fill="#1a1a2e"/><text x="50" y="40" fill="${primaryColor}" text-anchor="middle" font-size="8">Facility</text></svg>`)}`;
+        
+        return (
+          <article 
           key={facility.id} 
           className="facility-item"
           style={{
@@ -153,7 +157,7 @@ export const FacilityList: FC<FacilityListProps> = memo(({
               height="100%"
               style={{ objectFit: 'cover' }}
               preview={false}
-              fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiB2aWV3Qm94PSIwIDAgMTAwIDcwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiMxYTFhMmUiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZpbGw9IiNFQ0M1NkQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iOCI+RmFjaWxpdHk8L3RleHQ+PC9zdmc+"
+              fallback={fallbackSvg}
             />
           </div>
 
@@ -173,7 +177,8 @@ export const FacilityList: FC<FacilityListProps> = memo(({
             </Paragraph>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 });

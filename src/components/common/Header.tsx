@@ -5,7 +5,7 @@ import {
   DownOutlined,
   CloseOutlined,
   MenuOutlined,
-  FacebookOutlined,
+  HomeOutlined,
   TwitterOutlined,
   YoutubeOutlined,
   InstagramOutlined
@@ -13,6 +13,7 @@ import {
 import { Dropdown, Button, Space, Grid } from 'antd';
 import type { MenuProps } from 'antd';
 import { useLanguage, type Language } from '../../context/LanguageContext';
+import { useTheme } from '../../context/ThemeContext';
 import { getMenuTranslations } from '../../constants/translations';
 import { useContact } from '../../hooks/useContact';
 import { usePropertyContext } from '../../context/PropertyContext';
@@ -35,6 +36,7 @@ interface MenuItem {
 export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuToggle }) => {
   const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
   const { currentLang, availableLocales, setLanguage, locale } = useLanguage();
+  const { primaryColor } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const screens = useBreakpoint();
@@ -126,7 +128,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     height: 37,
     background: 'rgba(0, 0, 0, 0.3)',
     cursor: 'pointer',
-    border: '1px solid rgba(236, 197, 109, 0.6)',
+    border: `1px solid ${primaryColor}99`,
     borderRadius: 12,
     zIndex: 10,
   };
@@ -150,7 +152,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     width: 62,
     height: 62,
     overflow: 'hidden',
-    background: '#ecc56d',
+    background: 'var(--primary-color, #ecc56d)', // Dùng CSS variable để tránh flash
     border: 'none',
     borderRadius: 0,
     padding: 0,
@@ -181,8 +183,46 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     textDecoration: 'none',
   };
 
+  // Home button style - Góc trái trên
+  const homeBtnStyle: CSSProperties = {
+    position: 'fixed',
+    top: screens.md ? 12 : 10,
+    left: screens.md ? 15 : 10,
+    width: screens.md ? 50 : 44,
+    height: screens.md ? 50 : 44,
+    background: 'rgba(0, 0, 0, 0.68)',
+    backdropFilter: 'blur(2px)',
+    WebkitBackdropFilter: 'blur(2px)',
+    border: 'none',
+    borderRadius: 14,
+    cursor: 'pointer',
+    transition: 'all 300ms ease',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 61,
+    pointerEvents: 'auto',
+  };
+
   return (
     <header style={headerStyle}>
+      {/* Home Button - Góc trái trên */}
+      <Link
+        to={getLocalizedPath('/', locale)}
+        style={homeBtnStyle}
+        onMouseEnter={(e) => {
+          const icon = e.currentTarget.querySelector('.home-icon') as HTMLElement;
+          if (icon) icon.style.color = primaryColor;
+        }}
+        onMouseLeave={(e) => {
+          const icon = e.currentTarget.querySelector('.home-icon') as HTMLElement;
+          if (icon) icon.style.color = '#fff';
+        }}
+        title="Trang chủ"
+      >
+        <HomeOutlined className="home-icon" style={{ fontSize: screens.md ? 22 : 20, color: '#fff', transition: 'color 200ms ease' }} />
+      </Link>
+
       <style>{`
         /* Primary Menu Items CSS */
         .primary-menu {
@@ -212,7 +252,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         }
 
         .primary-menu .menu-item a:hover {
-          color: #ECC56D;
+          color: ${primaryColor};
         }
 
         .primary-menu .menu-item a::before {
@@ -233,7 +273,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         }
 
         .primary-menu .menu-item a.active {
-          color: #ECC56D;
+          color: ${primaryColor};
         }
 
         /* Menu item có submenu */
@@ -255,7 +295,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         }
 
         .primary-menu .menu-item.has-submenu > div:hover {
-          color: #ECC56D;
+          color: ${primaryColor};
         }
 
         /* Submenu CSS */
@@ -286,7 +326,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         } 
         
         ::-webkit-scrollbar-thumb {
-          background: rgba(236, 197, 109, 0.5);
+          background: ${primaryColor}80;
         }
         
         ::-webkit-scrollbar-track {
@@ -296,7 +336,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         .lang-dropdown-custom .ant-dropdown-menu {
           background: #000000ad !important;
           backdrop-filter: blur(2px);
-          border: 1px solid rgba(236, 197, 109, 0.3) !important;
+          border: 1px solid ${primaryColor}4D !important;
           borderRadius: 12px !important;
           padding: 8px 0 !important;
           marginTop: 8px !important;
@@ -305,7 +345,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         .lang-dropdown-custom .ant-dropdown-menu-item {
           color: rgba(255, 255, 255, 0.8) !important;
           padding: 10px 16px !important;
-          border-bottom: 1px solid rgba(236, 197, 109, 0.15);
+          border-bottom: 1px solid ${primaryColor}26;
           borderRadius: 0 !important;
         }
 
@@ -314,8 +354,8 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
         }
 
         .lang-dropdown-custom .ant-dropdown-menu-item:hover {
-          background: rgba(236, 197, 109, 0.15) !important;
-          color: #ECC56D !important;
+          background: ${primaryColor}26 !important;
+          color: ${primaryColor} !important;
         }
       `}</style>
 
@@ -345,8 +385,8 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
             <Button
               onClick={() => onMenuToggle?.(!isMenuExpanded)}
               style={toggleBtnStyle}
-              onMouseEnter={(e) => e.currentTarget.style.background = '#d4a855'}
-              onMouseLeave={(e) => e.currentTarget.style.background = '#ecc56d'}
+              onMouseEnter={(e) => e.currentTarget.style.background = `var(--primary-color, #ecc56d)dd`}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'var(--primary-color, #ecc56d)'}
               icon={
                 isMenuExpanded ? (
                   <CloseOutlined style={{ fontSize: 20, color: '#fff' }} />
@@ -449,7 +489,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#ecc56d'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
                   onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                   title="Facebook"
                 >
@@ -464,7 +504,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#ecc56d'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
                   onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                   title="Instagram"
                 >
@@ -477,7 +517,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#ecc56d'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
                   onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                   title="Twitter"
                 >
@@ -490,7 +530,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = '#ecc56d'}
+                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
                   onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
                   title="YouTube"
                 >

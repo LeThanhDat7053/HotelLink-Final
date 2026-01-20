@@ -2,6 +2,7 @@ import type { FC, CSSProperties } from 'react';
 import { memo, useState, useEffect } from 'react';
 import { Button, Grid, Spin, Alert, Image } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useTheme } from '../../context/ThemeContext';
 import { ImageGalleryViewer } from './ImageGalleryViewer';
 import type { ServiceUIData } from '../../types/service';
 
@@ -24,8 +25,7 @@ export const ServiceDetail: FC<ServiceDetailProps> = memo(({
   onVrLinkChange,
   className = '' 
 }) => {
-  const screens = useBreakpoint();
-  const [galleryOpen, setGalleryOpen] = useState(false);
+  const screens = useBreakpoint();  const { primaryColor } = useTheme();  const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
 
   const openGallery = (index: number) => {
@@ -63,8 +63,8 @@ export const ServiceDetail: FC<ServiceDetailProps> = memo(({
   // Back button style
   const backButtonStyle: CSSProperties = {
     marginBottom: 16,
-    color: '#ecc56d',
-    borderColor: 'rgba(236, 197, 109, 0.5)',
+    color: primaryColor,
+    borderColor: `${primaryColor}80`,
     backgroundColor: 'transparent',
     fontSize: screens.md ? 13 : 12,
   };
@@ -162,7 +162,7 @@ export const ServiceDetail: FC<ServiceDetailProps> = memo(({
         {/* Gallery images */}
         {galleryImages.length > 0 && (
           <div style={{ marginTop: 16 }}>
-            <h4 style={{ color: '#ecc56d', fontSize: screens.md ? 15 : 13, marginBottom: 8 }}>Hình ảnh</h4>
+            <h4 style={{ color: primaryColor, fontSize: screens.md ? 15 : 13, marginBottom: 8 }}>Hình ảnh</h4>
             <div style={galleryContainerStyle}>
               {galleryImages.map((img, index) => (
                 <div

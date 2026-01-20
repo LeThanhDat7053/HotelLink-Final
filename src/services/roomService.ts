@@ -77,8 +77,8 @@ export const roomService = {
       .sort((a, b) => a.sort_order - b.sort_order);
     const galleryImages = galleryMedia.map(m => mediaService.getMediaViewUrl(m.media_id));
 
-    // Lấy VR link - ưu tiên vr_link top-level, fallback về attributes_json.vr_link
-    const vrLink = room.vr_link || room.attributes_json?.vr_link || null;
+    // Lấy VR link từ top level (room.vr_link), KHÔNG lấy từ attributes_json
+    const vrLink = room.vr_link || null;
 
     return {
       id: room.id,

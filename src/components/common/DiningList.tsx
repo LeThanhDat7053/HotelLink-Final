@@ -3,8 +3,7 @@ import { memo, useMemo } from 'react';
 import { Image, Typography, Grid, Spin, Alert } from 'antd';
 import { useDinings } from '../../hooks/useDining';
 import { useProperty } from '../../context/PropertyContext';
-import { useLanguage } from '../../context/LanguageContext';
-import type { DiningUIData } from '../../types/dining';
+import { useLanguage } from '../../context/LanguageContext';import { useTheme } from '../../context/ThemeContext';import type { DiningUIData } from '../../types/dining';
 
 const { Title, Paragraph } = Typography;
 const { useBreakpoint } = Grid;
@@ -25,6 +24,7 @@ export const DiningList: FC<DiningListProps> = memo(({
   const screens = useBreakpoint();
   const { propertyId } = useProperty();
   const { locale } = useLanguage();
+  const { primaryColor } = useTheme();
 
   // Memoize params để tránh re-render vô hạn
   const params = useMemo(() => ({
@@ -76,7 +76,7 @@ export const DiningList: FC<DiningListProps> = memo(({
   };
 
   const titleStyle: CSSProperties = {
-    color: '#ecc56d',
+    color: primaryColor,
     fontSize: screens.md ? 15 : 13,
     fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
     margin: 0,
@@ -137,8 +137,12 @@ export const DiningList: FC<DiningListProps> = memo(({
 
   return (
     <div className={`dining-list ${className}`} style={wrapperStyle}>
-      {dinings.map((dining, index) => (
-        <article 
+      {dinings.map((dining, index) => {
+        // Generate dynamic fallback SVG with primaryColor
+        const fallbackSvg = `data:image/svg+xml;base64,${btoa(`<svg width="100" height="70" viewBox="0 0 100 70" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="70" fill="#1a1a2e"/><text x="50" y="40" fill="${primaryColor}" text-anchor="middle" font-size="10">Dining</text></svg>`)}`;
+        
+        return (
+          <article 
           key={dining.id} 
           className="dining-item"
           style={{
@@ -151,13 +155,13 @@ export const DiningList: FC<DiningListProps> = memo(({
           {/* Thumbnail - Bên trái */}
           <div className="dining-thumbnail" style={thumbnailStyle}>
             <Image
-              src={dining.primaryImage || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiB2aWV3Qm94PSIwIDAgMTAwIDcwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiMxYTFhMmUiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZpbGw9IiNFQ0M1NkQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkRpbmluZzwvdGV4dD48L3N2Zz4='}
+              src={dining.primaryImage || undefined}
               alt={dining.name}
               width="100%"
               height="100%"
               style={{ objectFit: 'cover' }}
               preview={false}
-              fallback="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjcwIiB2aWV3Qm94PSIwIDAgMTAwIDcwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iNzAiIGZpbGw9IiMxYTFhMmUiLz48dGV4dCB4PSI1MCIgeT0iNDAiIGZpbGw9IiNFQ0M1NkQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiPkRpbmluZzwvdGV4dD48L3N2Zz4="
+              fallback={fallbackSvg}
             />
           </div>
 
@@ -177,7 +181,8 @@ export const DiningList: FC<DiningListProps> = memo(({
             </Paragraph>
           </div>
         </article>
-      ))}
+        );
+      })}
     </div>
   );
 });

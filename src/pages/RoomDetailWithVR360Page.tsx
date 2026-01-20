@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useVR360ByRoom } from '../hooks/useVR360';
 import { VR360Modal } from '../components/common';
-import type { VR360Link } from '../types/hotel';
+import type { VR360Link } from '../types/api';
 
 // Mock room data (trong thực tế sẽ fetch từ API)
 const mockRoomData = {
