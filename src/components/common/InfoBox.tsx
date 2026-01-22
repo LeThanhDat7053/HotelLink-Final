@@ -13,6 +13,7 @@ interface InfoBoxProps {
   content?: string;
   children?: ReactNode;
   isVisible?: boolean;
+  onClose?: () => void; // Callback để đóng InfoBox (cho mobile)
 }
 
 export const InfoBox: FC<InfoBoxProps> = memo(({ 
@@ -20,11 +21,24 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
   title,
   content,
   children,
-  isVisible = true
+  isVisible = true,
+  onClose
 }) => {
   const { primaryColor } = useTheme();
   const screens = useBreakpoint();
   const { propertyName, description, loading } = usePropertyData();
+  
+  // Chỉ hiển thị nút close trên mobile
+  const isMobile = !screens.md;
+  
+  // Handler cho nút đóng
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onClose) {
+      onClose();
+    }
+  };
   
   // Use props if provided, otherwise use API data
   const displayTitle = title || propertyName;
@@ -60,8 +74,13 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         body: { padding: 0 }
       }}
     >
-      {/* Page Title */}
-      <div style={{ padding: screens.md ? '25px 30px 16px 30px' : '20px 20px 12px 20px' }}>
+      {/* Page Title với nút đóng */}
+      <div style={{ 
+        padding: screens.md ? '25px 30px 16px 30px' : '20px 20px 12px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}>
         {loading ? (
           <Skeleton.Input active size="small" style={{ width: 200 }} />
         ) : (
@@ -75,10 +94,39 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
               letterSpacing: 1,
               margin: 0,
               fontWeight: 'normal',
+              flex: 1,
             }}
           >
             {displayTitle}
           </Title>
+        )}
+        
+        {/* Nút đóng - chỉ hiển thị trên mobile */}
+        {isMobile && onClose && (
+          <a
+            className="close-info-btn"
+            title="Ẩn thông tin"
+            onClick={handleCloseClick}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 22,
+              height: 22,
+              background: primaryColor,
+              color: '#fff',
+              borderRadius: 22,
+              transition: 'all 160ms linear',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              fontSize: 12,
+              fontWeight: 'bold',
+              marginLeft: 10,
+              flexShrink: 0,
+            }}
+          >
+            ✕
+          </a>
         )}
       </div>
       

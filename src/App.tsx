@@ -26,6 +26,7 @@ const { useBreakpoint } = Grid;
 const AppLayout: FC = () => {
   const location = useLocation();
   const [isMenuExpanded, setIsMenuExpanded] = useState(false);
+  const [isInfoBoxVisible, setIsInfoBoxVisible] = useState(true); // State riêng cho mobile InfoBox
   const [roomTitle, setRoomTitle] = useState<string | null>(null);
   const [diningTitle, setDiningTitle] = useState<string | null>(null);
   const [facilityTitle, setFacilityTitle] = useState<string | null>(null);
@@ -210,12 +211,23 @@ const AppLayout: FC = () => {
   const mediaType = useMemo(() => getMediaType(vr360Url || ''), [vr360Url]);
   
   // Desktop: InfoBox hiện khi menu mở
-  // Mobile: InfoBox hiện khi menu đóng
-  // Khi menu đóng, InfoBox luôn đóng (kể cả trang chủ)
+  // Mobile: InfoBox có state riêng, ban đầu hiện, có nút để ẩn
   const isDesktop = screens.md;
   const shouldShowInfoBox = isDesktop 
     ? isMenuExpanded 
-    : !isMenuExpanded;
+    : isInfoBoxVisible && !isMenuExpanded; // Mobile: hiện khi isInfoBoxVisible=true VÀ menu đóng
+  
+  // Callback để đóng InfoBox trên mobile
+  const handleCloseInfoBox = useCallback(() => {
+    setIsInfoBoxVisible(false);
+  }, []);
+  
+  // Khi menu đóng lại trên mobile, mở lại InfoBox
+  useEffect(() => {
+    if (!isDesktop && !isMenuExpanded) {
+      setIsInfoBoxVisible(true);
+    }
+  }, [isMenuExpanded, isDesktop]);
 
   return (
     <Layout 
@@ -313,10 +325,11 @@ const AppLayout: FC = () => {
       <Header isMenuExpanded={isMenuExpanded} onMenuToggle={setIsMenuExpanded} />
 
       {/* InfoBox - Fixed Bottom Left */}
-      {/* Desktop: Hiện khi menu mở HOẶC trang chủ | Mobile: Hiện khi menu đóng */}
+      {/* Desktop: Hiện khi menu mở | Mobile: Có nút X để ẩn */}
       <InfoBox 
         title={pageTitle || undefined}
         isVisible={shouldShowInfoBox}
+        onClose={handleCloseInfoBox}
       >
         {/* Trang chủ: Hiển thị Property Posts */}
         {isHomePage && <PropertyPostsContent />}
