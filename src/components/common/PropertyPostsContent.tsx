@@ -1,6 +1,10 @@
 /**
  * PropertyPostsContent Component
  * Hiển thị property posts với locale-aware content
+ * 
+ * Logic: Parse HTML content để tách:
+ * - Title: Lấy từ thẻ <h1>, <h2>, <h3> đầu tiên trong content
+ * - Content: Phần còn lại sau thẻ heading
  */
 
 import { Skeleton } from 'antd';
@@ -19,6 +23,35 @@ const getPostTranslation = (post: PropertyPost, locale: string): PostTranslation
   const translation = post.translations.find(t => t.locale === locale);
   
   return translation || null;
+};
+
+/**
+ * Parse HTML content để tách title từ thẻ heading và content còn lại
+ * @param htmlContent - HTML string từ API
+ * @returns { title: string | null, content: string }
+ */
+const parsePostContent = (htmlContent: string): { title: string | null; content: string } => {
+  if (!htmlContent) {
+    return { title: null, content: '' };
+  }
+
+  // Regex để tìm thẻ <h1>, <h2>, hoặc <h3> đầu tiên
+  const headingRegex = /^(\s*<h[1-3][^>]*>(.*?)<\/h[1-3]>)/i;
+  const match = htmlContent.match(headingRegex);
+
+  if (match) {
+    // Lấy text bên trong thẻ heading (bỏ HTML tags)
+    const titleHtml = match[2];
+    const title = titleHtml.replace(/<[^>]*>/g, '').trim();
+    
+    // Content là phần còn lại sau thẻ heading
+    const content = htmlContent.replace(match[1], '').trim();
+    
+    return { title, content };
+  }
+
+  // Không tìm thấy heading -> toàn bộ là content
+  return { title: null, content: htmlContent };
 };
 
 export const PropertyPostsContent = () => {
@@ -53,20 +86,23 @@ export const PropertyPostsContent = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {filteredPosts.map((post) => {
-        const content = getPostTranslation(post, locale);
+        const translation = getPostTranslation(post, locale);
         
-        if (!content) return null;
+        if (!translation) return null;
+
+        // Parse content để tách title và nội dung
+        const { content } = parsePostContent(translation.content);
 
         return (
           <div key={`${post.id}-${locale}`}>
-            {/* Content - HTML rendered */}
+            {/* Content - HTML rendered (không có heading) */}
             <div
               style={{
                 color: 'rgba(255, 255, 255, 0.8)',
                 fontSize: '14px',
                 lineHeight: '22px',
               }}
-              dangerouslySetInnerHTML={{ __html: content.content }}
+              dangerouslySetInnerHTML={{ __html: content }}
             />
           </div>
         );

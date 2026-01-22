@@ -72,6 +72,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
   // Menu items với translations động theo locale
   const menuItems: MenuItem[] = useMemo(() => {
     const allItems = [
+      { path: '/', label: t.home }, // Trang chủ
       { path: '/gioi-thieu', label: t.about },
       { path: '/phong-nghi', label: t.rooms },
       { path: '/am-thuc', label: t.dining },
@@ -224,46 +225,9 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     textDecoration: 'none',
   };
 
-  // Home button style - Góc trái trên
-  const homeBtnStyle: CSSProperties = {
-    position: 'fixed',
-    top: screens.md ? 12 : 10,
-    left: screens.md ? 15 : 10,
-    width: screens.md ? 50 : 44,
-    height: screens.md ? 50 : 44,
-    background: 'rgba(0, 0, 0, 0.68)',
-    backdropFilter: 'blur(2px)',
-    WebkitBackdropFilter: 'blur(2px)',
-    border: 'none',
-    borderRadius: 14,
-    cursor: 'pointer',
-    transition: 'all 300ms ease',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 61,
-    pointerEvents: 'auto',
-  };
 
   return (
     <header style={headerStyle}>
-      {/* Home Button - Góc trái trên */}
-      <Link
-        to={getLocalizedPath('/', locale)}
-        style={homeBtnStyle}
-        onMouseEnter={(e) => {
-          const icon = e.currentTarget.querySelector('.home-icon') as HTMLElement;
-          if (icon) icon.style.color = primaryColor;
-        }}
-        onMouseLeave={(e) => {
-          const icon = e.currentTarget.querySelector('.home-icon') as HTMLElement;
-          if (icon) icon.style.color = '#fff';
-        }}
-        title="Trang chủ"
-      >
-        <HomeOutlined className="home-icon" style={{ fontSize: screens.md ? 22 : 20, color: '#fff', transition: 'color 200ms ease' }} />
-      </Link>
-
       <style>{`
         /* Primary Menu Items CSS */
         .primary-menu {

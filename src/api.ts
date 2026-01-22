@@ -7,6 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const API_USERNAME = import.meta.env.VITE_API_USERNAME;
 const API_PASSWORD = import.meta.env.VITE_API_PASSWORD;
 const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
+const PROPERTY_ID = import.meta.env.VITE_PROPERTY_ID;
 
 // Mở rộng kiểu config để có thể đánh dấu request đã được thử lại
 interface AuthRequestConfig extends InternalAxiosRequestConfig {
@@ -105,6 +106,10 @@ const ensureToken = async (): Promise<string> => {
 api.interceptors.request.use(async (config) => {
   if (TENANT_CODE) {
     config.headers["x-tenant-code"] = TENANT_CODE;
+  }
+
+  if (PROPERTY_ID) {
+    config.headers["x-property-id"] = PROPERTY_ID;
   }
 
   // Chặn và chờ lấy token

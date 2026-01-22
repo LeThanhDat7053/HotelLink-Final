@@ -6,6 +6,7 @@
  */
 
 export interface MenuTranslations {
+  home: string;            // Trang chủ
   about: string;           // Giới thiệu
   rooms: string;           // Phòng nghỉ
   dining: string;          // Ẩm thực
@@ -78,6 +79,7 @@ export interface MenuTranslations {
 export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
   // Vietnamese - Tiếng Việt
   vi: {
+    home: 'TRANG CHỦ',
     about: 'GIỚI THIỆU',
     rooms: 'PHÒNG NGHỈ',
     dining: 'ẨM THỰC',
@@ -146,6 +148,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // English
   en: {
+    home: 'HOME',
     about: 'ABOUT',
     rooms: 'ROOMS',
     dining: 'DINING',
@@ -214,6 +217,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Arabic - العربية
   ar: {
+    home: 'الصفحة الرئيسية',
     about: 'نبذة عنا',
     rooms: 'الغرف',
     dining: 'المطاعم',
@@ -274,6 +278,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // German - Deutsch
   de: {
+    home: 'STARTSEITE',
     about: 'ÜBER UNS',
     rooms: 'ZIMMER',
     dining: 'GASTRONOMIE',
@@ -334,6 +339,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Spanish - Español
   es: {
+    home: 'INICIO',
     about: 'ACERCA DE',
     rooms: 'HABITACIONES',
     dining: 'GASTRONOMÍA',
@@ -394,6 +400,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // French - Français
   fr: {
+    home: 'ACCUEIL',
     about: 'À PROPOS',
     rooms: 'CHAMBRES',
     dining: 'RESTAURATION',
@@ -454,6 +461,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Hindi - हिंदी
   hi: {
+    home: 'होम',
     about: 'परिचय',
     rooms: 'कमरे',
     dining: 'भोजन',
@@ -514,6 +522,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Indonesian - Bahasa Indonesia
   id: {
+    home: 'BERANDA',
     about: 'TENTANG',
     rooms: 'KAMAR',
     dining: 'KULINER',
@@ -574,6 +583,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Italian - Italiano
   it: {
+    home: 'HOME',
     about: 'CHI SIAMO',
     rooms: 'CAMERE',
     dining: 'RISTORAZIONE',
@@ -634,6 +644,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Japanese - 日本語
   ja: {
+    home: 'ホーム',
     about: '紹介',
     rooms: '客室',
     dining: 'ダイニング',
@@ -694,6 +705,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Korean - 한국어
   ko: {
+    home: '홈',
     about: '소개',
     rooms: '객실',
     dining: '다이닝',

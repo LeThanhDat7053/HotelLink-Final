@@ -4,9 +4,9 @@
  * Cung cấp property info (name, contact...) cho toàn bộ app
  * 
  * Flow:
- * 1. Fetch danh sách properties từ /properties/
- * 2. Tìm property theo VITE_PROPERTY_CODE từ .env.local
- * 3. Để đổi property, chỉ cần sửa VITE_PROPERTY_CODE và restart dev server
+ * 1. Lấy VITE_PROPERTY_ID từ .env
+ * 2. Fetch property detail từ /properties/{id}
+ * 3. Để đổi property, chỉ cần sửa VITE_PROPERTY_ID và restart dev server
  */
 
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
@@ -32,22 +32,16 @@ export const PropertyProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLoading(true);
       setError(null);
 
-      // 1. Fetch all properties in tenant
-      const propertiesList = await propertyService.getProperties();
-
-      // 2. Get property code from env
-      const propertyCode = import.meta.env.VITE_PROPERTY_CODE;
-      if (!propertyCode) {
-        throw new Error('VITE_PROPERTY_CODE is not defined in .env.local');
+      // Get property ID from env
+      const propertyId = import.meta.env.VITE_PROPERTY_ID;
+      if (!propertyId) {
+        throw new Error('VITE_PROPERTY_ID is not defined in .env');
       }
 
-      // 3. Find property by code
-      const foundProperty = propertiesList.find(p => p.code === propertyCode);
-      if (!foundProperty) {
-        throw new Error(`Property with code "${propertyCode}" not found. Available: ${propertiesList.map(p => p.code).join(', ')}`);
-      }
-
-      setProperty(foundProperty);
+      // Fetch property by ID directly
+      const propertyData = await propertyService.getPropertyById(Number(propertyId));
+      
+      setProperty(propertyData);
 
     } catch (err) {
       console.error('[PropertyContext] Failed to fetch property:', err);

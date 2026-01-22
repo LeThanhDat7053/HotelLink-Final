@@ -2,6 +2,27 @@ import { useState, useEffect } from 'react';
 import { propertyPostService } from '../services/propertyPostService';
 import type { PropertyPost, PostTranslation } from '../types/api';
 
+/**
+ * Parse HTML content để tách title từ thẻ heading
+ * @param htmlContent - HTML string từ API
+ * @returns title string hoặc null
+ */
+const extractTitleFromContent = (htmlContent: string): string | null => {
+  if (!htmlContent) return null;
+
+  // Regex để tìm thẻ <h1>, <h2>, hoặc <h3> đầu tiên
+  const headingRegex = /^(\s*<h[1-3][^>]*>(.*?)<\/h[1-3]>)/i;
+  const match = htmlContent.match(headingRegex);
+
+  if (match) {
+    // Lấy text bên trong thẻ heading (bỏ HTML tags)
+    const titleHtml = match[2];
+    return titleHtml.replace(/<[^>]*>/g, '').trim();
+  }
+
+  return null;
+};
+
 interface UsePropertyPostsReturn {
   posts: PropertyPost[];
   loading: boolean;
@@ -45,7 +66,8 @@ export const usePropertyPosts = (propertyId: number | null): UsePropertyPostsRet
     fetchPosts();
   }, [propertyId]);
 
-  // Helper function để lấy title của post đầu tiên theo locale (không fallback)
+  // Helper function để lấy title của post đầu tiên theo locale
+  // Title được parse từ thẻ <h1>/<h2>/<h3> trong content, không dùng field title của API
   const getFirstPostTitle = (locale: string): string | null => {
     if (posts.length === 0) return null;
     
@@ -54,8 +76,10 @@ export const usePropertyPosts = (propertyId: number | null): UsePropertyPostsRet
       if (!post.translations || post.translations.length === 0) continue;
       
       const translation = post.translations.find(t => t.locale === locale);
-      if (translation && translation.title) {
-        return translation.title;
+      if (translation && translation.content) {
+        // Parse title từ thẻ heading trong content
+        const title = extractTitleFromContent(translation.content);
+        if (title) return title;
       }
     }
     
