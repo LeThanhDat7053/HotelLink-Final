@@ -766,6 +766,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Malay - Bahasa Melayu
   ms: {
+    home: 'LAMAN UTAMA',
     about: 'MENGENAI',
     rooms: 'BILIK',
     dining: 'MAKAN',
@@ -826,6 +827,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Portuguese - Português
   pt: {
+    home: 'INÍCIO',
     about: 'SOBRE',
     rooms: 'QUARTOS',
     dining: 'GASTRONOMIA',
@@ -886,6 +888,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Russian - Русский
   ru: {
+    home: 'ГЛАВНАЯ',
     about: 'О НАС',
     rooms: 'НОМЕРА',
     dining: 'РЕСТОРАНЫ',
@@ -946,6 +949,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Tamil - தமிழ்
   ta: {
+    home: 'முகப்பு',
     about: 'பற்றி',
     rooms: 'அறைகள்',
     dining: 'உணவகம்',
@@ -1006,6 +1010,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Thai - ภาษาไทย
   th: {
+    home: 'หน้าหลัก',
     about: 'เกี่ยวกับเรา',
     rooms: 'ห้องพัก',
     dining: 'ร้านอาหาร',
@@ -1066,6 +1071,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Filipino/Tagalog
   tl: {
+    home: 'TAHANAN',
     about: 'TUNGKOL',
     rooms: 'MGA SILID',
     dining: 'KAINAN',
@@ -1126,6 +1132,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Cantonese - 廣語 (Hong Kong) - hk code
   hk: {
+    home: '主頁',
     about: '關於我們',
     rooms: '客房',
     dining: '餐飲',
@@ -1186,6 +1193,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Cantonese - 粵語 - yue code (API code)
   yue: {
+    home: '主頁',
     about: '關於我們',
     rooms: '客房',
     dining: '餐飲',
@@ -1246,6 +1254,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Chinese Simplified - 简体中文
   'zh-CN': {
+    home: '首页',
     about: '关于我们',
     rooms: '客房',
     dining: '餐饮',
@@ -1306,6 +1315,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Alias for zh-CN
   zh: {
+    home: '首页',
     about: '关于我们',
     rooms: '客房',
     dining: '餐饮',
@@ -1366,6 +1376,7 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
 
   // Chinese Traditional - 中文（繁體）
   'zh-TW': {
+    home: '首頁',
     about: '關於我們',
     rooms: '客房',
     dining: '餐飲',

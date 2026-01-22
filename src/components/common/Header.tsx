@@ -5,7 +5,6 @@ import {
   DownOutlined,
   CloseOutlined,
   MenuOutlined,
-  HomeOutlined,
   TwitterOutlined,
   YoutubeOutlined,
   InstagramOutlined
