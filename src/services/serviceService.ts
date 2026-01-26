@@ -52,6 +52,9 @@ export function transformServiceForUI(
     // VR360
     vrLink: service.vr_link,
     
+    // Booking
+    bookingUrl: service.booking_url,
+    
     // Meta
     display_order: service.display_order,
     created_at: service.created_at,

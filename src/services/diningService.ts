@@ -51,6 +51,9 @@ export function transformDiningForUI(
     // VR360
     vrLink: dining.vr_link,
     
+    // Booking
+    bookingUrl: dining.booking_url,
+    
     // Meta
     display_order: dining.display_order,
     created_at: dining.created_at,

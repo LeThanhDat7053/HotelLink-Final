@@ -40,6 +40,13 @@ export const ServiceDetail: FC<ServiceDetailProps> = memo(({
     setGalleryOpen(false);
   };
 
+  // Handler nút Đặt ngay - chỉ hiện khi có booking_url
+  const handleBooking = () => {
+    if (service?.bookingUrl) {
+      window.open(service.bookingUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   // Đổi VR360 background khi vào chi tiết dịch vụ
   useEffect(() => {
     if (service?.vrLink && onVrLinkChange) {
@@ -185,6 +192,26 @@ export const ServiceDetail: FC<ServiceDetailProps> = memo(({
             {paragraph}
           </p>
         ))}
+
+        {/* Nút Đặt ngay - chỉ hiện khi có booking_url */}
+        {service.bookingUrl && (
+          <Button 
+            type="primary"
+            size="large"
+            onClick={handleBooking}
+            style={{ 
+              background: primaryColor, 
+              borderColor: primaryColor,
+              color: '#000',
+              fontWeight: 600,
+              fontSize: screens.md ? 14 : 13,
+              marginTop: 16,
+              width: '100%',
+            }}
+          >
+            {t.bookNow}
+          </Button>
+        )}
 
         {/* Gallery images */}
         {galleryImages.length > 0 && (

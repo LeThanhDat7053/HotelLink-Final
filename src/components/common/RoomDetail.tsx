@@ -69,11 +69,24 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
     setGalleryOpen(false);
   }, []);
 
-  // Chuyển đến trang đặt phòng - redirect to external booking URL in new tab
+  // Chuyển đến trang đặt phòng
+  // Logic: Ưu tiên booking_url của phòng → Fallback về settings.booking_url
   const handleBooking = useCallback(() => {
-    if (!settings?.booking_url) return;
-    window.open(settings.booking_url, '_blank', 'noopener,noreferrer');
-  }, [settings?.booking_url]);
+    // 1. Ưu tiên: Nếu phòng có booking_url riêng, dùng nó
+    if (room?.bookingUrl) {
+      window.open(room.bookingUrl, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    
+    // 2. Fallback: Dùng booking_url từ settings (global)
+    if (settings?.booking_url) {
+      window.open(settings.booking_url, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    
+    // 3. Không có booking URL nào
+    console.warn('No booking URL available');
+  }, [room?.bookingUrl, settings?.booking_url]);
 
   // Đổi VR360 background khi vào chi tiết phòng
   useEffect(() => {

@@ -105,6 +105,7 @@ export const roomService = {
       status: room.status,
       amenities,
       vrLink,
+      bookingUrl: room.booking_url, // URL đặt phòng riêng
       primaryImage,
       galleryImages,
       displayOrder: room.display_order,

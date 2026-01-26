@@ -43,6 +43,13 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
     setGalleryOpen(false);
   };
 
+  // Handler nút Đặt ngay - chỉ hiện khi có booking_url
+  const handleBooking = () => {
+    if (dining?.bookingUrl) {
+      window.open(dining.bookingUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   // Đổi VR360 background khi vào chi tiết ẩm thực
   useEffect(() => {
     if (dining?.vrLink && onVrLinkChange) {
@@ -197,6 +204,26 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
           }}>
             {t.operatingHours}: <strong>{dining.operatingHours}</strong>
           </p>
+        )}
+
+        {/* Nút Đặt ngay - chỉ hiện khi có booking_url */}
+        {dining.bookingUrl && (
+          <Button 
+            type="primary"
+            size="large"
+            onClick={handleBooking}
+            style={{ 
+              background: primaryColor, 
+              borderColor: primaryColor,
+              color: '#000',
+              fontWeight: 600,
+              fontSize: screens.md ? 14 : 13,
+              marginTop: 16,
+              width: '100%',
+            }}
+          >
+            {t.bookNow}
+          </Button>
         )}
 
         {/* Gallery Images nếu có */}

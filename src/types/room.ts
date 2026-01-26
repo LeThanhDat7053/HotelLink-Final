@@ -57,6 +57,7 @@ export interface RoomResponse {
   size_sqm: number; // Diện tích (m²)
   price_per_night: number; // Giá phòng/đêm
   vr_link: string | null; // VR360 link từ top level (DÙNG CÁI NÀY)
+  booking_url: string | null; // Booking URL riêng cho từng phòng
   status: string; // available, occupied, maintenance, etc.
   amenities_json: string[]; // Danh sách tiện nghi
   attributes_json: RoomAttributes; // Metadata (có vr_link nhưng BỎ QUA)
@@ -106,6 +107,7 @@ export interface RoomUIData {
   status: string;
   amenities: string[];
   vrLink: string | null;
+  bookingUrl: string | null; // URL đặt phòng riêng cho phòng này
   primaryImage: string | null; // URL ảnh đại diện (is_primary=true)
   galleryImages: string[]; // URLs ảnh chi tiết (is_primary=false)
   displayOrder: number;

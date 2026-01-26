@@ -24,6 +24,7 @@ export interface DiningResponse {
   code: string;
   dining_type: string;
   vr_link: string | null;
+  booking_url: string | null;
   operating_hours: string | null;
   status: string;
   display_order: number;
@@ -54,6 +55,9 @@ export interface DiningUIData {
   
   // VR360
   vrLink: string | null;
+  
+  // Booking
+  bookingUrl: string | null;
   
   // Meta
   display_order: number;

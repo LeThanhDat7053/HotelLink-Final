@@ -17,6 +17,8 @@ import { getMenuTranslations } from '../../constants/translations';
 import { useContact } from '../../hooks/useContact';
 import { usePropertyContext } from '../../context/PropertyContext';
 import { useVrHotelSettings } from '../../hooks/useVR360';
+import { useIntroduction } from '../../hooks/useIntroduction';
+import { usePolicy } from '../../hooks/usePolicy';
 import { getLocalizedPath, extractCleanPath } from '../../constants/routes';
 
 const { useBreakpoint } = Grid;
@@ -43,6 +45,8 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
   const { property } = usePropertyContext();
   const { content: contactData } = useContact(property?.id || 0, locale);
   const { settings: vrHotelSettings, loading: vrSettingsLoading } = useVrHotelSettings(property?.id || null);
+  const { introduction } = useIntroduction(property?.id || null);
+  const { content: policyData } = usePolicy(property?.id || 0, locale);
 
   // Auto-open menu sau khi settings load xong + delay để smooth
   useEffect(() => {
@@ -81,22 +85,34 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
       { path: '/lien-he', label: t.contact },
     ];
 
-    // Filter menu items dựa trên is_displaying từ VR Hotel Settings
-    if (!vrHotelSettings?.pages) {
-      return allItems;
-    }
-
+    // Filter menu items dựa trên is_displaying từ các API
     return allItems.filter((item) => {
-      const pageKey = pageKeyMap[item.path];
-      // Nếu không có trong map (ví dụ: gioi-thieu, chinh-sach, lien-he) thì hiển thị
-      if (!pageKey) {
-        return true;
+      // Trang Giới thiệu - check từ API introduction
+      if (item.path === '/gioi-thieu') {
+        return introduction?.isDisplaying !== false;
       }
-      // Kiểm tra is_displaying từ API
-      const pageSettings = vrHotelSettings.pages[pageKey as keyof typeof vrHotelSettings.pages];
-      return pageSettings?.is_displaying !== false;
+      
+      // Trang Chính sách - check từ API policies
+      if (item.path === '/chinh-sach') {
+        return policyData?.isDisplaying !== false;
+      }
+      
+      // Trang Liên hệ - check từ API contact
+      if (item.path === '/lien-he') {
+        return contactData?.isDisplaying !== false;
+      }
+      
+      // Các trang từ VR Hotel Settings (rooms, dining, facilities, services, offers)
+      const pageKey = pageKeyMap[item.path];
+      if (pageKey && vrHotelSettings?.pages) {
+        const pageSettings = vrHotelSettings.pages[pageKey as keyof typeof vrHotelSettings.pages];
+        return pageSettings?.is_displaying !== false;
+      }
+      
+      // Trang chủ - hiển thị mặc định
+      return true;
     });
-  }, [t, vrHotelSettings]);
+  }, [t, vrHotelSettings, introduction, policyData, contactData]);
 
   // Footer links với translations động theo locale (có thể dùng sau)
   // const footerLinks = useMemo(() => [
