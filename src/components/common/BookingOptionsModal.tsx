@@ -151,8 +151,9 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
       z-index: 9999 !important;
     }
     .booking-modal .ant-modal-wrap {
-      align-items: flex-start !important;
-      padding-top: 80px !important;
+      /* Center modal vertically and horizontally on all screen sizes */
+      align-items: center !important;
+      padding-top: 0 !important;
       z-index: 9999 !important;
     }
     .booking-modal .ant-modal-mask {
@@ -193,9 +194,6 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
     
     /* Mobile responsive */
     @media (max-width: 768px) {
-      .booking-modal .ant-modal-wrap {
-        padding-top: 60px !important;
-      }
       .booking-modal .ant-modal {
         max-width: calc(100vw - 32px) !important;
       }
@@ -253,7 +251,7 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
         onCancel={onClose}
         footer={null}
         title={t.bookNow || 'Đặt ngay'}
-        centered={false}
+        centered={true}
         width={420}
         wrapClassName="booking-modal"
         closable={false}
