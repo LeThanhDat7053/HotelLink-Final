@@ -1,6 +1,7 @@
 import type { FC, CSSProperties } from 'react';
 import { memo, useState, useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { Grid } from 'antd';
 import { 
   CloseOutlined, 
   LeftOutlined, 
@@ -9,6 +10,8 @@ import {
   PlayCircleOutlined,
   PauseCircleOutlined
 } from '@ant-design/icons';
+
+const { useBreakpoint } = Grid;
 
 interface ImageGalleryViewerProps {
   images: string[];
@@ -23,6 +26,8 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
   visible, 
   onClose 
 }) => {
+  const screens = useBreakpoint();
+  const isMobile = !screens.md;
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
@@ -79,15 +84,23 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [visible, onClose]);
 
-  // Mouse wheel navigation
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    e.preventDefault();
-    if (e.deltaY > 0) {
-      setCurrentIndex(prev => Math.min(prev + 1, images.length - 1));
-    } else {
-      setCurrentIndex(prev => Math.max(prev - 1, 0));
-    }
-  }, [images.length]);
+  // Mouse wheel navigation - Dùng native event listener để tránh passive warning
+  useEffect(() => {
+    if (!visible || !containerRef.current) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      if (e.deltaY > 0) {
+        setCurrentIndex(prev => Math.min(prev + 1, images.length - 1));
+      } else {
+        setCurrentIndex(prev => Math.max(prev - 1, 0));
+      }
+    };
+
+    const container = containerRef.current;
+    container.addEventListener('wheel', handleWheel, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheel);
+  }, [visible, images.length]);
 
   const goToPrev = useCallback(() => {
     setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
@@ -122,6 +135,7 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     backgroundColor: '#1a1a1a',
     zIndex: 99992,
     display: 'flex',
+    flexDirection: isMobile ? 'column' : 'row',
     overflow: 'hidden',
     // Fancybox styles
     WebkitBackfaceVisibility: 'hidden',
@@ -145,14 +159,14 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     top: 0,
     right: 0,
     display: 'flex',
-    gap: 4,
-    padding: '12px 16px',
+    gap: isMobile ? 2 : 4,
+    padding: isMobile ? '8px 10px' : '12px 16px',
     zIndex: 10,
   };
 
   const buttonStyle: CSSProperties = {
-    width: 44,
-    height: 44,
+    width: isMobile ? 36 : 44,
+    height: isMobile ? 36 : 44,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -161,16 +175,16 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     color: '#ccc',
     cursor: 'pointer',
     transition: 'color 0.2s ease',
-    fontSize: 20,
+    fontSize: isMobile ? 16 : 20,
   };
 
   const infobarStyle: CSSProperties = {
     position: 'absolute',
     top: 0,
     left: 0,
-    padding: '16px 20px',
+    padding: isMobile ? '10px 12px' : '16px 20px',
     color: '#ccc',
-    fontSize: 14,
+    fontSize: isMobile ? 12 : 14,
     zIndex: 10,
   };
 
@@ -181,7 +195,7 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     justifyContent: 'center',
     position: 'relative',
     overflow: 'hidden',
-    padding: '20px 60px',
+    padding: isMobile ? '10px 40px' : '20px 60px',
   };
 
   const imageContainerStyle: CSSProperties = {
@@ -197,7 +211,7 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
 
   const imageStyle: CSSProperties = {
     maxWidth: '100%',
-    maxHeight: 'calc(100vh - 40px)',
+    maxHeight: isMobile ? 'calc(100vh - 140px)' : 'calc(100vh - 40px)',
     objectFit: 'contain',
     userSelect: 'none',
   };
@@ -206,8 +220,8 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     position: 'absolute',
     top: '50%',
     transform: 'translateY(-50%)',
-    width: 50,
-    height: 80,
+    width: isMobile ? 36 : 50,
+    height: isMobile ? 60 : 80,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -215,25 +229,26 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
     border: 'none',
     color: 'rgba(255, 255, 255, 0.7)',
     cursor: 'pointer',
-    fontSize: 32,
+    fontSize: isMobile ? 24 : 32,
     transition: 'color 0.2s ease',
     zIndex: 5,
   };
 
   const thumbnailsSidebarStyle: CSSProperties = {
-    width: 140,
-    height: '100%',
+    width: isMobile ? '100%' : 140,
+    height: isMobile ? 100 : '100%',
     backgroundColor: 'rgba(20, 20, 20, 0.95)',
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    padding: '12px 10px',
+    overflowY: isMobile ? 'hidden' : 'auto',
+    overflowX: isMobile ? 'auto' : 'hidden',
+    padding: isMobile ? '10px 12px' : '12px 10px',
     display: 'flex',
-    flexDirection: 'column',
-    gap: 10,
+    flexDirection: isMobile ? 'row' : 'column',
+    gap: isMobile ? 8 : 10,
   };
 
   const thumbnailStyle = (isActive: boolean): CSSProperties => ({
-    width: '100%',
+    width: isMobile ? 80 : '100%',
+    height: isMobile ? 80 : 'auto',
     aspectRatio: '1',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
@@ -259,8 +274,7 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
   const galleryContent = (
     <div 
       ref={containerRef}
-      style={containerStyle} 
-      onWheel={handleWheel}
+      style={containerStyle}
     >
       {/* Main Content Area */}
       <div style={mainContentStyle}>
@@ -302,37 +316,41 @@ export const ImageGalleryViewer: FC<ImageGalleryViewerProps> = memo(({
             </button>
           </div>
 
-          {/* Navigation Buttons */}
-          <button 
-            style={{ ...navButtonStyle, left: 10 }}
-            onClick={goToPrev}
-            title="Previous"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#fff';
-              e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#ccc';
-              e.currentTarget.style.background = 'transparent';
-            }}
-          >
-            <LeftOutlined />
-          </button>
-          <button 
-            style={{ ...navButtonStyle, right: 10 }}
-            onClick={goToNext}
-            title="Next"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#fff';
-              e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#ccc';
-              e.currentTarget.style.background = 'transparent';
-            }}
-          >
-            <RightOutlined />
-          </button>
+          {/* Navigation Buttons - Desktop only */}
+          {!isMobile && (
+            <button 
+              style={{ ...navButtonStyle, left: 10 }}
+              onClick={goToPrev}
+              title="Previous"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#fff';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#ccc';
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <LeftOutlined />
+            </button>
+          )}
+          {!isMobile && (
+            <button 
+              style={{ ...navButtonStyle, right: 10 }}
+              onClick={goToNext}
+              title="Next"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#fff';
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#ccc';
+                e.currentTarget.style.background = 'transparent';
+              }}
+            >
+              <RightOutlined />
+            </button>
+          )}
 
           {/* Main Image Stage */}
           <div style={stageStyle}>

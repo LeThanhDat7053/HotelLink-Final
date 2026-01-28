@@ -164,9 +164,9 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 16,
     marginBottom: 20,
-    padding: screens.md ? '18px 20px' : '14px 16px',
+    padding: screens.md ? '24px 28px' : '20px 22px',
     background: `linear-gradient(135deg, ${primaryColor}40 0%, ${primaryColor}20 100%)`,
     borderRadius: 12,
     border: `1px solid ${primaryColor}60`,
@@ -175,7 +175,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
 
   const priceTextStyle: CSSProperties = {
     color: 'white',
-    fontSize: screens.md ? 18 : 15,
+    fontSize: screens.md ? 22 : 18,
     fontWeight: 500,
     margin: 0,
   };
@@ -322,28 +322,28 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
         {/* Price & Booking - Chỉ hiển thị khi giá > 0 */}
         {room.price > 0 && (
           <div style={priceContainerStyle}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 12 : 10, margin: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 14 : 12, margin: 0 }}>
                 {t.pricePerNight}
               </Text>
               <Text style={priceTextStyle}>
-                <strong style={{ color: primaryColor, fontSize: screens.md ? 22 : 18 }}>{formattedPrice}</strong>
-                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 14 : 12, marginLeft: 4 }}>/{t.night}</span>
+                <strong style={{ color: primaryColor, fontSize: screens.md ? 28 : 22 }}>{formattedPrice}</strong>
+                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 16 : 14, marginLeft: 4 }}>/{t.night}</span>
               </Text>
             </div>
             <Button 
               type="primary"
-              size={screens.md ? 'middle' : 'small'}
+              size="large"
               onClick={handleBooking}
               style={{ 
                 background: `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
                 borderColor: primaryColor,
                 color: '#000',
-                fontWeight: 600,
-                fontSize: screens.md ? 14 : 12,
-                padding: screens.md ? '8px 24px' : '6px 16px',
+                fontWeight: 700,
+                fontSize: screens.md ? 18 : 16,
+                padding: screens.md ? '12px 36px' : '10px 28px',
                 height: 'auto',
-                borderRadius: 8,
+                borderRadius: 10,
                 boxShadow: `0 4px 12px ${primaryColor}50`,
                 transition: 'all 0.3s ease',
               }}

@@ -5,23 +5,23 @@ import { useLanguage } from '../../context/LanguageContext';
 import { getMenuTranslations } from '../../constants/translations';
 import { getBookingUrlWithMessage, createBookingMessage, copyToClipboard } from '../../utils/bookingHelper';
 
-// Custom Messenger Icon - Simple white lightning bolt
+// Custom Messenger Icon - Simple lightning bolt with vibrant gold color
 const MessengerIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFD700" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 3px 8px rgba(255, 215, 0, 0.7))' }}>
     <path d="M12 2C6.48 2 2 6.15 2 11.25c0 2.91 1.45 5.51 3.71 7.25V22l3.71-2.03c.99.27 2.04.42 3.12.42 5.52 0 10-4.15 10-9.25S17.52 2 12 2zm1.03 12.43l-2.49-2.65-4.86 2.65 5.36-5.68 2.55 2.65 4.8-2.65-5.36 5.68z" />
   </svg>
 );
 
-// Custom Zalo Icon - Simple white chat bubble with Z
+// Custom Zalo Icon - Simple chat bubble with Z in vibrant gold color
 const ZaloIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFD700" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 3px 8px rgba(255, 215, 0, 0.7))' }}>
     <path d="M12 2C6.48 2 2 6.15 2 11.14c0 3.12 1.95 5.88 4.95 7.52l-.95 3.48 3.48-1.85c1.39.49 2.89.76 4.45.76 5.52 0 10-4.15 10-9.14S17.52 2 12 2zm3.5 9.14H9.7l3.95-4.57h-5.2v-1.5h5.8l-3.95 4.57h4.7v1.5z" />
   </svg>
 );
 
-// Custom Booking Icon - Simple white calendar with check
+// Custom Booking Icon - Simple calendar with check in vibrant gold color
 const BookingIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="#FFD700" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0 3px 8px rgba(255, 215, 0, 0.7))' }}>
     <path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2zm-7 5l-4 4 1.41 1.41L10 16.17l4.59 4.58L16 19.34l-4-4z" />
   </svg>
 );
@@ -203,15 +203,15 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
   const optionButtonStyle: CSSProperties = {
     width: '100%',
     height: 'auto',
-    padding: '16px 20px',
-    marginBottom: 12,
+    padding: '20px 24px',
+    marginBottom: 16,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 12,
+    gap: 16,
     borderRadius: 12,
-    fontSize: 16,
-    fontWeight: 500,
+    fontSize: 18,
+    fontWeight: 600,
     boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
     border: 'none',
   };
