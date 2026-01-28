@@ -147,6 +147,17 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
   };
 
   const modalHeaderStyle = `
+    .booking-modal {
+      z-index: 9999 !important;
+    }
+    .booking-modal .ant-modal-wrap {
+      align-items: flex-start !important;
+      padding-top: 80px !important;
+      z-index: 9999 !important;
+    }
+    .booking-modal .ant-modal-mask {
+      z-index: 9998 !important;
+    }
     .booking-modal .ant-modal-container {
       background-color: transparent !important;
     }
@@ -178,6 +189,16 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
       background: rgba(0, 0, 0, 0.68);
       border-radius: 0 0 16px 16px;
       padding: 24px !important;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .booking-modal .ant-modal-wrap {
+        padding-top: 60px !important;
+      }
+      .booking-modal .ant-modal {
+        max-width: calc(100vw - 32px) !important;
+      }
     }
   `;
 
@@ -232,11 +253,12 @@ export const BookingOptionsModal: FC<BookingOptionsModalProps> = memo(({
         onCancel={onClose}
         footer={null}
         title={t.bookNow || 'Đặt ngay'}
-        centered
+        centered={false}
         width={420}
         wrapClassName="booking-modal"
         closable={false}
         styles={{ body: modalBodyStyle }}
+        zIndex={9999}
       >
         <div style={{ marginTop: 8 }}>
           {options.map((option) => (
