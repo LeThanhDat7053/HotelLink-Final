@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { memo, useState, useCallback, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { OfferList } from './OfferList';
 import { OfferDetail } from './OfferDetail';
 import { useOfferDetail } from '../../hooks/useOffers';
@@ -14,24 +14,30 @@ interface OfferViewProps {
   className?: string;
   onTitleChange?: (title: string) => void;
   onVrLinkChange?: (vrLink: string | null) => void;
+  initialCode?: string; // Code từ URL để hiển thị detail ngay khi load
 }
 
 export const OfferView: FC<OfferViewProps> = memo(({ 
   className = '',
   onTitleChange,
-  onVrLinkChange 
+  onVrLinkChange,
+  initialCode
 }) => {
-  const [selectedOfferCode, setSelectedOfferCode] = useState<string | null>(null);
-  const { code } = useParams<{ code?: string }>();
+  const [selectedOfferCode, setSelectedOfferCode] = useState<string | undefined>(initialCode);
   const navigate = useNavigate();
   const { propertyId } = useProperty();
   const { locale } = useLanguage();
   const t = getMenuTranslations(locale);
 
+  // Sync initialCode from props when URL changes
+  useEffect(() => {
+    setSelectedOfferCode(initialCode);
+  }, [initialCode]);
+
   // Fetch offer detail when selected
   const { offer, loading, error } = useOfferDetail({
     propertyId: propertyId ?? undefined,
-    code: selectedOfferCode || code || '',
+    code: selectedOfferCode || '',
     locale,
   });
 
@@ -44,7 +50,7 @@ export const OfferView: FC<OfferViewProps> = memo(({
   }, [onTitleChange, onVrLinkChange, navigate, locale]);
 
   const handleBack = useCallback(() => {
-    setSelectedOfferCode(null);
+    setSelectedOfferCode(undefined);
     const newPath = getLocalizedPath('/uu-dai', locale);
     navigate(newPath, { replace: true });
     onTitleChange?.(t.offers);
@@ -53,27 +59,20 @@ export const OfferView: FC<OfferViewProps> = memo(({
 
   // Update title when offer data changes
   useEffect(() => {
-    if (offer && (selectedOfferCode || code)) {
+    if (offer && selectedOfferCode) {
       onTitleChange?.(offer.title);
     }
-  }, [offer, selectedOfferCode, code, onTitleChange]);
+  }, [offer, selectedOfferCode, onTitleChange]);
 
   // Set title to list page title when not viewing detail
   useEffect(() => {
-    if (!selectedOfferCode && !code) {
+    if (!selectedOfferCode) {
       onTitleChange?.(t.offers);
     }
-  }, [selectedOfferCode, code, locale, onTitleChange, t.offers]);
+  }, [selectedOfferCode, locale, onTitleChange, t.offers]);
 
-  // Sync URL code with selectedOfferCode
-  useEffect(() => {
-    if (code && !selectedOfferCode) {
-      setSelectedOfferCode(code);
-    }
-  }, [code, selectedOfferCode]);
-
-  // Show detail view when offer is selected or code in URL
-  if (selectedOfferCode || code) {
+  // Show detail view when offer is selected
+  if (selectedOfferCode) {
     return (
       <OfferDetail 
         offer={offer} 

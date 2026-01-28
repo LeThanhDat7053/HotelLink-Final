@@ -25,13 +25,13 @@ export { useIntroduction, useIntroductionContent } from './useIntroduction';
 
 export { usePropertyPosts, usePostContent } from './usePropertyPosts';
 
-export { useRooms, useRoomDetail } from './useRooms';
+export { useRooms, useRoomDetail, useRoomDetailByCode } from './useRooms';
 
-export { useDinings, useDiningDetail } from './useDining';
+export { useDinings, useDiningDetail, useDiningDetailByCode } from './useDining';
 
-export { useFacilities, useFacilityDetail } from './useFacility';
+export { useFacilities, useFacilityDetail, useFacilityDetailByCode } from './useFacility';
 
-export { useServices, useServiceDetail } from './useService';
+export { useServices, useServiceDetail, useServiceDetailByCode } from './useService';
 
 export { usePolicy } from './usePolicy';
 

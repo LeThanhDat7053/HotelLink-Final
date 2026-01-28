@@ -98,8 +98,24 @@ export function getFacilitiesForUI(
   });
 }
 
+/**
+ * Lấy facility theo code
+ */
+export function getFacilityByCode(
+  propertyId: number,
+  code: string,
+  locale: string
+): Promise<FacilityUIData | null> {
+  return getFacilities(propertyId).then(facilities => {
+    const facility = facilities.find(f => f.code?.toLowerCase() === code.toLowerCase());
+    if (!facility) return null;
+    return transformFacilityForUI(facility, locale);
+  });
+}
+
 export const facilityService = {
   getFacilities,
   getFacilitiesForUI,
+  getFacilityByCode,
   transformFacilityForUI,
 };

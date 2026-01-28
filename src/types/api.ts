@@ -557,6 +557,8 @@ export interface VRHotelIntroductionResponse {
 export interface VrHotelSettingsResponse {
   primary_color: string;
   booking_url: string;
+  messenger_url?: string;
+  phone_number?: string;
   logo_media_id: number | null;
   favicon_media_id: number | null;
   seo: Record<string, {

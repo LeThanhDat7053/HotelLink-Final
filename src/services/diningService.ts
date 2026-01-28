@@ -103,8 +103,24 @@ export function getDiningsForUI(
   });
 }
 
+/**
+ * Lấy dining theo code
+ */
+export function getDiningByCode(
+  propertyId: number,
+  code: string,
+  locale: string
+): Promise<DiningUIData | null> {
+  return getDinings(propertyId).then(dinings => {
+    const dining = dinings.find(d => d.code?.toLowerCase() === code.toLowerCase());
+    if (!dining) return null;
+    return transformDiningForUI(dining, locale);
+  });
+}
+
 export const diningService = {
   getDinings,
   getDiningsForUI,
+  getDiningByCode,
   transformDiningForUI,
 };

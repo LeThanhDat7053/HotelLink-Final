@@ -1,6 +1,6 @@
 import type { FC, CSSProperties } from 'react';
 import { memo, useState, useCallback, useEffect } from 'react';
-import { Typography, Button, Grid, Spin, Alert } from 'antd';
+import { Typography, Button, Grid, Spin, Alert, message } from 'antd';
 import { 
   HomeOutlined, 
   ExpandOutlined, 
@@ -15,6 +15,8 @@ import { getMenuTranslations } from '../../constants/translations';
 import { usePropertyData } from '../../context/PropertyContext';
 import { useVrHotelSettings } from '../../hooks/useVR360';
 import { ImageGalleryViewer } from './ImageGalleryViewer';
+import { BookingOptionsModal, getBookingBehavior } from './BookingOptionsModal';
+import { getBookingUrlWithMessage, createBookingMessage, copyToClipboard } from '../../utils/bookingHelper';
 import type { RoomUIData } from '../../types/room';
 
 const { Paragraph, Text } = Typography;
@@ -46,6 +48,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
   const { settings } = useVrHotelSettings(propertyId);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   // Icon mapping helper with dynamic color
   const iconStyle = { fontSize: 14, marginRight: 8, color: primaryColor };
@@ -70,23 +73,57 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
   }, []);
 
   // Chuyển đến trang đặt phòng
-  // Logic: Ưu tiên booking_url của phòng → Fallback về settings.booking_url
-  const handleBooking = useCallback(() => {
-    // 1. Ưu tiên: Nếu phòng có booking_url riêng, dùng nó
-    if (room?.bookingUrl) {
-      window.open(room.bookingUrl, '_blank', 'noopener,noreferrer');
+  // Logic mới: Hiện popup với 3 lựa chọn (Messenger, Zalo, Booking)
+  // Nếu chỉ có 1 option → redirect trực tiếp
+  const handleBooking = useCallback(async () => {
+    const itemName = room?.name || '';
+    
+    // Lấy URLs từ settings
+    const messengerUrl = settings?.messenger_url;
+    const zaloPhone = settings?.phone_number;
+    // Ưu tiên booking_url của room, fallback về settings
+    const bookingUrl = room?.bookingUrl || settings?.booking_url;
+    
+    // Check behavior: show modal hay redirect trực tiếp
+    const { shouldShowModal, singleOption } = getBookingBehavior(
+      messengerUrl,
+      zaloPhone,
+      bookingUrl
+    );
+    
+    // Nếu chỉ có 1 option → redirect trực tiếp
+    if (!shouldShowModal && singleOption) {
+      let finalUrl = singleOption.url;
+      
+      // Xử lý Messenger - thêm pre-fill message
+      if (singleOption.type === 'messenger') {
+        finalUrl = getBookingUrlWithMessage(singleOption.url, itemName, t.wantToBook);
+      }
+      
+      // Xử lý Zalo - copy message và thêm ?text= parameter
+      if (singleOption.type === 'zalo') {
+        const bookingMessage = createBookingMessage(itemName, t.wantToBook);
+        const copied = await copyToClipboard(bookingMessage);
+        if (copied) {
+          message.success(t.messageCopied);
+        }
+        const encodedMessage = encodeURIComponent(bookingMessage);
+        finalUrl = `${singleOption.url}?text=${encodedMessage}`;
+      }
+      
+      window.open(finalUrl, '_blank', 'noopener,noreferrer');
       return;
     }
     
-    // 2. Fallback: Dùng booking_url từ settings (global)
-    if (settings?.booking_url) {
-      window.open(settings.booking_url, '_blank', 'noopener,noreferrer');
+    // Nếu có nhiều options → show modal
+    if (shouldShowModal) {
+      setBookingModalOpen(true);
       return;
     }
     
-    // 3. Không có booking URL nào
+    // Không có option nào
     console.warn('No booking URL available');
-  }, [room?.bookingUrl, settings?.booking_url]);
+  }, [room?.bookingUrl, room?.name, settings?.messenger_url, settings?.phone_number, settings?.booking_url, t.wantToBook, t.messageCopied]);
 
   // Đổi VR360 background khi vào chi tiết phòng
   useEffect(() => {
@@ -128,15 +165,18 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 12,
-    marginBottom: 16,
-    padding: '12px 16px',
-    background: `${primaryColor}26`,
-    borderRadius: 8,
+    marginBottom: 20,
+    padding: screens.md ? '18px 20px' : '14px 16px',
+    background: `linear-gradient(135deg, ${primaryColor}40 0%, ${primaryColor}20 100%)`,
+    borderRadius: 12,
+    border: `1px solid ${primaryColor}60`,
+    boxShadow: `0 4px 15px ${primaryColor}30`,
   };
 
   const priceTextStyle: CSSProperties = {
-    color: primaryColor,
-    fontSize: screens.md ? 15 : 13,
+    color: 'white',
+    fontSize: screens.md ? 18 : 15,
+    fontWeight: 500,
     margin: 0,
   };
 
@@ -282,19 +322,40 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
         {/* Price & Booking - Chỉ hiển thị khi giá > 0 */}
         {room.price > 0 && (
           <div style={priceContainerStyle}>
-            <Text style={priceTextStyle}>
-              {t.pricePerNight}: <strong>{formattedPrice}</strong>/{t.night}
-            </Text>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 12 : 10, margin: 0 }}>
+                {t.pricePerNight}
+              </Text>
+              <Text style={priceTextStyle}>
+                <strong style={{ color: primaryColor, fontSize: screens.md ? 22 : 18 }}>{formattedPrice}</strong>
+                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 14 : 12, marginLeft: 4 }}>/{t.night}</span>
+              </Text>
+            </div>
             <Button 
               type="primary"
-              size="small"
+              size={screens.md ? 'middle' : 'small'}
               onClick={handleBooking}
               style={{ 
-                background: primaryColor, 
+                background: `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
                 borderColor: primaryColor,
                 color: '#000',
-                fontWeight: 500,
-                fontSize: screens.md ? 12 : 10,
+                fontWeight: 600,
+                fontSize: screens.md ? 14 : 12,
+                padding: screens.md ? '8px 24px' : '6px 16px',
+                height: 'auto',
+                borderRadius: 8,
+                boxShadow: `0 4px 12px ${primaryColor}50`,
+                transition: 'all 0.3s ease',
+              }}
+              onMouseEnter={(e) => {
+                const btn = e.currentTarget as HTMLElement;
+                btn.style.transform = 'translateY(-2px)';
+                btn.style.boxShadow = `0 6px 20px ${primaryColor}70`;
+              }}
+              onMouseLeave={(e) => {
+                const btn = e.currentTarget as HTMLElement;
+                btn.style.transform = 'translateY(0)';
+                btn.style.boxShadow = `0 4px 12px ${primaryColor}50`;
               }}
             >
               {t.bookNow}
@@ -384,6 +445,19 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
         initialIndex={galleryIndex}
         visible={galleryOpen}
         onClose={closeGallery}
+      />
+
+      {/* Booking Options Modal */}
+      <BookingOptionsModal
+        open={bookingModalOpen}
+        onClose={() => setBookingModalOpen(false)}
+        messengerUrl={settings?.messenger_url}
+        zaloPhone={settings?.phone_number}
+        bookingUrl={room?.bookingUrl || settings?.booking_url}
+        itemName={room?.name || ''}
+        wantToBookText={t.wantToBook}
+        messageCopiedText={t.messageCopied}
+        primaryColor={primaryColor}
       />
 
       {/* Custom scrollbar styles */}

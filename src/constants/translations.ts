@@ -70,6 +70,9 @@ export interface MenuTranslations {
   loading: string;         // Đang tải...
   notFound: string;        // Không tìm thấy
   errorLoading: string;    // Lỗi tải dữ liệu
+  showInfo: string;        // Hiển thị thông tin
+  wantToBook: string;      // Tôi muốn đặt
+  messageCopied: string;   // Tin nhắn đã được sao chép! Hãy dán vào Zalo
   
   // Units
   people: string;          // người / people / guests
@@ -143,6 +146,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Đang tải...',
     notFound: 'Không tìm thấy',
     errorLoading: 'Lỗi tải dữ liệu',
+    showInfo: 'Hiển thị thông tin',
+    wantToBook: 'Tôi muốn đặt',
+    messageCopied: 'Tin nhắn đã được sao chép! Hãy dán vào Zalo',
     people: 'người',
   },
 
@@ -212,6 +218,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Loading...',
     notFound: 'Not found',
     errorLoading: 'Error loading data',
+    showInfo: 'Show Information',
+    wantToBook: 'I want to book',
+    messageCopied: 'Message copied! Please paste it in Zalo',
     people: 'people',
   },
 
@@ -273,6 +282,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'جاري التحميل...',
     notFound: 'غير موجود',
     errorLoading: 'خطأ في تحميل البيانات',
+    showInfo: 'إظهار المعلومات',
+    wantToBook: 'أريد حجز',
+    messageCopied: 'تم نسخ الرسالة! الرجاء لصقها في Zalo',
     people: 'أشخاص',
   },
 
@@ -334,6 +346,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Lädt...',
     notFound: 'Nicht gefunden',
     errorLoading: 'Fehler beim Laden der Daten',
+    showInfo: 'Informationen anzeigen',
+    wantToBook: 'Ich möchte buchen',
+    messageCopied: 'Nachricht kopiert! Bitte in Zalo einfügen',
     people: 'Personen',
   },
 
@@ -395,6 +410,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Cargando...',
     notFound: 'No encontrado',
     errorLoading: 'Error al cargar datos',
+    showInfo: 'Mostrar información',
+    wantToBook: 'Quiero reservar',
+    messageCopied: '¡Mensaje copiado! Por favor, pégalo en Zalo',
     people: 'personas',
   },
 
@@ -456,6 +474,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Chargement...',
     notFound: 'Non trouvé',
     errorLoading: 'Erreur de chargement des données',
+    showInfo: 'Afficher les informations',
+    wantToBook: 'Je voudrais réserver',
+    messageCopied: 'Message copié ! Veuillez le coller dans Zalo',
     people: 'personnes',
   },
 
@@ -517,6 +538,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'लोड हो रहा है...',
     notFound: 'नहीं मिला',
     errorLoading: 'डेटा लोड करने में त्रुटि',
+    showInfo: 'जानकारी दिखाएं',
+    wantToBook: 'मैं बुक करना चाहता हूं',
+    messageCopied: 'संदेश कॉपी किया गया! कृपया इसे ज़ालो में पेस्ट करें',
     people: 'लोग',
   },
 
@@ -578,6 +602,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Memuat...',
     notFound: 'Tidak ditemukan',
     errorLoading: 'Gagal memuat data',
+    showInfo: 'Tampilkan Informasi',
+    wantToBook: 'Saya ingin memesan',
+    messageCopied: 'Pesan telah disalin! Silakan tempel di Zalo',
     people: 'orang',
   },
 
@@ -639,6 +666,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Caricamento...',
     notFound: 'Non trovato',
     errorLoading: 'Errore nel caricamento dei dati',
+    showInfo: 'Mostra informazioni',
+    wantToBook: 'Voglio prenotare',
+    messageCopied: 'Messaggio copiato! Incollalo in Zalo',
     people: 'persone',
   },
 
@@ -700,6 +730,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '読み込み中...',
     notFound: '見つかりません',
     errorLoading: 'データの読み込みエラー',
+    showInfo: '情報を表示',
+    wantToBook: '予約したいです',
+    messageCopied: 'メッセージがコピーされました！Zaloに貼り付けてください',
     people: '名',
   },
 
@@ -761,6 +794,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '로딩 중...',
     notFound: '찾을 수 없음',
     errorLoading: '데이터 로딩 오류',
+    showInfo: '정보 표시',
+    wantToBook: '예약하고 싶습니다',
+    messageCopied: '메시지가 복사되었습니다! Zalo에 붙여넣으세요',
     people: '명',
   },
 
@@ -822,6 +858,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Memuatkan...',
     notFound: 'Tidak dijumpai',
     errorLoading: 'Ralat memuatkan data',
+    showInfo: 'Tunjukkan Maklumat',
+    wantToBook: 'Saya ingin tempah',
+    messageCopied: 'Mesej telah disalin! Sila tampal di Zalo',
     people: 'orang',
   },
 
@@ -883,6 +922,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Carregando...',
     notFound: 'Não encontrado',
     errorLoading: 'Erro ao carregar dados',
+    showInfo: 'Mostrar informações',
+    wantToBook: 'Eu quero reservar',
+    messageCopied: 'Mensagem copiada! Por favor, cole no Zalo',
     people: 'pessoas',
   },
 
@@ -944,6 +986,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Загрузка...',
     notFound: 'Не найдено',
     errorLoading: 'Ошибка загрузки данных',
+    showInfo: 'Показать информацию',
+    wantToBook: 'Я хочу забронировать',
+    messageCopied: 'Сообщение скопировано! Пожалуйста, вставьте в Zalo',
     people: 'человек',
   },
 
@@ -1005,6 +1050,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'ஏற்றுகிறது...',
     notFound: 'கிடைக்கவில்லை',
     errorLoading: 'தரவு ஏற்றுவதில் பிழை',
+    showInfo: 'தகவலைக் காட்டு',
+    wantToBook: 'நான் பதிவு செய்ய விரும்புகிறேன்',
+    messageCopied: 'செய்தி நகலெடுக்கப்பட்டது! Zaloவில் ஒட்டவும்',
     people: 'நபர்கள்',
   },
 
@@ -1066,6 +1114,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'กำลังโหลด...',
     notFound: 'ไม่พบข้อมูล',
     errorLoading: 'เกิดข้อผิดพลาดในการโหลดข้อมูล',
+    showInfo: 'แสดงข้อมูล',
+    wantToBook: 'ฉันต้องการจอง',
+    messageCopied: 'คัดลอกข้อความแล้ว! กรุณาวางใน Zalo',
     people: 'คน',
   },
 
@@ -1127,6 +1178,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: 'Naglo-load...',
     notFound: 'Hindi nahanap',
     errorLoading: 'Error sa pag-load ng data',
+    showInfo: 'Ipakita ang Impormasyon',
+    wantToBook: 'Gusto kong mag-book',
+    messageCopied: 'Nakopya ang mensahe! Pakipaste sa Zalo',
     people: 'tao',
   },
 
@@ -1188,6 +1242,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '載入中...',
     notFound: '找不到',
     errorLoading: '載入數據時發生錯誤',
+    showInfo: '顯示資訊',
+    wantToBook: '我想預訂',
+    messageCopied: '訊息已複製！請貼到Zalo',
     people: '人',
   },
 
@@ -1249,6 +1306,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '載入中...',
     notFound: '找不到',
     errorLoading: '載入數據時發生錯誤',
+    showInfo: '顯示資訊',
+    wantToBook: '我想預訂',
+    messageCopied: '訊息已複製！請貼到Zalo',
     people: '人',
   },
 
@@ -1310,6 +1370,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '加载中...',
     notFound: '未找到',
     errorLoading: '加载数据时发生错误',
+    showInfo: '显示信息',
+    wantToBook: '我想预订',
+    messageCopied: '消息已复制！请粘贴到Zalo',
     people: '人',
   },
 
@@ -1371,6 +1434,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '加载中...',
     notFound: '未找到',
     errorLoading: '加载数据时发生错误',
+    showInfo: '显示信息',
+    wantToBook: '我想预订',
+    messageCopied: '消息已复制！请粘贴到Zalo',
     people: '人',
   },
 
@@ -1432,6 +1498,9 @@ export const MENU_TRANSLATIONS: Record<string, MenuTranslations> = {
     loading: '載入中...',
     notFound: '未找到',
     errorLoading: '載入數據時發生錯誤',
+    showInfo: '顯示資訊',
+    wantToBook: '我想預訂',
+    messageCopied: '訊息已複製！請貼到Zalo',
     people: '人',
   },
 };

@@ -29,6 +29,68 @@ export const isImageUrl = (url: string): boolean => {
 };
 
 /**
+ * Kiểm tra xem URL có phải là YouTube video hay không
+ * @param url - URL cần kiểm tra
+ * @returns true nếu là YouTube, false nếu không phải
+ */
+export const isYouTubeUrl = (url: string): boolean => {
+  if (!url) return false;
+  
+  const youtubeDomains = [
+    'youtube.com',
+    'youtu.be',
+    'youtube-nocookie.com',
+  ];
+  
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    
+    return youtubeDomains.some(domain => hostname.includes(domain));
+  } catch {
+    const lowerUrl = url.toLowerCase();
+    return youtubeDomains.some(domain => lowerUrl.includes(domain));
+  }
+};
+
+/**
+ * Convert YouTube URL thành embed URL
+ * @param url - YouTube URL (watch hoặc short link)
+ * @returns Embed URL hoặc URL gốc nếu không phải YouTube
+ */
+export const getYouTubeEmbedUrl = (url: string): string => {
+  if (!url || !isYouTubeUrl(url)) return url;
+  
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    
+    // Handle youtu.be short links
+    if (hostname.includes('youtu.be')) {
+      const videoId = urlObj.pathname.slice(1); // Remove leading '/'
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+    }
+    
+    // Handle youtube.com/watch?v=xxx
+    if (hostname.includes('youtube.com')) {
+      const videoId = urlObj.searchParams.get('v');
+      if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}`;
+      }
+    }
+    
+    // If already embed URL, return as is
+    if (url.includes('/embed/')) {
+      return url;
+    }
+    
+    return url;
+  } catch {
+    return url;
+  }
+};
+
+/**
  * Kiểm tra xem URL có phải là VR360 iframe hay không
  * @param url - URL cần kiểm tra
  * @returns true nếu là VR360 iframe, false nếu không phải
@@ -64,12 +126,13 @@ export const isVR360Url = (url: string): boolean => {
 /**
  * Xác định loại media từ URL
  * @param url - URL cần kiểm tra
- * @returns 'image' | 'vr360' | 'unknown'
+ * @returns 'image' | 'youtube' | 'vr360' | 'unknown'
  */
-export const getMediaType = (url: string): 'image' | 'vr360' | 'unknown' => {
+export const getMediaType = (url: string): 'image' | 'youtube' | 'vr360' | 'unknown' => {
   if (!url) return 'unknown';
   
   if (isImageUrl(url)) return 'image';
+  if (isYouTubeUrl(url)) return 'youtube';
   if (isVR360Url(url)) return 'vr360';
   
   // Mặc định coi là VR360 iframe nếu không xác định được

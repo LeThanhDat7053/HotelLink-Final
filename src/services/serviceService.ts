@@ -104,8 +104,24 @@ export function getServicesForUI(
   });
 }
 
+/**
+ * Lấy service theo code
+ */
+export function getServiceByCode(
+  propertyId: number,
+  code: string,
+  locale: string
+): Promise<ServiceUIData | null> {
+  return getServices(propertyId).then(services => {
+    const service = services.find(s => s.code?.toLowerCase() === code.toLowerCase());
+    if (!service) return null;
+    return transformServiceForUI(service, locale);
+  });
+}
+
 export const serviceService = {
   getServices,
   getServicesForUI,
+  getServiceByCode,
   transformServiceForUI,
 };

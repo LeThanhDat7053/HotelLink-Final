@@ -141,3 +141,66 @@ export function useDiningDetail({
 
   return { dining, loading, error };
 }
+
+/**
+ * Hook để fetch chi tiết một dining theo code (dùng cho URL routing)
+ */
+export function useDiningDetailByCode({ 
+  propertyId, 
+  diningCode, 
+  locale,
+  enabled = true 
+}: {
+  propertyId: number | null;
+  diningCode: string | null | undefined;
+  locale: string;
+  enabled?: boolean;
+}) {
+  const [dining, setDining] = useState<DiningUIData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!propertyId || !diningCode || !enabled) {
+      setLoading(false);
+      setDining(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchDiningDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const foundDining = await diningService.getDiningByCode(propertyId, diningCode, locale);
+
+        if (!cancelled) {
+          if (foundDining) {
+            setDining(foundDining);
+          } else {
+            setError(new Error(`Dining with code ${diningCode} not found`));
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('[useDiningDetailByCode] Error fetching dining:', err);
+          setError(err instanceof Error ? err : new Error('Failed to fetch dining'));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchDiningDetail();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [propertyId, diningCode, locale, enabled]);
+
+  return { dining, loading, error };
+}

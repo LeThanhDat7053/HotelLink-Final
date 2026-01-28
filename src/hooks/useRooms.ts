@@ -156,3 +156,70 @@ export const useRoomDetail = (options: {
     refetch: fetchRoom,
   };
 };
+
+/**
+ * Hook để lấy chi tiết 1 phòng theo room_code (dùng cho URL routing)
+ * 
+ * @param propertyId - ID của property
+ * @param roomCode - Mã phòng (room_code)
+ * @param locale - Mã ngôn ngữ
+ * @returns { room, loading, error, refetch }
+ * 
+ * @example
+ * ```tsx
+ * const { room, loading } = useRoomDetailByCode({ 
+ *   propertyId: 10, 
+ *   roomCode: 'ROOM1', 
+ *   locale: 'vi' 
+ * });
+ * ```
+ */
+export const useRoomDetailByCode = (options: {
+  propertyId: number | null;
+  roomCode: string | null | undefined;
+  locale: string;
+  enabled?: boolean;
+}): {
+  room: RoomUIData | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<void>;
+} => {
+  const { propertyId, roomCode, locale, enabled = true } = options;
+  
+  const [room, setRoom] = useState<RoomUIData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchRoom = useCallback(async () => {
+    if (!propertyId || !roomCode || !enabled) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await roomService.getRoomByCode(propertyId, roomCode, locale);
+      setRoom(data);
+    } catch (err) {
+      console.error('[useRoomDetailByCode] Failed to fetch room:', err);
+      setError(err instanceof Error ? err : new Error('Failed to fetch room'));
+      setRoom(null);
+    } finally {
+      setLoading(false);
+    }
+  }, [propertyId, roomCode, locale, enabled]);
+
+  useEffect(() => {
+    fetchRoom();
+  }, [fetchRoom]);
+
+  return {
+    room,
+    loading,
+    error,
+    refetch: fetchRoom,
+  };
+};

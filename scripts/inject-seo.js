@@ -22,9 +22,9 @@ config();
 
 // Config from .env
 const API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
-const TENANT_CODE = process.env.VITE_TENANT_CODE || 'fusion';
-const PROPERTY_ID = process.env.VITE_PROPERTY_ID || '10';
-const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://fusionsuites.vn';
+const TENANT_CODE = process.env.VITE_TENANT_CODE || 'phoenix';
+const PROPERTY_ID = process.env.VITE_PROPERTY_ID || '13';
+const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://phoenixhotelvungtau.com/';
 
 console.log('📋 Config:');
 console.log('  - API:', API_BASE_URL);

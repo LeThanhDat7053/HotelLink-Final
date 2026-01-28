@@ -1,11 +1,15 @@
 import type { FC, CSSProperties } from 'react';
 import { memo, useState, useEffect } from 'react';
-import { Button, Grid, Spin, Alert, Image } from 'antd';
+import { Button, Grid, Spin, Alert, Image, message } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { usePropertyData } from '../../context/PropertyContext';
+import { useVrHotelSettings } from '../../hooks/useVR360';
 import { getMenuTranslations } from '../../constants/translations';
 import { ImageGalleryViewer } from './ImageGalleryViewer';
+import { BookingOptionsModal, getBookingBehavior } from './BookingOptionsModal';
+import { getBookingUrlWithMessage, createBookingMessage, copyToClipboard } from '../../utils/bookingHelper';
 import type { DiningUIData } from '../../types/dining';
 
 const { useBreakpoint } = Grid;
@@ -30,9 +34,12 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
   const screens = useBreakpoint();
   const { primaryColor } = useTheme();
   const { locale } = useLanguage();
+  const { propertyId } = usePropertyData();
+  const { settings } = useVrHotelSettings(propertyId);
   const t = getMenuTranslations(locale);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
 
   const openGallery = (index: number) => {
     setGalleryIndex(index);
@@ -43,11 +50,57 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
     setGalleryOpen(false);
   };
 
-  // Handler nút Đặt ngay - chỉ hiện khi có booking_url
-  const handleBooking = () => {
-    if (dining?.bookingUrl) {
-      window.open(dining.bookingUrl, '_blank', 'noopener,noreferrer');
+  // Handler nút Đặt ngay
+  // Logic mới: Hiện popup với 3 lựa chọn (Messenger, Zalo, Booking)
+  // Nếu chỉ có 1 option → redirect trực tiếp
+  const handleBooking = async () => {
+    const itemName = dining?.name || '';
+    
+    // Lấy URLs từ settings
+    const messengerUrl = settings?.messenger_url;
+    const zaloPhone = settings?.phone_number;
+    // CHỈ dùng booking_url của dining, KHÔNG fallback về settings
+    const bookingUrl = dining?.bookingUrl;
+    
+    // Check behavior: show modal hay redirect trực tiếp
+    const { shouldShowModal, singleOption } = getBookingBehavior(
+      messengerUrl,
+      zaloPhone,
+      bookingUrl
+    );
+    
+    // Nếu chỉ có 1 option → redirect trực tiếp
+    if (!shouldShowModal && singleOption) {
+      let finalUrl = singleOption.url;
+      
+      // Xử lý Messenger - thêm pre-fill message
+      if (singleOption.type === 'messenger') {
+        finalUrl = getBookingUrlWithMessage(singleOption.url, itemName, t.wantToBook);
+      }
+      
+      // Xử lý Zalo - copy message và thêm ?text= parameter
+      if (singleOption.type === 'zalo') {
+        const bookingMessage = createBookingMessage(itemName, t.wantToBook);
+        const copied = await copyToClipboard(bookingMessage);
+        if (copied) {
+          message.success(t.messageCopied);
+        }
+        const encodedMessage = encodeURIComponent(bookingMessage);
+        finalUrl = `${singleOption.url}?text=${encodedMessage}`;
+      }
+      
+      window.open(finalUrl, '_blank', 'noopener,noreferrer');
+      return;
     }
+    
+    // Nếu có nhiều options → show modal
+    if (shouldShowModal) {
+      setBookingModalOpen(true);
+      return;
+    }
+    
+    // Không có option nào
+    console.warn('No booking URL available');
   };
 
   // Đổi VR360 background khi vào chi tiết ẩm thực
@@ -206,26 +259,6 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
           </p>
         )}
 
-        {/* Nút Đặt ngay - chỉ hiện khi có booking_url */}
-        {dining.bookingUrl && (
-          <Button 
-            type="primary"
-            size="large"
-            onClick={handleBooking}
-            style={{ 
-              background: primaryColor, 
-              borderColor: primaryColor,
-              color: '#000',
-              fontWeight: 600,
-              fontSize: screens.md ? 14 : 13,
-              marginTop: 16,
-              width: '100%',
-            }}
-          >
-            {t.bookNow}
-          </Button>
-        )}
-
         {/* Gallery Images nếu có */}
         {dining.galleryImages && dining.galleryImages.length > 0 && (
           <div style={{ marginTop: 16 }}>
@@ -250,6 +283,60 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
             </div>
           </div>
         )}
+
+        {/* Nút Đặt ngay - hiện khi có ít nhất 1 booking option - NẰM CUỐI CÙNG */}
+        {(() => {
+          const { optionCount } = getBookingBehavior(
+            settings?.messenger_url,
+            settings?.phone_number,
+            dining.bookingUrl
+          );
+          
+          return optionCount > 0 ? (
+            <div style={{
+              marginTop: 20,
+              padding: screens.md ? '18px 20px' : '14px 16px',
+              background: `linear-gradient(135deg, ${primaryColor}40 0%, ${primaryColor}20 100%)`,
+              borderRadius: 12,
+              border: `1px solid ${primaryColor}60`,
+              boxShadow: `0 4px 15px ${primaryColor}30`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Button 
+                type="primary"
+                size={screens.md ? 'large' : 'middle'}
+                onClick={handleBooking}
+                style={{ 
+                  background: `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
+                  borderColor: primaryColor,
+                  color: '#000',
+                  fontWeight: 600,
+                  fontSize: screens.md ? 16 : 14,
+                  padding: screens.md ? '10px 40px' : '8px 30px',
+                  height: 'auto',
+                  borderRadius: 8,
+                  boxShadow: `0 4px 12px ${primaryColor}50`,
+                  transition: 'all 0.3s ease',
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => {
+                  const btn = e.currentTarget as HTMLElement;
+                  btn.style.transform = 'translateY(-2px)';
+                  btn.style.boxShadow = `0 6px 20px ${primaryColor}70`;
+                }}
+                onMouseLeave={(e) => {
+                  const btn = e.currentTarget as HTMLElement;
+                  btn.style.transform = 'translateY(0)';
+                  btn.style.boxShadow = `0 4px 12px ${primaryColor}50`;
+                }}
+              >
+                {t.bookNow}
+              </Button>
+            </div>
+          ) : null;
+        })()}
       </div>
 
       {/* Image Gallery Viewer - Fullscreen */}
@@ -258,6 +345,19 @@ export const DiningDetail: FC<DiningDetailProps> = memo(({
         initialIndex={galleryIndex}
         visible={galleryOpen}
         onClose={closeGallery}
+      />
+
+      {/* Booking Options Modal */}
+      <BookingOptionsModal
+        open={bookingModalOpen}
+        onClose={() => setBookingModalOpen(false)}
+        messengerUrl={settings?.messenger_url}
+        zaloPhone={settings?.phone_number}
+        bookingUrl={dining?.bookingUrl}
+        itemName={dining?.name || ''}
+        wantToBookText={t.wantToBook}
+        messageCopiedText={t.messageCopied}
+        primaryColor={primaryColor}
       />
     </div>
   );

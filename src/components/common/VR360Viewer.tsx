@@ -12,7 +12,7 @@
 
 import React, { useState, useMemo } from 'react';
 import type { VR360Link } from '../../types/api';
-import { getMediaType } from '../../utils/mediaHelper';
+import { getMediaType, getYouTubeEmbedUrl } from '../../utils/mediaHelper';
 
 interface VR360ViewerProps {
   link: VR360Link;
@@ -119,7 +119,7 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
         </div>
       )}
 
-      {/* Content: Image hoặc VR360 iframe */}
+      {/* Content: Image hoặc YouTube hoặc VR360 iframe */}
       {mediaType === 'image' ? (
         // Hiển thị ảnh với object-fit cover
         <img
@@ -129,10 +129,21 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
           onLoad={handleLoadComplete}
           onError={handleError}
         />
+      ) : mediaType === 'youtube' ? (
+        // Hiển thị YouTube video iframe
+        <iframe
+          src={getYouTubeEmbedUrl(link.vrUrl || '')}
+          title={link.title}
+          className="w-full h-full min-h-[400px] border-0 rounded-lg"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          onLoad={handleLoadComplete}
+          onError={handleError}
+        />
       ) : (
         // Hiển thị VR360 iframe
         <iframe
-          src={link.vrUrl}
+          src={link.vrUrl || ''}
           title={link.title}
           className="w-full h-full min-h-[400px] border-0 rounded-lg"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen; xr-spatial-tracking"

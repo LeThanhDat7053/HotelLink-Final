@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sticky Buttons - Phoenix Hotel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset */
+        .sticky-buttons, .sticky-buttons * {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            background: none;
+            line-height: 1;
+            box-sizing: border-box;
+        }
+
+        /* Main Style */
+        .sticky-buttons {
+            position: fixed;
+            z-index: 999;
+        }
+
+        .sticky-buttons .sb-icon {
+            display: inline-block;
+            text-align: center;
+            transition: all 0.5s;
+        }
+
+        .sticky-buttons .sb-label {
+            position: absolute;
+            padding: 0 15px;
+            cursor: pointer;
+            visibility: hidden;
+            opacity: 0;
+            white-space: nowrap;
+            z-index: 3;
+            transition: all 0.5s;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .sticky-buttons a:hover .sb-label {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Label Visible - luôn hiển thị */
+        .sticky-buttons .sb-label.-visible {
+            visibility: visible;
+            opacity: 1;
+            transform: none !important;
+            z-index: 2;
+        }
+
+        /* Shadow */
+        .sticky-buttons.-shadow .sb-icon,
+        .sticky-buttons.-shadow .sb-label {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Size - Large */
+        .sticky-buttons.-large .sb-icon,
+        .sticky-buttons.-large .sb-label {
+            height: 50px;
+            line-height: 50px;
+            font-size: 22px;
+        }
+
+        .sticky-buttons.-large .sb-icon {
+            width: 50px;
+        }
+
+        /* Circle Shape */
+        .sticky-buttons.-circle .sb-icon {
+            border-radius: 50%;
+        }
+
+        .sticky-buttons.-circle .sb-label {
+            border-radius: 25px;
+        }
+
+        /* Position: Left Center */
+        .sticky-buttons.-left-center {
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .sticky-buttons.-left-center li {
+            margin-bottom: 10px;
+        }
+
+        .sticky-buttons.-left-center .sb-label {
+            left: 100%;
+            top: 0;
+            margin-left: 10px;
+        }
+
+        /* Slide Animation */
+        .sticky-buttons.-slide .sb-label {
+            transform: translateX(-20px);
+        }
+
+        .sticky-buttons.-slide a:hover .sb-label {
+            transform: translateX(0);
+        }
+
+        /* Colors */
+        .sticky-buttons .white { background: #fff; color: #000; }
+        .sticky-buttons .black { background: #000; color: #fff; }
+        .sticky-buttons .blue { background: #0084ff; color: #fff; }
+        .sticky-buttons .green { background: #25d366; color: #fff; }
+        .sticky-buttons .orange { background: #ff6600; color: #fff; }
+        .sticky-buttons .red { background: #e53935; color: #fff; }
+        .sticky-buttons .gold { background: #d4a855; color: #fff; }
+        .sticky-buttons .purple { background: #7b1fa2; color: #fff; }
+
+        /* Demo page style */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #ffd700;
+        }
+
+        p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .note {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #ffd700;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY BUTTONS - THỬ 3 VỊ TRÍ KHÁC NHAU -->
+
+<!-- Version 1: LEFT CENTER - Mặc định -->
+<ul class="sticky-buttons -large -left-center -shadow -slide -circle">
+    <li class="gold white">
+        <a href="tel:+84123456789">
+            <span class="sb-icon fas fa-phone"></span>
+            <span class="sb-label">0123 456 789</span>
+        </a>
+    </li>
+    <li class="green white">
+        <a href="https://zalo.me/0123456789" target="_blank">
+            <span class="sb-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" style="fill: currentColor; vertical-align: middle;">
+                    <path d="M24,4C13.5,4,5,12.1,5,22c0,5.2,2.3,9.8,6,13.1V44l8.3-4.5c1.5,0.4,3.1,0.5,4.7,0.5c10.5,0,19-8.1,19-18S34.5,4,24,4z"/>
+                </svg>
+            </span>
+            <span class="sb-label">Chat Zalo</span>
+        </a>
+    </li>
+    <li class="blue white">
+        <a href="https://m.me/yourpage" target="_blank">
+            <span class="sb-icon fab fa-facebook-messenger"></span>
+            <span class="sb-label">Messenger</span>
+        </a>
+    </li>
+    <li class="orange white">
+        <a href="mailto:info@phoenixhotel.com">
+            <span class="sb-icon fas fa-envelope"></span>
+            <span class="sb-label">Email</span>
+        </a>
+    </li>
+    <li class="red white">
+        <a href="/dat-phong">
+            <span class="sb-icon fas fa-calendar-check"></span>
+            <span class="sb-label -visible">Đặt Phòng</span>
+        </a>
+    </li>
+</ul>
+
+<div class="demo-container">
+    <h1>🏨 Phoenix Hotel</h1>
+    <h2>Test Sticky Buttons</h2>
+    
+    <div class="note">
+        <strong>👈 Nhìn sang bên trái màn hình!</strong><br>
+        Bạn sẽ thấy các nút sticky buttons. Hover chuột vào để xem hiệu ứng.
+    </div>
+
+    <h2>Tính năng:</h2>
+    <ul class="features">
+        <li><strong>Điện thoại:</strong> Click để gọi trực tiếp (trên mobile)</li>
+        <li><strong>Zalo:</strong> Mở chat Zalo (có icon Zalo custom)</li>
+        <li><strong>Messenger:</strong> Chat Facebook Messenger</li>
+        <li><strong>Email:</strong> Mở email client</li>
+        <li><strong>Đặt Phòng:</strong> Link đến trang booking (label luôn hiển thị)</li>
+    </ul>
+
+    <h2>Các tùy chọn có thể thay đổi:</h2>
+    <p><strong>Vị trí:</strong></p>
+    <ul class="features">
+        <li>-left-center (hiện tại) - Trái giữa</li>
+        <li>-right-center - Phải giữa</li>
+        <li>-left-top - Trái trên</li>
+        <li>-left-bottom - Trái dưới</li>
+        <li>-right-top, -right-bottom</li>
+    </ul>
+
+    <p><strong>Hiệu ứng:</strong></p>
+    <ul class="features">
+        <li>-slide (hiện tại) - Trượt ra</li>
+        <li>-fade - Mờ dần</li>
+        <li>-zoom - Phóng to</li>
+        <li>-flip - Lật</li>
+        <li>-rotate - Xoay</li>
+        <li>-scale - Thu phóng</li>
+        <li>-swing - Đung đưa</li>
+    </ul>
+
+    <p><strong>Kích thước:</strong></p>
+    <ul class="features">
+        <li>-small (30px)</li>
+        <li>-medium (40px)</li>
+        <li>-large (50px) - hiện tại</li>
+    </ul>
+
+    <p><strong>Hình dạng:</strong></p>
+    <ul class="features">
+        <li>-circle (tròn) - hiện tại</li>
+        <li>-rounded (bo góc)</li>
+        <li>-square (vuông)</li>
+    </ul>
+
+    <div class="note">
+        <strong>💡 Hướng dẫn test:</strong><br>
+        1. Mở file này bằng trình duyệt (double click vào test-sticky-buttons.html)<br>
+        2. Hover chuột vào các nút bên trái<br>
+        3. Thử click để test các link<br>
+        4. Resize cửa sổ để xem responsive<br>
+        5. Nếu thích, tôi sẽ tích hợp vào React app!
+    </div>
+
+    <h2>Scroll xuống để test sticky behavior:</h2>
+    <p style="margin-top: 50px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    
+    <div style="height: 800px; background: rgba(255,255,255,0.05); margin: 30px 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+        <p>Scroll để test sticky buttons<br>🔽</p>
+    </div>
+    
+    <p>Sticky buttons vẫn ở đó phải không? 😊</p>
+</div>
+
+<script>
+    // Optional: Log clicks
+    document.querySelectorAll('.sticky-buttons a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const label = this.querySelector('.sb-label').textContent;
+            console.log('Clicked:', label);
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -134,3 +134,70 @@ export function useServiceDetail({
 
   return { service, loading, error };
 }
+
+/**
+ * Hook để fetch chi tiết 1 service theo code (dùng cho URL routing)
+ */
+export function useServiceDetailByCode({ 
+  propertyId, 
+  serviceCode, 
+  locale,
+  enabled = true 
+}: {
+  propertyId: number | null;
+  serviceCode: string | null | undefined;
+  locale: string;
+  enabled?: boolean;
+}): UseServiceDetailResult {
+  const [service, setService] = useState<ServiceUIData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchServiceDetail = async () => {
+      if (!propertyId || !serviceCode) {
+        setService(null);
+        setLoading(false);
+        return;
+      }
+
+      if (!enabled) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const foundService = await serviceService.getServiceByCode(propertyId, serviceCode, locale);
+        
+        if (isMounted) {
+          setService(foundService || null);
+          if (!foundService) {
+            setError(new Error('Không tìm thấy dịch vụ'));
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err instanceof Error ? err : new Error('Lỗi khi tải chi tiết dịch vụ'));
+          console.error('Error fetching service detail by code:', err);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchServiceDetail();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [propertyId, locale, serviceCode, enabled]);
+
+  return { service, loading, error };
+}

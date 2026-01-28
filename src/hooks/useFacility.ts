@@ -141,3 +141,66 @@ export function useFacilityDetail({
 
   return { facility, loading, error };
 }
+
+/**
+ * Hook để fetch chi tiết một facility theo code (dùng cho URL routing)
+ */
+export function useFacilityDetailByCode({ 
+  propertyId, 
+  facilityCode, 
+  locale,
+  enabled = true 
+}: {
+  propertyId: number | null;
+  facilityCode: string | null | undefined;
+  locale: string;
+  enabled?: boolean;
+}) {
+  const [facility, setFacility] = useState<FacilityUIData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!propertyId || !facilityCode || !enabled) {
+      setLoading(false);
+      setFacility(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchFacilityDetail = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const foundFacility = await facilityService.getFacilityByCode(propertyId, facilityCode, locale);
+
+        if (!cancelled) {
+          if (foundFacility) {
+            setFacility(foundFacility);
+          } else {
+            setError(new Error(`Facility with code ${facilityCode} not found`));
+          }
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('[useFacilityDetailByCode] Error fetching facility:', err);
+          setError(err instanceof Error ? err : new Error('Failed to fetch facility'));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchFacilityDetail();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [propertyId, facilityCode, locale, enabled]);
+
+  return { facility, loading, error };
+}

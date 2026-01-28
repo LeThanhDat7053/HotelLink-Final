@@ -48,17 +48,18 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
   const { introduction } = useIntroduction(property?.id || null);
   const { content: policyData } = usePolicy(property?.id || 0, locale);
 
-  // Auto-open menu sau khi settings load xong + delay để smooth
+  // Auto-open menu sau khi settings load xong + delay để smooth (CHỈ desktop)
   useEffect(() => {
-    if (!vrSettingsLoading && vrHotelSettings) {
-      // Delay 500ms sau khi settings load xong rồi mở menu
+    const isDesktop = screens.md;
+    if (!vrSettingsLoading && vrHotelSettings && isDesktop) {
+      // Delay 500ms sau khi settings load xong rồi mở menu (chỉ desktop)
       const timer = setTimeout(() => {
         onMenuToggle?.(true);
       }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, [vrSettingsLoading, vrHotelSettings, onMenuToggle]);
+  }, [vrSettingsLoading, vrHotelSettings, onMenuToggle, screens.md]);
 
   // Lấy translations theo locale hiện tại
   const t = useMemo(() => getMenuTranslations(locale), [locale]);
@@ -294,6 +295,9 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
 
         .primary-menu .menu-item a.active {
           color: ${primaryColor};
+          font-weight: 600;
+          background: rgba(236, 197, 109, 0.15);
+          border-left: 4px solid ${primaryColor};
         }
 
         /* Menu item có submenu */
@@ -472,30 +476,38 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
               </ul>
             </nav>
 
-            {/* Book Now Button - Ant Design */}
-            <Button
-              type="primary"
-              size="large"
-              block
-              style={{
-                height: 52,
-                background: '#d4a855',
-                color: 'white',
-                textAlign: 'center',
-                fontWeight: 500,
-                fontSize: 13,
-                letterSpacing: '0.15em',
-                borderRadius: 0,
-                border: 0,
-                marginTop: 0,
+            {/* Book Now Button - Full clickable area */}
+            <Link 
+              to={getLocalizedPath('/dat-phong', locale)} 
+              style={{ 
+                display: 'block',
+                width: '100%',
+                textDecoration: 'none'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = '#c49a4a'}
-              onMouseLeave={(e) => e.currentTarget.style.background = '#d4a855'}
             >
-              <Link to={getLocalizedPath('/dat-phong', locale)} style={{ color: 'white', textDecoration: 'none' }}>
+              <Button
+                type="primary"
+                size="large"
+                block
+                style={{
+                  height: 52,
+                  background: '#d4a855',
+                  color: 'white',
+                  textAlign: 'center',
+                  fontWeight: 500,
+                  fontSize: 13,
+                  letterSpacing: '0.15em',
+                  borderRadius: 0,
+                  border: 0,
+                  marginTop: 0,
+                  width: '100%',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#c49a4a'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#d4a855'}
+              >
                 {t.booking}
-              </Link>
-            </Button>
+              </Button>
+            </Link>
 
             {/* Social Bar - Ant Design Space */}
             <Space 

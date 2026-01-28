@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sticky Buttons Documentation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/prism.css">
+</head>
+<body>
+<div id="sidebar">
+    <div id="logo">
+        <img src="images/logo.png">
+    </div>
+
+    <ul id="nav">
+        <li><a class="current" href="#cover">Hello</a></li>
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#structure">The structure</a></li>
+        <li><a href="#installation">Quick install</a></li>
+        <li><a href="#options">Options</a></li>
+        <li><a href="#credits">Sources and Credits</a></li>
+        <li><a href="#tips">Tricks and tips</a></li>
+        <li><a href="#notes">Notes</a></li>
+        <li><a href="#support">Support</a></li>
+    </ul>
+
+    <div id="copyright">
+        <a href="https://dayes.dev">Copyright Dayes</a>
+    </div>
+
+</div>
+
+<div id="content">
+    <div class="content-wrap">
+
+        <section id="cover">
+            <h1>Sticky Buttons</h1>
+            <h2>Documentation</h2>
+            <hr>
+            <ul>
+                <li>Created: 06.04.2020</li>
+                <li>Created by: Dayes</li>
+                <li>Profile: <a
+                        href="https://codecanyon.net/user/dayesdesign">https://codecanyon.net/user/dayesdesign</a></li>
+                <li>Support: <a href="mailto:d@dayes.dev">d@dayes.dev</a></li>
+            </ul>
+
+            <div class="subtitle">Thank you for choosing Sticky Buttons</div>
+
+            <p>Before you get started I suggest you to read the documentation and in case you have an issue or need some
+                help,
+                feel free to contact me via email or PM on Codecanyon.
+            </p>
+        </section>
+
+        <section id="overview">
+            <h3>Overview</h3>
+            <hr class="notop">
+            <p>
+                <strong>Sticky Buttons</strong> is meant to be easily implemented into almost any website or CMS system
+                with
+                some basic knowledge of HTML, JS, CSS and/or server-side scripting.<br/>
+                It is a framework for easy installation, customization, and development. <b>It is not a CMS plugin,
+                module or
+                widget</b> hence it needs to be installed manually. Sticky Buttons does not contain premade designs, it
+                is a
+                layout/framework for your custom notification design/s for static websites or dynamic (CMS).
+            </p>
+
+            <div class="subtitle">Package contents</div>
+            <ol>
+                <li>Quick start - includes a single demo for a quick start</li>
+                <li>Demo layouts - include basic demo layouts for reference</li>
+                <li>Documentation</li>
+                <li>Source</li>
+                <li>changelog.txt</li>
+            </ol>
+
+        </section>
+
+        <section id="structure">
+            <h3>The structure</h3>
+            <hr class="notop">
+
+            <p><strong>Sticky Buttons</strong> is made from the html elements which define the layout, CSS for basic
+                layout
+                design and JS for actions</p>
+            <br/><br/>
+            <span class="subtitle">1. HTML</span>
+            <p>The main HTML structure of the menu consists of list items and switchers. Each item contains a link,
+                icon, and
+                optional tooltip. Here is the structure with 5 items.</p>
+
+            <pre><code class="language-html line-numbers match-braces">
+	&lt;ul class=&quot;sticky-buttons -large -left-center -space -slide&quot;&gt;
+	&lt;li class=&quot;white black&quot;&gt;
+		&lt;a href=&quot;#&quot; target=&quot;_blank&quot;&gt;
+			&lt;span class=&quot;sb-icon fas fa-plug&quot;&gt;&lt;/span&gt;
+			&lt;span class=&quot;sb-label&quot;&gt;Products&lt;/span&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class=&quot;black orange&quot;&gt;
+		&lt;a href=&quot;#&quot; target=&quot;_blank&quot;&gt;
+			&lt;span class=&quot;sb-icon fas fa-shopping-cart&quot;&gt;&lt;/span&gt;
+			&lt;span class=&quot;sb-label -visible&quot;&gt;Buy Now&lt;/span&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class=&quot;pink white&quot;&gt;
+		&lt;a href=&quot;#&quot; data-type=&quot;email&quot;&gt;
+			&lt;span class=&quot;sb-icon fas fa-envelope&quot;&gt;&lt;/span&gt;
+			&lt;span class=&quot;sb-label&quot;&gt;Share via Email&lt;/span&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class=&quot;white blue&quot;&gt;
+		&lt;a href=&quot;#&quot; data-type=&quot;facebook&quot;&gt;
+			&lt;span class=&quot;sb-icon fab fa-facebook&quot;&gt;&lt;/span&gt;
+			&lt;span class=&quot;sb-label&quot;&gt;Share on Facebook&lt;/span&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class=&quot;yellow green&quot;&gt;
+		&lt;a href=&quot;#&quot; data-type=&quot;print&quot;&gt;
+			&lt;span class=&quot;sb-icon fas fa-print&quot;&gt;&lt;/span&gt;
+			&lt;span class=&quot;sb-label&quot;&gt;Print&lt;/span&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+		</code></pre>
+
+            <div class="subtitle">2. CSS</div>
+
+            <p>This menu contains two CSS files:</p>
+
+            <ul>
+                <li>main.css - demo page styles</li>
+                <li>sticky-buttons.css - required menu styles</li>
+            </ul>
+
+            <p>The file "sticky-buttons.css" contains all of the specific styling. The file is separated into
+                sections:</p>
+
+            <ul>
+                <li>Reset</li>
+                <li>Main Style</li>
+                <li>Size</li>
+                <li>Shapes</li>
+                <li>Position</li>
+                <li>Animations</li>
+                <li>Colors</li>
+            </ul>
+
+            <p>If you would like to edit a specific section, simply find the appropriate label in the CSS file.</p>
+        </section>
+
+        <section id="installation">
+            <h3>Quick install</h3>
+            <hr class="notop">
+
+            <ol>
+                <li>Include necessary CSS
+                    <pre><code class="language-html">
+						&lt;link rel=&quot;stylesheet&quot; href=&quot;css/sticky-buttons.css&quot;&gt;
+					</code></pre>
+                </li>
+                <li>Copy HTML code of the menu from one of demo files.</li>
+                <li>Replace demo menu elements with yours.</li>
+            </ol>
+        </section>
+
+        <section id="options">
+            <h3>Options</h3>
+            <hr class="notop">
+
+            <div class="subtitle">Label Animation Effects</div>
+
+            <p>There are 8 animation effects for label that you can use. All you need is to add the appropriate class
+                to menu container.
+                For example, if you want the "Slide" effect, class name should be: "<code
+                        class="string">-slide</code>". You can find all
+                available effects and classes in table below.</p>
+
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -slide&quot;&gt;
+            </code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Effect</th>
+                    <th>Class name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Fade</td>
+                    <td> -fade</td>
+                </tr>
+                <tr>
+                    <td>Slide</td>
+                    <td><code class="string">-slide</code></td>
+                </tr>
+                <tr>
+                    <td>Slide-out</td>
+                    <td><code class="string">-slide-out</code></td>
+                </tr>
+                <tr>
+                    <td>Zoom</td>
+                    <td><code class="string">-zoom</code></td>
+                </tr>
+                <tr>
+                    <td>Rotate</td>
+                    <td><code class="string">-rotate</code></td>
+                </tr>
+                <tr>
+                    <td>Rotate zoom</td>
+                    <td><code class="string">-rotate-zoom</code></td>
+                </tr>
+                <tr>
+                    <td>Flip-x</td>
+                    <td><code class="string">-flip-x</code></td>
+                </tr>
+                <tr>
+                    <td>Flip-y</td>
+                    <td><code class="string">-flip-y</code></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="subtitle">Position</div>
+
+            <p>There are 12 defined menu positions. To use one of them you need to add appropriate class to menu
+                container. For
+                example, if you want the "Top-left" position, class name should be: "-top-left". You can find all
+                available positions and classes in table below.</p>
+
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -left-center&quot;&gt;
+            </code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Class name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Top-left</td>
+                    <td><code class="string">-top-left</code></td>
+                </tr>
+                <tr>
+                    <td>Top-center</td>
+                    <td><code class="string">-top-center</code></td>
+                </tr>
+                <tr>
+                    <td>Top-right</td>
+                    <td><code class="string">-top-right</code></td>
+                </tr>
+                <tr>
+                    <td>Bottom-left</td>
+                    <td><code class="string">-bottom-left</code></td>
+                </tr>
+                <tr>
+                    <td>Bottom-center</td>
+                    <td><code class="string">-bottom-center</code></td>
+                </tr>
+                <tr>
+                    <td>Bottom-right</td>
+                    <td><code class="string">-bottom-right</code></td>
+                </tr>
+                <tr>
+                    <td>Left Center</td>
+                    <td><code class="string">-left-center</code></td>
+                </tr>
+                <tr>
+                    <td>Left Top</td>
+                    <td><code class="string">-left-top</code></td>
+                </tr>
+                <tr>
+                    <td>Left Bottom</td>
+                    <td><code class="string">-left-bottom</code></td>
+                </tr>
+                <tr>
+                    <td>Right Center</td>
+                    <td><code class="string">-right-center</code></td>
+                </tr>
+                <tr>
+                    <td>Right Top</td>
+                    <td><code class="string">right-top</code></td>
+                </tr>
+                <tr>
+                    <td>Right Bottom</td>
+                    <td><code class="string">-right-bottom</code></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="subtitle">Shape</div>
+
+            <p>There are 4 possible shapes of the buttons. To use one of them you need to add appropriate class to menu
+                container. For example, if you want the "Rounded square" shape, class name should be: "-rsquare". You
+                can find all available shapes and classes in table below.</p>
+
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -circle&quot;&gt;
+            </code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Shape</th>
+                    <th>Class name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Circle</td>
+                    <td><code class="string">-circle</code></td>
+                </tr>
+                <tr>
+                    <td>Ellipse</td>
+                    <td><code class="string">-ellipse</code></td>
+                </tr>
+                <tr>
+                    <td>Square</td>
+                    <td><code class="string">-square</code></td>
+                </tr>
+                <tr>
+                    <td>Rounded square</td>
+                    <td><code class="string">-rsquare</code></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="subtitle">Size</div>
+
+            <p>There are 3 possible size of the buttons. To use one of them you need to add appropriate class to menu
+                container.
+                For example, if you want the "small" size, class name should be: "-small". You can find all available
+                sizes and classes in table below.</p>
+
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -large&quot;&gt;
+            </code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Size</th>
+                    <th>Class name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Size</td>
+                    <td><code class="string">-small</code></td>
+                </tr>
+                <tr>
+                    <td>Medium</td>
+                    <td><code class="string">-medium</code></td>
+                </tr>
+                <tr>
+                    <td>Large</td>
+                    <td><code class="string">-large</code></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="subtitle">Hold Open</div>
+
+            <p>You can hold open the label. For this option you must add the class -visible to label</p>
+
+            <pre><code class="language-html">&lt;span class=&quot;sb-label -visible&quot;&gt;Buy Now&lt;/span&gt;</code></pre>
+
+
+            <div class="subtitle">Colors</div>
+            <p>There are 12 defined color combinations. To use one of them you need to add color classes to
+                &lt;li&gt; tag. For example, if you want the orange background color and black color for the icon,
+                the classes should be: "black orange". When you hover on the icon the background change on black color
+                and icon color change on orange. You can find all the available colors and attribute value in the
+                table below.</p>
+
+            <pre><code class="language-html">&lt;li class=&quot;black orange&quot;&gt;</code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Color classes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>white</td>
+                </tr>
+                <tr>
+                    <td>grey</td>
+                </tr>
+                <tr>
+                    <td>black</td>
+                </tr>
+                <tr>
+                    <td>red</td>
+                </tr>
+                <tr>
+                    <td>orange</td>
+                </tr>
+                <tr>
+                    <td>yellow</td>
+
+                </tr>
+                <tr>
+                    <td>lime</td>
+                </tr>
+                <tr>
+                    <td>green</td>
+                </tr>
+                <tr>
+                    <td>cyan</td>
+                </tr>
+                <tr>
+                    <td>blue</td>
+                </tr>
+                <tr>
+                    <td>purple</td>
+                </tr>
+                <tr>
+                    <td>pink</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="subtitle">Space</div>
+            <p>For add space between elements, use class -shadow for tag ul</p>
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -shadow&quot;&gt;
+            </code></pre>
+
+            <div class="subtitle">Shadow</div>
+
+            <p>For add shadow for menu, use class -space for tag ul</p>
+            <pre><code class="language-html">
+                &lt;ul class=&quot;sticky-buttons -space&quot;&gt;
+            </code></pre>
+
+            <div class="subtitle">Actions</div>
+
+            <p>For add a specific action to the item, you must include the script actions.js on the page before tag
+                /body
+            </p>
+            <pre><code class="language-html">
+                &lt;script src="js/actions.js"&gt;&lt;/script&gt;
+            </code></pre>
+
+            <p>Add the attribute data-type to tag. Example for share page in Facebook:</p>
+            <pre><code class="language-html">
+                &lt;a href=&quot;#&quot; data-type=&quot;facebook&quot;&gt;
+            </code></pre>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Attribute data-type</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td>Print page</td>
+                    <td><code class="string">print</code></td>
+                </tr>
+
+                <tr>
+                    <td>Go to the back</td>
+                    <td><code class="string">back</code></td>
+                </tr>
+
+                <tr>
+                    <td>Go to the forward</td>
+                    <td><code class="string">forward</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Facebook</td>
+                    <td><code class="string">facebook</code></td>
+                </tr>
+                <tr>
+                    <td>Share on VK</td>
+                    <td><code class="string">vk</code></td>
+                </tr>
+                <tr>
+                    <td>Share on Twitter</td>
+                    <td><code class="string">twitter</code></td>
+                </tr>
+                <tr>
+                    <td>Share on Linkedin</td>
+                    <td><code class="string">linkedin</code></td>
+                </tr>
+                <tr>
+                    <td>Share on Odnoklassniki</td>
+                    <td><code class="string">odnoklassniki</code></td>
+                </tr>
+                <tr>
+                    <td>Share on Pinterest</td>
+                    <td><code class="string">pinterest</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Xing</td>
+                    <td><code class="string">xing</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Myspace</td>
+                    <td><code class="string">myspace</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Weibo</td>
+                    <td><code class="string">weibo</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Buffer</td>
+                    <td><code class="string">buffer</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Stumbleupon</td>
+                    <td><code class="string">stumbleupon</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Reddit</td>
+                    <td><code class="string">reddit</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Tumblr</td>
+                    <td><code class="string">tumblr</code></td>
+                </tr>
+                <tr>
+                    <td>Share on Blogger</td>
+                    <td><code class="string">blogger</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Livejournal</td>
+                    <td><code class="string">livejournal</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Pocket</td>
+                    <td><code class="string">pocket</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Telegram</td>
+                    <td><code class="string">telegram</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Skype</td>
+                    <td><code class="string">skype</code></td>
+                </tr>
+
+                <tr>
+                    <td>Share on Email</td>
+                    <td><code class="string">email</code></td>
+                </tr>
+
+
+
+                </tbody>
+            </table>
+
+
+
+
+        </section>
+
+
+        <section id="credits">
+            <h3>Sources and Credits</h3>
+            <hr class="notop">
+
+            <p>I've used the following images, icons or other files as listed.</p>
+
+            <ul>
+                <li><a href="https://fontawesome.com/">Font Awesome</a> by Fonticons, Inc</li>
+            </ul>
+
+        </section>
+
+        <section id="tips">
+            <h3>Tricks and tips</h3>
+            <hr class="notop">
+            <br/>
+
+            <div class="subtitle">1. Debug</div>
+            <p>If you're stuck with your layout and have issues you can't fix immediately, I recommend you first try to
+                debug
+                the site with firebug or native browser element inspector (eg. right click --> Inspect element).<br/>
+                This will also help you build your custom layout faster and understand the scheme of how things work in
+                Sticky buttons.</p>
+            <br/><br/><br/>
+            <div class="subtitle">2.
+                Use minified version
+            </div>
+            <p>From the performance point it is good practice to use minified css and js version of the Sticky
+                buttons CSS.</p>
+
+        </section>
+
+        <section id="notes">
+            <h3>Additional notes</h3>
+            <hr class="notop">
+            <div class="smallinfo"><span>Note 1:</span> The layout and functionalities of the item's and their inner
+                elements
+                won't work properly in non supported CSS3 browsers.
+            </div>
+            <div class="smallinfo"><span>Note 2:</span> To view this documentation properly, it is recommended to view
+                it on
+                resolution 1280px of width or more.
+            </div>
+            <div class="smallinfo"><span>Note 3:</span> If you don't understand implementation steps and usage, feel
+                free to
+                contact me. I'm not responsible for any data lost or other damage, which was formed during installation
+                or usage
+                of this items and their elements. Always create backups.
+            </div>
+            <br/><br/><br/><br/>
+        </section>
+
+        <section id="support">
+            <h3>Support</h3>
+            <hr class="notop">
+            <a name="support-team"></a>
+            <p>If you got stuck with the installation, usage or modification of the item's, contact me via email <a
+                    href="mailto:d@dayes.dev">d@dayes.dev</a> or send me a message on <a
+                    href="https://codecanyon.net/user/dayesdesign" target="_blank">Codecanyon</a>.</p>
+
+            <p>When you submit a support ticket, please provide as much information as possible, for example:</p>
+
+            <ul>
+                <li>Your Envato username</li>
+                <li>Detailed issue</li>
+                <li>URL where you use the item</li>
+            </ul>
+
+            <div class="subtitle">Thank you again for using Sticky buttons. Don't forget to rate :)</div>
+            <img src="images/stars.png" style="margin-top:20px;"/>
+
+        </section>
+
+
+    </div>
+</div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/script.js"></script>
+<script src="js/prism.js"></script>
+</body>
+</html>

@@ -158,4 +158,25 @@ export const roomService = {
     
     return this.transformRoomForUI(room, locale);
   },
+
+  /**
+   * Lấy chi tiết 1 phòng theo room_code
+   * 
+   * @param propertyId - ID của property
+   * @param roomCode - Mã phòng (room_code)
+   * @param locale - Mã ngôn ngữ
+   * @returns Promise<RoomUIData | null>
+   */
+  async getRoomByCode(
+    propertyId: number,
+    roomCode: string,
+    locale: string
+  ): Promise<RoomUIData | null> {
+    const rooms = await this.getRooms(propertyId);
+    const room = rooms.find(r => r.room_code?.toLowerCase() === roomCode.toLowerCase());
+    
+    if (!room) return null;
+    
+    return this.transformRoomForUI(room, locale);
+  },
 };
