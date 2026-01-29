@@ -3,7 +3,7 @@
  * 
  * Fullscreen loading với logo từ API
  * Hiển thị khi chuyển trang với animation mượt mà
- * Background màu xám nhạt (bg-gray-50) để không gây flash đen
+ * Background màu xám tối (bg-gray-800) để tối hơn
  */
 
 import type { FC } from 'react';
@@ -25,7 +25,7 @@ interface LoadingScreenProps {
 
 /**
  * LoadingScreen - Logo loading từ API với animation
- * Background: rgb(249, 250, 251) - tailwind bg-gray-50
+ * Background: rgb(31, 41, 55) - tailwind bg-gray-800
  */
 export const LoadingScreen: FC<LoadingScreenProps> = ({
   logoUrl: propLogoUrl = null,
@@ -88,7 +88,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
         right: 0,
         bottom: 0,
         minHeight: '100vh',
-        backgroundColor: 'rgb(249, 250, 251)', // bg-gray-50
+        backgroundColor: 'rgb(31, 41, 55)', // bg-gray-800
         zIndex: 999999,
         display: 'flex',
         flexDirection: 'column',
@@ -102,8 +102,8 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
       {/* Logo Container với Spinner xoay quanh - Responsive */}
       <div style={{
         position: 'relative',
-        width: 'clamp(200px, 20vw, 320px)',
-        height: 'clamp(200px, 20vw, 320px)',
+        width: 'clamp(160px, 16vw, 280px)',
+        height: 'clamp(160px, 16vw, 280px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -111,8 +111,8 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
         {/* Logo to nằm giữa - Responsive */}
         <div style={{
           position: 'absolute',
-          width: 'clamp(140px, 16vw, 260px)',
-          height: 'clamp(140px, 16vw, 260px)',
+          width: 'clamp(120px, 12vw, 200px)',
+          height: 'clamp(120px, 12vw, 200px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -122,8 +122,8 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
           {!logoLoaded && !logoError && (
             <div style={{
               position: 'absolute',
-              width: 'clamp(120px, 14vw, 240px)',
-              height: 'clamp(120px, 14vw, 240px)',
+              width: 'clamp(100px, 10vw, 180px)',
+              height: 'clamp(100px, 10vw, 180px)',
               borderRadius: '50%',
               background: 'linear-gradient(90deg, rgb(229, 231, 235) 25%, rgb(243, 244, 246) 50%, rgb(229, 231, 235) 75%)',
               backgroundSize: '200% 100%',
@@ -160,15 +160,15 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
           {/* Fallback nếu logo error */}
           {logoError && (
             <div style={{
-              width: 'clamp(90px, 12vw, 200px)',
-              height: 'clamp(90px, 12vw, 200px)',
+              width: 'clamp(80px, 8vw, 150px)',
+              height: 'clamp(80px, 8vw, 150px)',
               borderRadius: '50%',
               backgroundColor: 'rgb(229, 231, 235)',
               animation: 'logoPulse 1.5s ease-in-out infinite',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 'clamp(36px, 5vw, 80px)',
+              fontSize: 'clamp(32px, 4vw, 60px)',
               color: 'rgb(156, 163, 175)',
             }}>
               🏨
