@@ -42,3 +42,7 @@ export { useContact } from './useContact';
 export { useOffers, useOfferDetail } from './useOffers';
 
 export { useGallery } from './useGallery';
+
+export { useSettings, useLogo } from './useSettings';
+
+export { useRouteLoading } from './useRouteLoading';

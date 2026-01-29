@@ -3,11 +3,11 @@ import { useState, useCallback, useMemo, lazy, Suspense, useEffect, useRef } fro
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout, Grid, Skeleton } from 'antd';
 import { ROUTES, extractCleanPath } from './constants/routes';
-import { Header, InfoBox, BottomBar, RoomsView, DiningView, FacilityView, ServiceView, PolicyContent, ContactContent, GalleryContent, RegulationContent, AboutContent, PropertyPostsContent, SEOMeta } from './components/common';
+import { Header, InfoBox, BottomBar, RoomsView, DiningView, FacilityView, ServiceView, PolicyContent, ContactContent, GalleryContent, RegulationContent, AboutContent, PropertyPostsContent, SEOMeta, LoadingScreen } from './components/common';
 import { OfferView } from './components/common/OfferView';
 import { PropertyProvider, usePropertyData, LanguageProvider, usePropertyContext, ThemeProvider, useTheme } from './context';
 import { ThemeInjector } from './components/ThemeInjector';
-import { useIntroductionContent, usePropertyPosts, usePolicy, useRegulation, useContact } from './hooks';
+import { useIntroductionContent, usePropertyPosts, usePolicy, useRegulation, useContact, useLogo, useRouteLoading } from './hooks';
 import { useVrHotelSettings } from './hooks/useVR360';
 import { useLocale } from './context/LanguageContext';
 import { getMediaType, getYouTubeEmbedUrl } from './utils/mediaHelper';
@@ -48,6 +48,18 @@ const AppLayout: FC = () => {
   const { vr360Url: defaultVr360Url, propertyName, loading, propertyId } = usePropertyData();
   const locale = useLocale();
   const { primaryColor } = useTheme();
+  
+  // Lấy logo từ API cho loading screen
+  const { logoUrl } = useLogo();
+  
+  // Route loading - hiển thị loading screen 0.5 giây khi chuyển trang
+  const { isLoading: isRouteLoading } = useRouteLoading({ minLoadingTime: 500 });
+  
+  // Debug: Log logo URL and route loading state
+  useEffect(() => {
+    // console.log('[App] logoUrl:', logoUrl);
+    // console.log('[App] isRouteLoading:', isRouteLoading);
+  }, [logoUrl, isRouteLoading]);
   
   // Get translations for current locale
   const t = getMenuTranslations(locale);
@@ -297,11 +309,17 @@ const AppLayout: FC = () => {
       style={{ 
         width: '100vw', 
         height: '100vh', 
-        backgroundColor: '#000', 
+        backgroundColor: 'rgb(249, 250, 251)', // bg-gray-50 - tránh flash đen
         overflow: 'hidden', 
         position: 'relative' 
       }}
     >
+      {/* Loading Screen - Hiển thị khi chuyển trang */}
+      <LoadingScreen 
+        logoUrl={logoUrl} 
+        visible={isRouteLoading}
+      />
+      
       {/* Theme Injector - Apply dynamic colors */}
       <ThemeInjector />
       
@@ -326,7 +344,7 @@ const AppLayout: FC = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              backgroundColor: '#000'
+              backgroundColor: 'rgb(249, 250, 251)' // bg-gray-50
             }}>
               <Skeleton.Node active style={{ width: 200, height: 200 }}>
                 <span style={{ color: '#888' }}>Đang tải VR360...</span>
@@ -530,19 +548,7 @@ const AppLayout: FC = () => {
       <BottomBar />
 
       {/* Hidden Routes - for navigation logic with Suspense */}
-      <Suspense fallback={
-        <div style={{ 
-          position: 'fixed', 
-          top: '50%', 
-          left: '50%', 
-          transform: 'translate(-50%, -50%)',
-          zIndex: 9999
-        }}>
-          <Skeleton.Node active style={{ width: 200, height: 200 }}>
-            <span style={{ color: '#888' }}>Đang tải...</span>
-          </Skeleton.Node>
-        </div>
-      }>
+      <Suspense fallback={<LoadingScreen logoUrl={logoUrl} />}>
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={`/:lang${ROUTES.HOME}`} element={<HomePage />} />

@@ -26,14 +26,14 @@ const TENANT_CODE = process.env.VITE_TENANT_CODE || 'phoenix';
 const PROPERTY_ID = process.env.VITE_PROPERTY_ID || '13';
 const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://phoenixhotelvungtau.com/';
 
-console.log('📋 Config:');
-console.log('  - API:', API_BASE_URL);
-console.log('  - Tenant:', TENANT_CODE);
-console.log('  - Property ID:', PROPERTY_ID);
-console.log('  - Site URL:', SITE_BASE_URL);
+// console.log('📋 Config:');
+// console.log('  - API:', API_BASE_URL);
+// console.log('  - Tenant:', TENANT_CODE);
+// console.log('  - Property ID:', PROPERTY_ID);
+// console.log('  - Site URL:', SITE_BASE_URL);
 
 async function fetchSEOData() {
-  console.log('🔄 Fetching SEO data from API...');
+  // console.log('🔄 Fetching SEO data from API...');
   
   const response = await fetch(`${API_BASE_URL}/vr-hotel/settings`, {
     headers: {
@@ -48,7 +48,7 @@ async function fetchSEOData() {
   }
   
   const data = await response.json();
-  console.log('✅ API data fetched:', data);
+  // console.log('✅ API data fetched:', data);
   
   return {
     title: data.seo?.vi?.meta_title || 'HotelLink',
@@ -121,10 +121,10 @@ async function injectSEO() {
     // 5. Ghi lại file
     fs.writeFileSync(indexPath, html, 'utf-8');
     
-    console.log('✅ SEO meta tags injected successfully!');
-    console.log('📄 File:', indexPath);
-    console.log('🎯 Title:', seo.title);
-    console.log('🖼️  Image:', seo.logoUrl);
+    // console.log('✅ SEO meta tags injected successfully!');
+    // console.log('📄 File:', indexPath);
+    // console.log('🎯 Title:', seo.title);
+    // console.log('🖼️  Image:', seo.logoUrl);
     
   } catch (error) {
     console.error('❌ Error:', error.message);

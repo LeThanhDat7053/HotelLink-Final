@@ -23,6 +23,7 @@ export { policyService } from './policyService';
 export { regulationService } from './regulationService';
 export { contactService } from './contactService';
 export { offerService } from './offerService';
+export { settingsService } from './settingsService';
 
 // Re-export api instance for direct use if needed
 export { default as api } from '../api';

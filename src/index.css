@@ -17,12 +17,14 @@ html, body, #root {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-color: rgb(249, 250, 251); /* bg-gray-50 - tránh flash đen */
 }
 
 body {
   font-family: 'UTMNeoSansIntel', Arial, sans-serif;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: rgb(249, 250, 251); /* bg-gray-50 */
 }
 
 /* Custom Scrollbar */

@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- DNS Prefetch for faster API calls -->
+    <link rel="dns-prefetch" href="https://travel.link360.vn" />
+    <link rel="preconnect" href="https://travel.link360.vn" crossorigin />
+    
     <!-- SEO Meta Tags (Hardcode for crawlers) -->
     <title>Phoenix Hotel Vũng Tàu | Khách sạn 3 sao gần biển, trung tâm</title>
     <meta name="description" content="Phoenix Hotel Vũng Tàu là khách sạn 3 sao gần trung tâm, phòng tiện nghi, nhiều dịch vụ, thuận tiện di chuyển ra biển và điểm tham quan.">
@@ -29,8 +33,17 @@
     <link rel="icon" href="https://travel.link360.vn/api/v1/media/172/view">
     <link rel="shortcut icon" href="https://travel.link360.vn/api/v1/media/172/view">
     <link rel="apple-touch-icon" href="https://travel.link360.vn/api/v1/media/172/view">
+    
+    <!-- Inline critical CSS to prevent flash -->
+    <style>
+      html, body, #root {
+        background-color: rgb(249, 250, 251) !important;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
-  <body>
+  <body style="background-color: rgb(249, 250, 251);">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
