@@ -42,6 +42,11 @@ const AppLayout: FC = () => {
   const [offerDetailVrLink, setOfferDetailVrLink] = useState<string | null>(null);
   const [offerTitle, setOfferTitle] = useState<string | null>(null);
   
+  // State cho iframe loading - tránh flash trắng
+  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const prevVr360UrlRef = useRef<string | null>(null);
+  const iframeTimeoutRef = useRef<number | null>(null);
+  
   const screens = useBreakpoint();
   
   // Lấy dữ liệu property và locale
@@ -52,8 +57,9 @@ const AppLayout: FC = () => {
   // Lấy logo từ API cho loading screen
   const { logoUrl } = useLogo();
   
-  // Route loading - hiển thị loading screen 0.5 giây khi chuyển trang
-  const { isLoading: isRouteLoading } = useRouteLoading({ minLoadingTime: 500 });
+  // Route loading - hiển thị loading screen khi chuyển trang
+  // Loading screen sẽ ẩn khi cả timer min và iframe đều đã xong
+  const { isLoading: isRouteLoading } = useRouteLoading({ minLoadingTime: 300 });
   
   // Debug: Log logo URL and route loading state
   useEffect(() => {
@@ -261,6 +267,39 @@ const AppLayout: FC = () => {
   // Xác định loại media (image hay vr360)
   const mediaType = useMemo(() => getMediaType(vr360Url || ''), [vr360Url]);
   
+  // Reset iframeLoaded khi VR360 URL thay đổi + timer cho iframe load
+  useEffect(() => {
+    // Clear timeout cũ
+    if (iframeTimeoutRef.current) {
+      clearTimeout(iframeTimeoutRef.current);
+    }
+    
+    if (vr360Url !== prevVr360UrlRef.current) {
+      // Chỉ reset nếu URL thực sự khác (không phải cùng link)
+      if (prevVr360UrlRef.current !== null) {
+        setIframeLoaded(false);
+        
+        // Đợi iframe có thời gian load (2 giây cho VR360 thường đủ)
+        iframeTimeoutRef.current = window.setTimeout(() => {
+          setIframeLoaded(true);
+        }, 2000);
+      } else {
+        // Lần đầu load trang - đợi 2.5 giây
+        setIframeLoaded(false);
+        iframeTimeoutRef.current = window.setTimeout(() => {
+          setIframeLoaded(true);
+        }, 2500);
+      }
+      prevVr360UrlRef.current = vr360Url || null;
+    }
+    
+    return () => {
+      if (iframeTimeoutRef.current) {
+        clearTimeout(iframeTimeoutRef.current);
+      }
+    };
+  }, [vr360Url]);
+  
   // Desktop: InfoBox hiện khi menu mở
   // Mobile: InfoBox có state riêng, chỉ đóng khi click X
   const isDesktop = screens.md;
@@ -309,15 +348,15 @@ const AppLayout: FC = () => {
       style={{ 
         width: '100vw', 
         height: '100vh', 
-        backgroundColor: 'rgb(249, 250, 251)', // bg-gray-50 - tránh flash đen
+        backgroundColor: 'rgb(31, 41, 55)', // bg-gray-800 - giống LoadingScreen
         overflow: 'hidden', 
         position: 'relative' 
       }}
     >
-      {/* Loading Screen - Hiển thị khi chuyển trang */}
+      {/* Loading Screen - Hiển thị khi chuyển trang hoặc iframe đang load */}
       <LoadingScreen 
         logoUrl={logoUrl} 
-        visible={isRouteLoading}
+        visible={isRouteLoading || !iframeLoaded}
       />
       
       {/* Theme Injector - Apply dynamic colors */}
@@ -344,10 +383,10 @@ const AppLayout: FC = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              backgroundColor: 'rgb(249, 250, 251)' // bg-gray-50
+              backgroundColor: 'rgb(31, 41, 55)' // bg-gray-800
             }}>
               <Skeleton.Node active style={{ width: 200, height: 200 }}>
-                <span style={{ color: '#888' }}>Đang tải VR360...</span>
+                <span style={{ color: '#ccc' }}>Đang tải VR360...</span>
               </Skeleton.Node>
             </div>
           ) : vr360Url ? (
@@ -396,7 +435,7 @@ const AppLayout: FC = () => {
                   left: 0, 
                   width: '100vw', 
                   height: '100vh',
-                  border: 0 
+                  border: 0,
                 }}
                 title={`${propertyName} VR360 Tour`}
                 allowFullScreen

@@ -70,7 +70,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
     if (!visible) {
       const timer = setTimeout(() => {
         setIsVisible(false);
-      }, 300); // Thời gian fade out
+      }, 400); // Thời gian fade out - đủ để transition hoàn tất
       return () => clearTimeout(timer);
     } else {
       setIsVisible(true);
@@ -96,7 +96,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
         justifyContent: 'center',
         gap: '2.5rem',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.3s ease-in-out',
+        transition: 'opacity 0.4s ease-in-out',
       }}
     >
       {/* Logo Container với Spinner xoay quanh - Responsive */}
