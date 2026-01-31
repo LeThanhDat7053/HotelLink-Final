@@ -54,17 +54,35 @@ interface VrHotelSettingsParams {
   propertyId: number;
 }
 
+// ===== CACHING =====
+// Simple in-memory cache cho VR Hotel Settings
+const settingsCache = new Map<string, { data: VrHotelSettingsResponse; timestamp: number }>();
+const SETTINGS_CACHE_DURATION = 5 * 60 * 1000; // 5 phút
+
 /**
  * Lấy VR Hotel Settings cho property
+ * OPTIMIZED: Thêm caching để giảm API calls
  * @param params - Property ID
  * @returns VrHotelSettingsResponse
  */
 const getVrHotelSettings = async (params: VrHotelSettingsParams): Promise<VrHotelSettingsResponse> => {
+  const cacheKey = `settings_${params.propertyId}`;
+  
+  // Check cache first
+  const cached = settingsCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < SETTINGS_CACHE_DURATION) {
+    return cached.data;
+  }
+  
   const response = await api.get('/vr-hotel/settings', {
     headers: {
       'x-property-id': params.propertyId.toString(),
     },
   });
+  
+  // Cache kết quả
+  settingsCache.set(cacheKey, { data: response.data, timestamp: Date.now() });
+  
   return response.data;
 };
 

@@ -27,6 +27,30 @@ body {
   background-color: rgb(249, 250, 251); /* bg-gray-50 */
 }
 
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+/* GPU acceleration hints cho animated elements */
+iframe {
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth scrolling cho containers */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Reduce repaints on hover */
+a, button {
+  will-change: opacity, transform;
+}
+
+/* Contain paint for fixed elements */
+[style*="position: fixed"] {
+  contain: layout style paint;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 2px;

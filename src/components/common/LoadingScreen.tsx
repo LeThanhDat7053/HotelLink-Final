@@ -1,14 +1,19 @@
 /**
- * LoadingScreen Component
+ * LoadingScreen Component - Optimized Version
  * 
  * Fullscreen loading với logo từ API
  * Hiển thị khi chuyển trang với animation mượt mà
  * Background màu xám tối (bg-gray-800) để tối hơn
+ * 
+ * OPTIMIZATIONS:
+ * - Giảm transition time cho faster feel
+ * - Thêm will-change hints
+ * - Optimized animation timing
  */
 
 import type { FC } from 'react';
 import { createPortal } from 'react-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../../hooks/useSettings';
 
 interface LoadingScreenProps {
@@ -34,43 +39,44 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
   const [isVisible, setIsVisible] = useState(visible);
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const hasPreloaded = useRef(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
   
-  // Hard code logo URL với media_id từ env
+  // Hard code logo URL với media_id từ env - luôn có sẵn ngay lập tức
   const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
   const logoMediaId = import.meta.env.VITE_LOGO_MEDIA_ID || '177';
-  const logoUrl = propLogoUrl || `${baseURL}/media/${logoMediaId}/view`;
+  const fallbackLogoUrl = `${baseURL}/media/${logoMediaId}/view`;
+  const logoUrl = propLogoUrl || fallbackLogoUrl;
   
   // Fetch settings từ API để lấy primary_color
   const { settings } = useSettings();
   const primaryColor = settings?.primary_color || '#c2b07f'; // fallback
   
-  // Debug: Log logo URL
+  // Preload logo ngay lập tức khi component mount
   useEffect(() => {
-    if (visible) {
-      // console.log('[LoadingScreen] Logo URL:', logoUrl);
+    if (logoUrl && !hasPreloaded.current) {
+      hasPreloaded.current = true;
       
-      // Preload image khi có logo URL
-      if (logoUrl) {
-        const img = new Image();
-        img.src = logoUrl;
-        img.onload = () => {
-          // console.log('[LoadingScreen] Logo preloaded successfully');
-          setLogoLoaded(true);
-        };
-        img.onerror = () => {
-          console.error('[LoadingScreen] Logo preload failed');
-          setLogoError(true);
-        };
-        // console.log('[LoadingScreen] Preloading logo image');
+      // Tạo Image object để preload
+      const img = new Image();
+      img.src = logoUrl;
+      imgRef.current = img;
+      
+      // Kiểm tra nếu đã có trong cache
+      if (img.complete && img.naturalHeight !== 0) {
+        setLogoLoaded(true);
+      } else {
+        img.onload = () => setLogoLoaded(true);
+        img.onerror = () => setLogoError(true);
       }
     }
-  }, [visible, logoUrl]);
+  }, [logoUrl]);
   
   useEffect(() => {
     if (!visible) {
       const timer = setTimeout(() => {
         setIsVisible(false);
-      }, 300); // Thời gian fade out
+      }, 250); // Giảm fade out time từ 400ms xuống 250ms
       return () => clearTimeout(timer);
     } else {
       setIsVisible(true);
@@ -96,7 +102,8 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
         justifyContent: 'center',
         gap: '2.5rem',
         opacity: visible ? 1 : 0,
-        transition: 'opacity 0.3s ease-in-out',
+        transition: 'opacity 0.25s ease-out', // Nhanh hơn, ease-out cho feel tự nhiên
+        willChange: 'opacity', // GPU acceleration hint
       }}
     >
       {/* Logo Container với Spinner xoay quanh - Responsive */}
@@ -157,23 +164,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
             />
           )}
           
-          {/* Fallback nếu logo error */}
-          {logoError && (
-            <div style={{
-              width: 'clamp(80px, 8vw, 150px)',
-              height: 'clamp(80px, 8vw, 150px)',
-              borderRadius: '50%',
-              backgroundColor: 'rgb(229, 231, 235)',
-              animation: 'logoPulse 1.5s ease-in-out infinite',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 'clamp(32px, 4vw, 60px)',
-              color: 'rgb(156, 163, 175)',
-            }}>
-              🏨
-            </div>
-          )}
+          {/* Khi logo error - chỉ hiện spinner, không hiện icon mặc định */}
         </div>
 
         {/* Spinner Ring xoay vòng quanh logo - Responsive border */}

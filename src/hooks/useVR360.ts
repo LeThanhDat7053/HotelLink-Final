@@ -300,6 +300,8 @@ export const useVR360Detail = (id: string): UseVR360DetailResult => {
  * @param propertyId - ID của property
  * @returns { settings, loading, error, refetch }
  * 
+ * OPTIMIZED: Thêm caching để không fetch lại mỗi lần navigate
+ * 
  * @example
  * function RoomBackground({ propertyId }) {
  *   const { settings, loading, error } = useVrHotelSettings(propertyId);
@@ -311,8 +313,22 @@ export const useVR360Detail = (id: string): UseVR360DetailResult => {
  *   return <VR360Viewer url={vr360Link} />;
  * }
  */
+
+// Cache cho VR Hotel Settings - persist across component unmounts
+const vrHotelSettingsCache = new Map<number, { data: VrHotelSettingsResponse; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 phút
+
 export const useVrHotelSettings = (propertyId: number | null) => {
-  const [settings, setSettings] = useState<VrHotelSettingsResponse | null>(null);
+  const [settings, setSettings] = useState<VrHotelSettingsResponse | null>(() => {
+    // Initialize từ cache nếu có
+    if (propertyId) {
+      const cached = vrHotelSettingsCache.get(propertyId);
+      if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        return cached.data;
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -321,11 +337,21 @@ export const useVrHotelSettings = (propertyId: number | null) => {
       return;
     }
 
+    // Check cache first
+    const cached = vrHotelSettingsCache.get(propertyId);
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      setSettings(cached.data);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
       const data = await vr360Service.getVrHotelSettings({ propertyId });
       setSettings(data);
+      
+      // Cache kết quả
+      vrHotelSettingsCache.set(propertyId, { data, timestamp: Date.now() });
     } catch (err) {
       console.error('[useVrHotelSettings] Error:', err);
       setError(err as Error);

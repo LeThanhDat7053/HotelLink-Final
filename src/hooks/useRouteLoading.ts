@@ -1,17 +1,22 @@
 /**
- * useRouteLoading Hook
+ * useRouteLoading Hook - Optimized Version
  * 
  * Quản lý loading state khi chuyển trang với thời gian tối thiểu
  * để đảm bảo loading screen hiển thị đủ lâu và smooth
+ * 
+ * OPTIMIZATIONS:
+ * - Giảm minLoadingTime để chuyển trang nhanh hơn
+ * - Thêm forceComplete để dừng loading sớm khi content ready
+ * - Thêm instant mode cho navigation giữa các sub-pages
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface UseRouteLoadingOptions {
   /**
    * Thời gian loading tối thiểu (ms)
-   * @default 1500
+   * @default 200 - đủ để animation smooth mà không quá chậm
    */
   minLoadingTime?: number;
   
@@ -41,7 +46,26 @@ interface UseRouteLoadingReturn {
    * Pathname trước đó
    */
   previousPath: string | null;
+  
+  /**
+   * Gọi để dừng loading ngay lập tức (khi content đã ready)
+   */
+  forceComplete: () => void;
 }
+
+// Helper: Check nếu 2 paths thuộc cùng section (vd: /phong-nghi/xxx và /phong-nghi/yyy)
+const isSameSection = (path1: string, path2: string): boolean => {
+  const getSection = (p: string) => {
+    const parts = p.split('/').filter(Boolean);
+    // Bỏ qua locale prefix nếu có (vi, en, etc.)
+    const locale = ['vi', 'en', 'zh', 'ja', 'ko'];
+    if (parts[0] && locale.includes(parts[0])) {
+      return parts[1] || '';
+    }
+    return parts[0] || '';
+  };
+  return getSection(path1) === getSection(path2);
+};
 
 /**
  * Hook để quản lý loading screen khi chuyển trang
@@ -53,7 +77,7 @@ export const useRouteLoading = (
   options: UseRouteLoadingOptions = {}
 ): UseRouteLoadingReturn => {
   const { 
-    minLoadingTime = 500, // giảm từ 1500ms xuống 500ms
+    minLoadingTime = 200, // Giảm xuống 200ms - đủ smooth mà nhanh
     onLoadingStart,
     onLoadingEnd 
   } = options;
@@ -66,20 +90,29 @@ export const useRouteLoading = (
   const isFirstRender = useRef(true);
   const hasInitialLoadingTriggered = useRef(false);
   
+  // forceComplete - dừng loading ngay lập tức khi content đã ready
+  const forceComplete = useCallback(() => {
+    if (loadingTimerRef.current) {
+      clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = null;
+    }
+    setIsLoading(false);
+    onLoadingEnd?.();
+  }, [onLoadingEnd]);
+  
   useEffect(() => {
-    // Initial loading - chỉ trigger một lần
+    // Initial loading - chỉ trigger một lần với thời gian ngắn
     if (isFirstRender.current && !hasInitialLoadingTriggered.current) {
       hasInitialLoadingTriggered.current = true;
       
       setIsLoading(true);
-      // console.log('[useRouteLoading] Starting initial loading');
       onLoadingStart?.();
       
-      loadingTimerRef.current = setTimeout(() => {
+      // Initial loading ngắn hơn - 150ms
+      loadingTimerRef.current = window.setTimeout(() => {
         setIsLoading(false);
-        // console.log('[useRouteLoading] Ending initial loading');
         onLoadingEnd?.();
-      }, minLoadingTime);
+      }, 150) as unknown as number;
       
       isFirstRender.current = false;
       return;
@@ -95,18 +128,20 @@ export const useRouteLoading = (
         clearTimeout(loadingTimerRef.current);
       }
       
+      // Kiểm tra nếu chuyển trong cùng section → loading rất ngắn
+      const sameSectionNav = isSameSection(currentBasePath, previousBasePath);
+      const actualLoadingTime = sameSectionNav ? 100 : minLoadingTime;
+      
       // Bắt đầu loading
       setPreviousPath(previousPathRef.current);
       setIsLoading(true);
-      // console.log('[useRouteLoading] Starting loading for path:', location.pathname);
       onLoadingStart?.();
       
-      // Đặt timer để kết thúc loading sau minLoadingTime
-      loadingTimerRef.current = setTimeout(() => {
+      // Đặt timer để kết thúc loading
+      loadingTimerRef.current = window.setTimeout(() => {
         setIsLoading(false);
-        // console.log('[useRouteLoading] Ending loading for path:', location.pathname);
         onLoadingEnd?.();
-      }, minLoadingTime);
+      }, actualLoadingTime) as unknown as number;
       
       // Cập nhật previous path
       previousPathRef.current = location.pathname;
@@ -124,6 +159,7 @@ export const useRouteLoading = (
     isLoading,
     currentPath: location.pathname,
     previousPath,
+    forceComplete,
   };
 };
 

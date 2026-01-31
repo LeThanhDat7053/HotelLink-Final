@@ -154,7 +154,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     right: 0,
     bottom: 0,
     left: 0,
-    zIndex: 60,
+    zIndex: 2000, // Cao hơn iframe VR360 (zIndex: 0) và InfoBox (zIndex: 1999)
     pointerEvents: 'none',
   };
 
@@ -162,7 +162,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     position: 'fixed',
     top: 0,
     right: 0,
-    zIndex: 60,
+    zIndex: 2000, // Cùng level với header
     width: screens.md ? 280 : screens.sm ? 260 : 240,
     maxWidth: screens.md ? 280 : screens.sm ? 260 : 240,
     background: '#000000ad',

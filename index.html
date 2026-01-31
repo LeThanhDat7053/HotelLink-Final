@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- DNS Prefetch for faster API calls -->
+    <!-- Preload Logo để hiển thị ngay trong LoadingScreen -->
+    <link rel="preload" href="https://travel.link360.vn/api/v1/media/177/view" as="image" />
+    
+    <!-- DNS Prefetch & Preconnect for faster API and VR360 loading -->
     <link rel="dns-prefetch" href="https://travel.link360.vn" />
     <link rel="preconnect" href="https://travel.link360.vn" crossorigin />
+    <!-- VR360 domains - preconnect for faster iframe loading -->
+    <link rel="dns-prefetch" href="https://link360.vn" />
+    <link rel="preconnect" href="https://link360.vn" crossorigin />
+    <link rel="dns-prefetch" href="https://my.matterport.com" />
+    <link rel="preconnect" href="https://my.matterport.com" crossorigin />
+    <link rel="dns-prefetch" href="https://kuula.co" />
+    <link rel="preconnect" href="https://kuula.co" crossorigin />
+    <link rel="dns-prefetch" href="https://www.youtube.com" />
+    <link rel="preconnect" href="https://www.youtube.com" crossorigin />
     
     <!-- SEO Meta Tags (Hardcode for crawlers) -->
     <title>Phoenix Hotel Vũng Tàu | Khách sạn 3 sao gần biển, trung tâm</title>
