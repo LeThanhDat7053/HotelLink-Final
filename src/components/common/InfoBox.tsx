@@ -189,22 +189,20 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 22,
-                height: 22,
-                background: 'rgba(255, 255, 255, 0.15)',
+                width: 36,
+                height: 36,
+                background: 'rgba(255, 255, 255, 0.12)',
                 color: primaryColor,
-                borderRadius: 22,
-                transition: 'all 160ms linear',
+                borderRadius: 36,
+                transition: 'all 200ms ease',
                 cursor: 'pointer',
                 textDecoration: 'none',
-                fontSize: 11,
-                fontWeight: 'bold',
               }}
             >
-              {/* Icon: mũi tên lên (^) khi collapsed để mở rộng, mũi tên xuống (v) khi expanded để thu gọn */}
+              {/* Icon: Mũi tên đơn giản - xoay 180 độ khi expand */}
               <svg 
-                width="12" 
-                height="12" 
+                width="18" 
+                height="18" 
                 viewBox="0 0 24 24" 
                 fill="none" 
                 stroke="currentColor" 
@@ -212,8 +210,8 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 style={{
-                  transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
-                  transition: 'transform 200ms ease',
+                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 250ms ease',
                 }}
               >
                 <polyline points="6 9 12 15 18 9" />
@@ -231,15 +229,15 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 22,
-                height: 22,
+                width: 36,
+                height: 36,
                 background: primaryColor,
                 color: '#fff',
-                borderRadius: 22,
+                borderRadius: 28,
                 transition: 'all 160ms linear',
                 cursor: 'pointer',
                 textDecoration: 'none',
-                fontSize: 12,
+                fontSize: 16,
                 fontWeight: 'bold',
               }}
           >
