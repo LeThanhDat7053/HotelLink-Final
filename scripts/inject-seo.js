@@ -24,7 +24,7 @@ config();
 const API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
 const TENANT_CODE = process.env.VITE_TENANT_CODE || 'phoenix';
 const PROPERTY_ID = process.env.VITE_PROPERTY_ID || '13';
-const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://phoenixhotelvungtau.com/';
+const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://phoenix.trip360.vn/';
 
 // console.log('📋 Config:');
 // console.log('  - API:', API_BASE_URL);
@@ -67,8 +67,25 @@ function generateMetaTags(seo) {
     <meta name="description" content="${seo.description}" />
     <meta name="keywords" content="${seo.keywords}" />
     
-    <!-- Canonical URL (homepage - React Router sẽ update cho các trang khác) -->
+    <!-- ✅ Canonical URL báo cho Google biết đây là trang chính thống -->
     <link rel="canonical" href="${seo.siteUrl}" />
+    
+    <!-- ✅ Open Graph (Facebook, Zalo, Messenger...) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="${seo.title}" />
+    <meta property="og:description" content="${seo.description}" />
+    <meta property="og:image" content="${seo.logoUrl}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="${seo.siteUrl}" />
+    <meta property="og:site_name" content="${seo.title}" />
+    <meta property="og:locale" content="vi_VN" />
+    
+    <!-- ✅ Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${seo.title}" />
+    <meta name="twitter:description" content="${seo.description}" />
+    <meta name="twitter:image" content="${seo.logoUrl}" />
     
     <!-- Favicon -->
     <link rel="icon" href="${seo.faviconUrl}" />
@@ -98,14 +115,16 @@ async function injectSEO() {
     // 5. Ghi lại file
     fs.writeFileSync(indexPath, html, 'utf-8');
     
-    // console.log('✅ SEO meta tags injected successfully!');
+    console.log('✅ SEO meta tags injected successfully!');
     // console.log('📄 File:', indexPath);
     // console.log('🎯 Title:', seo.title);
     // console.log('🖼️  Image:', seo.logoUrl);
     
   } catch (error) {
-    console.error('❌ Error:', error.message);
-    process.exit(1);
+    console.warn('⚠️ Warning: Could not fetch SEO data from API:', error.message);
+    console.log('📄 Using hardcoded SEO meta tags from index.html source');
+    // Không exit - giữ nguyên file dist/index.html với hardcode meta tags
+    process.exit(0);
   }
 }
 

@@ -499,10 +499,6 @@ const AppLayout: FC = () => {
         title={pageTitle || undefined}
         isVisible={shouldShowInfoBox}
         onClose={handleCloseInfoBox}
-        isListPage={
-          // Áp dụng cho cả list và detail pages của rooms, dining, services, facilities
-          isRoomsPage || isDiningPage || isServicePage || isFacilityPage
-        }
       >
         {/* Trang chủ: Hiển thị Property Posts */}
         {isHomePage && <PropertyPostsContent />}

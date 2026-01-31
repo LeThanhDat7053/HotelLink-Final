@@ -125,7 +125,7 @@ async function main() {
   const tenantCode = await question('🏷️  Tenant Code (VD: phoenix): ');
   const propertyId = await question('🆔 Property ID (VD: 13): ');
   const propertyCode = await question('📝 Property Code (VD: phoenix-hotel-vung-tau): ');
-  const siteUrl = await question('🌐 Site URL (VD: https://phoenixhotelvungtau.com): ');
+  const siteUrl = await question('🌐 Site URL (VD: https://phoenix.trip360.vn): ');
   const username = await question('👤 API Username (VD: phoenix@admin.com): ');
   const password = await question('🔑 API Password: ');
   

@@ -14,7 +14,6 @@ interface InfoBoxProps {
   children?: ReactNode;
   isVisible?: boolean;
   onClose?: () => void; // Callback để đóng InfoBox (cho mobile)
-  isListPage?: boolean; // Có phải trang có danh sách (rooms, dining, services, facilities) không
 }
 
 export const InfoBox: FC<InfoBoxProps> = memo(({ 
@@ -24,7 +23,6 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
   children,
   isVisible = true,
   onClose,
-  isListPage = false,
 }) => {
   const { primaryColor } = useTheme();
   const screens = useBreakpoint();
@@ -53,8 +51,9 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
     : 400;
   
   // Check xem content có overflow không (cần cuộn) → hiển thị nút expand
+  // Áp dụng cho cả list page và info page (bao gồm trang chủ, giới thiệu, chính sách,...)
   const checkOverflow = useCallback(() => {
-    if (!contentRef.current || !isListPage) {
+    if (!contentRef.current) {
       setNeedsExpand(false);
       return;
     }
@@ -75,7 +74,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
     }
     
     setNeedsExpand(hasOverflow);
-  }, [isListPage]);
+  }, []);
   
   // Check overflow khi children thay đổi hoặc sau khi render
   useEffect(() => {
@@ -83,11 +82,14 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
     const timer = setTimeout(checkOverflow, 100);
     // Re-check sau 500ms nữa để đảm bảo content đã load xong (API data)
     const timer2 = setTimeout(checkOverflow, 500);
+    // Re-check sau 1s nữa cho các trang có nội dung HTML render chậm
+    const timer3 = setTimeout(checkOverflow, 1000);
     return () => {
       clearTimeout(timer);
       clearTimeout(timer2);
+      clearTimeout(timer3);
     };
-  }, [children, checkOverflow, isVisible, isListPage, title]);
+  }, [children, checkOverflow, isVisible, title]);
   
   // Re-check khi window resize
   useEffect(() => {
@@ -98,7 +100,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
   // Reset expanded state khi chuyển trang (title thay đổi) hoặc ẩn InfoBox
   useEffect(() => {
     setIsExpanded(false);
-  }, [title, isListPage]);
+  }, [title]);
   
   useEffect(() => {
     if (!isVisible) {
@@ -189,11 +191,11 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         
         {/* Nhóm nút: Expand (nếu cần) + Đóng (mobile) */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-          {/* Nút expand/collapse - chỉ hiển thị khi là list page và cần expand */}
-          {isListPage && needsExpand && (
+          {/* Nút expand/collapse - hiển thị khi cần expand (có content overflow) */}
+          {needsExpand && (
             <a
               className="expand-info-btn"
-              title={isExpanded ? 'Thu gọn danh sách' : 'Mở rộng danh sách'}
+              title={isExpanded ? 'Thu gọn' : 'Mở rộng'}
               onClick={handleExpandClick}
               style={{
                 display: 'flex',
