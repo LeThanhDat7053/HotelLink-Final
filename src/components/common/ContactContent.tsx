@@ -1,6 +1,7 @@
 import type { FC, CSSProperties } from 'react';
 import { memo } from 'react';
-import { Spin, Alert } from 'antd';
+import { Spin, Alert, Space } from 'antd';
+import { InstagramOutlined, TwitterOutlined, YoutubeOutlined } from '@ant-design/icons';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { getMenuTranslations } from '../../constants/translations';
@@ -59,6 +60,21 @@ export const ContactContent: FC<ContactContentProps> = memo(({
   const strongStyle: CSSProperties = {
     color: '#fff',
     fontWeight: 'bold',
+  };
+
+  // Social button style
+  const socialBtnStyle: CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 36,
+    height: 36,
+    textAlign: 'center',
+    borderRadius: 8,
+    transition: 'all 200ms linear',
+    color: 'white',
+    textDecoration: 'none',
+    background: 'rgba(255, 255, 255, 0.1)',
   };
 
   // Loading state
@@ -134,6 +150,93 @@ export const ContactContent: FC<ContactContentProps> = memo(({
         <p className="contact-mes" style={contactMesStyle}>
           {content.description}
         </p>
+      )}
+
+      {/* Social Media Links */}
+      {(content.socialMedia?.facebook || content.socialMedia?.instagram || content.socialMedia?.twitter || content.socialMedia?.youtube) && (
+        <div style={{ marginTop: 20 }}>
+          <span style={strongStyle}>Theo dõi chúng tôi:</span>
+          <Space size={10} style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
+            {content.socialMedia?.facebook && (
+              <a
+                href={content.socialMedia.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={socialBtnStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = primaryColor;
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+                title="Facebook"
+              >
+                <svg viewBox="0 0 320 512" style={{ width: 18, height: 18, fill: 'currentColor' }}>
+                  <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
+                </svg>
+              </a>
+            )}
+            {content.socialMedia?.instagram && (
+              <a
+                href={content.socialMedia.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={socialBtnStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = primaryColor;
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+                title="Instagram"
+              >
+                <InstagramOutlined style={{ fontSize: 18 }} />
+              </a>
+            )}
+            {content.socialMedia?.twitter && (
+              <a
+                href={content.socialMedia.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={socialBtnStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = primaryColor;
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+                title="Twitter"
+              >
+                <TwitterOutlined style={{ fontSize: 18 }} />
+              </a>
+            )}
+            {content.socialMedia?.youtube && (
+              <a
+                href={content.socialMedia.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={socialBtnStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = primaryColor;
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+                title="YouTube"
+              >
+                <YoutubeOutlined style={{ fontSize: 18 }} />
+              </a>
+            )}
+          </Space>
+        </div>
       )}
     </div>
   );

@@ -4,10 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   DownOutlined,
   CloseOutlined,
-  MenuOutlined,
-  TwitterOutlined,
-  YoutubeOutlined,
-  InstagramOutlined
+  MenuOutlined
 } from '@ant-design/icons';
 import { Dropdown, Button, Space, Grid } from 'antd';
 import type { MenuProps } from 'antd';
@@ -228,17 +225,25 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
     maxHeight: isMenuExpanded ? 'none' : 0,
   };
 
+  // Responsive icon sizes for Messenger/Zalo
+  const socialIconSize = screens.lg ? 22 : screens.md ? 20 : screens.sm ? 18 : 16;
+  // Zalo icon has padding inside viewBox, so make it ~25% larger to match Messenger visually
+  const zaloIconSize = screens.lg ? 28 : screens.md ? 25 : screens.sm ? 23 : 20;
+  const socialBtnSize = screens.lg ? 42 : screens.md ? 38 : screens.sm ? 36 : 32;
+
   const socialBtnStyle: CSSProperties = {
-    display: 'inline-block',
-    width: 32,
-    height: 32,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: socialBtnSize,
+    height: socialBtnSize,
     textAlign: 'center',
-    borderRadius: 8,
-    lineHeight: '32px',
-    margin: '0 7px',
+    borderRadius: 12,
+    margin: '0 10px',
     transition: 'all 200ms linear',
     color: 'white',
     textDecoration: 'none',
+    background: 'rgba(255, 255, 255, 0.08)',
   };
 
 
@@ -509,64 +514,54 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
               </Button>
             </Link>
 
-            {/* Social Bar - Ant Design Space */}
+            {/* Social Bar - Messenger và Zalo */}
             <Space 
               size={14} 
               style={{ width: '100%', justifyContent: 'center', margin: '38px 0' }}
               wrap
             >
-              {contactData?.socialMedia?.facebook && (
+              {/* Messenger - Font Awesome icon */}
+              {vrHotelSettings?.messenger_url && (
                 <a
-                  href={contactData.socialMedia.facebook}
+                  href={vrHotelSettings.messenger_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
-                  onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                  title="Facebook"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = primaryColor;
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'white';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  title="Messenger"
                 >
-                  <svg viewBox="0 0 320 512" style={{ width: 18, height: 18, fill: 'currentColor' }}>
-                    <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
+                  <svg viewBox="0 0 512 512" style={{ width: socialIconSize, height: socialIconSize, fill: 'currentColor' }}>
+                    <path d="M256.55 8C116.52 8 8 110.34 8 248.57c0 72.3 29.71 134.78 78.07 177.94 8.35 7.51 6.63 11.86 8.05 58.23A19.92 19.92 0 0 0 122 502.31c52.91-23.3 53.59-25.14 62.56-22.7C337.85 521.8 504 423.7 504 248.57 504 110.34 396.59 8 256.55 8zm149.24 185.13l-73 115.57a37.37 37.37 0 0 1-53.91 9.93l-58.08-43.47a15 15 0 0 0-18 0l-78.37 59.44c-10.46 7.93-24.16-4.6-17.11-15.67l73-115.57a37.36 37.36 0 0 1 53.91-9.93l58.08 43.47a15 15 0 0 0 18 0l78.37-59.44c10.45-7.93 24.13 4.6 17.11 15.67z"/>
                   </svg>
                 </a>
               )}
-              {contactData?.socialMedia?.instagram && (
+              {/* Zalo */}
+              {vrHotelSettings?.phone_number && (
                 <a
-                  href={contactData.socialMedia.instagram}
+                  href={vrHotelSettings.phone_number}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
-                  onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                  title="Instagram"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = primaryColor;
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'white';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                  }}
+                  title="Zalo"
                 >
-                  <InstagramOutlined style={{ fontSize: 18 }} />
-                </a>
-              )}
-              {contactData?.socialMedia?.twitter && (
-                <a
-                  href={contactData.socialMedia.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
-                  onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                  title="Twitter"
-                >
-                  <TwitterOutlined style={{ fontSize: 18 }} />
-                </a>
-              )}
-              {contactData?.socialMedia?.youtube && (
-                <a
-                  href={contactData.socialMedia.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={socialBtnStyle}
-                  onMouseEnter={(e) => e.currentTarget.style.color = primaryColor}
-                  onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-                  title="YouTube"
-                >
-                  <YoutubeOutlined style={{ fontSize: 18 }} />
+                  <svg viewBox="0 0 32 32" style={{ width: zaloIconSize, height: zaloIconSize, fill: 'currentColor' }}>
+                    <path d="M5.76 2.56c-1.76 0-3.2 1.44-3.2 3.2v20.48c0 1.76 1.44 3.2 3.2 3.2h20.48c1.76 0 3.2-1.44 3.2-3.2v-20.48c0-1.76-1.44-3.2-3.2-3.2h-20.48zM5.76 3.84h4.211c-2.285 2.378-3.571 5.452-3.571 8.64 0 3.302 1.351 6.464 3.782 8.857 0.077 0.134 0.141 0.793-0.154 1.555-0.186 0.48-0.557 1.107-1.274 1.344-0.275 0.090-0.454 0.36-0.435 0.648s0.231 0.531 0.512 0.589c1.837 0.365 3.026-0.186 3.986-0.621 0.864-0.397 1.434-0.666 2.311-0.308 1.792 0.698 3.699 1.056 5.67 1.056 2.62 0 5.14-0.64 7.36-1.848v2.488c0 1.068-0.852 1.92-1.92 1.92h-20.48c-1.068 0-1.92-0.852-1.92-1.92v-20.48c0-1.068 0.852-1.92 1.92-1.92zM21.12 9.6c0.352 0 0.64 0.288 0.64 0.64v5.76c0 0.352-0.288 0.64-0.64 0.64s-0.64-0.288-0.64-0.64v-5.76c0-0.352 0.288-0.64 0.64-0.64zM11.52 10.24h3.2c0.23 0 0.449 0.128 0.564 0.332 0.109 0.198 0.102 0.448-0.020 0.646l-2.591 4.141h2.047c0.352 0 0.64 0.288 0.64 0.64s-0.288 0.64-0.64 0.64h-3.2c-0.23 0-0.449-0.128-0.564-0.332-0.109-0.198-0.102-0.448 0.020-0.646l2.591-4.141h-2.047c-0.352 0-0.64-0.288-0.64-0.64s0.288-0.64 0.64-0.64zM17.6 12.16c0.39 0 0.755 0.108 1.081 0.287 0.115-0.166 0.295-0.287 0.519-0.287 0.352 0 0.64 0.288 0.64 0.64v3.2c0 0.352-0.288 0.64-0.64 0.64-0.224 0-0.404-0.121-0.519-0.288-0.326 0.179-0.691 0.288-1.081 0.288-1.235 0-2.24-1.005-2.24-2.24s1.005-2.24 2.24-2.24zM24.64 12.16c1.235 0 2.24 1.005 2.24 2.24s-1.005 2.24-2.24 2.24c-1.235 0-2.24-1.005-2.24-2.24s1.005-2.24 2.24-2.24zM17.6 13.44c-0.066 0-0.131 0.007-0.194 0.020-0.125 0.026-0.242 0.075-0.344 0.144s-0.19 0.157-0.259 0.259c-0.069 0.102-0.118 0.219-0.144 0.344-0.013 0.063-0.020 0.127-0.020 0.194s0.007 0.131 0.020 0.194c0.013 0.063 0.031 0.123 0.055 0.18s0.054 0.113 0.089 0.164c0.034 0.051 0.074 0.098 0.117 0.141s0.090 0.083 0.141 0.117c0.102 0.069 0.219 0.118 0.344 0.144 0.063 0.013 0.127 0.020 0.194 0.020s0.131-0.007 0.194-0.020c0.438-0.089 0.766-0.475 0.766-0.94 0-0.531-0.429-0.96-0.96-0.96zM24.64 13.44c-0.066 0-0.131 0.007-0.194 0.020s-0.123 0.031-0.18 0.055c-0.057 0.024-0.113 0.054-0.164 0.089s-0.098 0.074-0.141 0.117c-0.087 0.087-0.158 0.19-0.206 0.305-0.024 0.057-0.042 0.117-0.055 0.18s-0.020 0.127-0.020 0.194c0 0.066 0.007 0.131 0.020 0.194s0.031 0.123 0.055 0.18c0.024 0.057 0.054 0.113 0.089 0.164s0.074 0.098 0.117 0.141c0.043 0.043 0.090 0.083 0.141 0.117s0.106 0.065 0.164 0.089c0.057 0.024 0.117 0.042 0.18 0.055s0.127 0.020 0.194 0.020c0.066 0 0.131-0.007 0.194-0.020 0.438-0.089 0.766-0.475 0.766-0.94 0-0.531-0.429-0.96-0.96-0.96z"/>
+                  </svg>
                 </a>
               )}
             </Space>

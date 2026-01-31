@@ -80,7 +80,6 @@ export const ThemeInjector: React.FC = () => {
       
       /* Primary buttons */
       .ant-btn-primary {
-        background: ${primaryColor} !important;
         border-color: ${primaryColor} !important;
       }
       
