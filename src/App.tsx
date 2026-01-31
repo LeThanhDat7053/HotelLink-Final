@@ -262,70 +262,13 @@ const AppLayout: FC = () => {
     // Ưu tiên detail link từ offer, fallback về page link từ settings, cuối cùng là default
     vr360Url = offerDetailVrLink || vrHotelSettings?.pages?.offers?.vr360_link || defaultVr360Url;
   } else if (isGalleryPage) {
-    // Gallery page cũng fallback về default
-    vr360Url = vrHotelSettings?.pages?.gallery?.vr360_link || defaultVr360Url;
+    // Gallery page fallback về default (không có settings riêng)
+    vr360Url = defaultVr360Url;
   }
   
   // Đảm bảo luôn có VR360 URL (fallback cuối cùng)
   if (!vr360Url) {
     vr360Url = defaultVr360Url;
-  }
-  
-  // SAFETY CHECK: Kiểm tra URL là VR360 hợp lệ (không phải self-reference hoặc website thường)
-  // Chỉ chấp nhận các domain VR360 đã biết hoặc các dạng URL VR360 phổ biến
-  const isValidVr360Url = (url: string | null | undefined): boolean => {
-    if (!url) return false;
-    
-    const currentOrigin = typeof window !== 'undefined' ? window.location.origin : '';
-    const currentHostname = typeof window !== 'undefined' ? window.location.hostname : '';
-    
-    // Reject self-reference
-    if (url.startsWith(currentOrigin) || url.startsWith('/')) {
-      return false;
-    }
-    
-    // Reject nếu chứa hostname hiện tại
-    if (currentHostname && url.includes(currentHostname)) {
-      return false;
-    }
-    
-    // Reject localhost khi đang chạy localhost
-    if (url.includes('localhost') && currentOrigin.includes('localhost')) {
-      return false;
-    }
-    
-    // Whitelist các domain VR360 phổ biến
-    const vr360Domains = [
-      'link360.vn',
-      'matterport.com',
-      'kuula.co',
-      'roundme.com',
-      'momento360.com',
-      '3dvista.com',
-      'pano2vr.com',
-      'cloudpano.com',
-      'youtube.com',
-      'youtu.be',
-      'vimeo.com',
-    ];
-    
-    // Check nếu URL thuộc whitelist domains
-    const isWhitelistedDomain = vr360Domains.some(domain => url.includes(domain));
-    
-    // Check nếu URL là image (cũng hợp lệ)
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
-    const isImage = imageExtensions.some(ext => url.toLowerCase().includes(ext));
-    
-    // Check nếu URL chứa từ khóa VR360
-    const vr360Keywords = ['vr360', 'vr-360', '360vr', 'panorama', 'pano', 'virtual-tour', 'virtualtour'];
-    const hasVr360Keyword = vr360Keywords.some(kw => url.toLowerCase().includes(kw));
-    
-    return isWhitelistedDomain || isImage || hasVr360Keyword;
-  };
-  
-  // Nếu URL không hợp lệ → set null để hiển thị background
-  if (!isValidVr360Url(vr360Url)) {
-    vr360Url = null;
   }
   
   // Debug logs (commented out to reduce spam)
@@ -556,6 +499,13 @@ const AppLayout: FC = () => {
         title={pageTitle || undefined}
         isVisible={shouldShowInfoBox}
         onClose={handleCloseInfoBox}
+        isListPage={
+          // Chỉ là list page khi KHÔNG có code trong URL (không phải detail view)
+          (isRoomsPage && !roomCodeFromUrl) ||
+          (isDiningPage && !diningCodeFromUrl) ||
+          (isServicePage && !serviceCodeFromUrl) ||
+          (isFacilityPage && !facilityCodeFromUrl)
+        }
       >
         {/* Trang chủ: Hiển thị Property Posts */}
         {isHomePage && <PropertyPostsContent />}
