@@ -41,11 +41,16 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
   // Chiều cao mặc định (khi chưa expand)
   const defaultMaxHeight = screens.md ? 318 : 250;
   
-  // Chiều cao tối đa khi expand = chiều cao màn hình - header(80) - footer(65) - title area(~80) - padding(~35)
-  // Đảm bảo InfoBox không vượt quá màn hình
+  // Khoảng cách tối thiểu từ top khi expand (header height + padding)
+  // Mobile: cách header khoảng 90px, Desktop: 100px
+  const minTopOffset = screens.md ? 100 : 90;
+  
+  // Chiều cao tối đa của content khi expand = window - top offset - bottom bar - title/divider area (~85px)
+  const bottomOffset = screens.md ? 65 : 55;
+  const titleAreaHeight = screens.md ? 85 : 75;
   const expandedMaxHeight = typeof window !== 'undefined' 
-    ? window.innerHeight - (screens.md ? 180 : 160)
-    : 500;
+    ? window.innerHeight - minTopOffset - bottomOffset - titleAreaHeight
+    : 400;
   
   // Check xem content có overflow không (cần cuộn) → hiển thị nút expand
   const checkOverflow = useCallback(() => {
@@ -132,6 +137,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         position: 'fixed',
         left: screens.md ? 15 : 10,
         bottom: screens.md ? 65 : 55,
+        // Không set top - để Card tự co giãn theo nội dung từ bottom lên
         width: screens.md ? 522 : screens.sm ? '90%' : 'calc(100% - 20px)',
         maxWidth: screens.md ? 522 : 450,
         zIndex: 1999,
@@ -148,7 +154,9 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         pointerEvents: isVisible ? 'auto' : 'none',
       }}
       styles={{
-        body: { padding: 0 }
+        body: { 
+          padding: 0,
+        }
       }}
     >
       {/* Page Title với nút đóng */}
@@ -157,6 +165,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        flexShrink: 0,
       }}>
         {loading ? (
           <Skeleton.Input active size="small" style={{ width: 200 }} />
@@ -252,7 +261,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         margin: 0, 
         borderColor: 'rgba(255, 255, 255, 0.28)', 
         marginLeft: screens.md ? 30 : 20, 
-        marginRight: screens.md ? 30 : 20 
+        marginRight: screens.md ? 30 : 20,
       }} />
 
       {/* Page Content */}
@@ -261,8 +270,11 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         className={`info-box-content ${isExpanded ? 'info-box-expanded' : ''}`}
         style={{ 
           padding: screens.md ? '18px 15px 30px 30px' : '15px 10px 20px 20px', 
-          maxHeight: isExpanded ? expandedMaxHeight : defaultMaxHeight, 
-          overflowY: 'scroll', // Luôn hiển thị scrollbar
+          // Khi expand: tăng maxHeight lên giới hạn tối đa (cách header), content tự co giãn theo nội dung
+          // Nếu nội dung nhiều hơn maxHeight thì scroll
+          // Khi không expand: giới hạn maxHeight nhỏ hơn
+          maxHeight: isExpanded ? expandedMaxHeight : defaultMaxHeight,
+          overflowY: 'auto', // Chỉ hiển thị scrollbar khi cần
           transition: 'max-height 300ms ease-in-out',
           // CSS variable để child components có thể dùng
           '--info-box-expanded-height': `${expandedMaxHeight - 50}px`,
