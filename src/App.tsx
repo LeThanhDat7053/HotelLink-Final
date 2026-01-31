@@ -500,11 +500,8 @@ const AppLayout: FC = () => {
         isVisible={shouldShowInfoBox}
         onClose={handleCloseInfoBox}
         isListPage={
-          // Chỉ là list page khi KHÔNG có code trong URL (không phải detail view)
-          (isRoomsPage && !roomCodeFromUrl) ||
-          (isDiningPage && !diningCodeFromUrl) ||
-          (isServicePage && !serviceCodeFromUrl) ||
-          (isFacilityPage && !facilityCodeFromUrl)
+          // Áp dụng cho cả list và detail pages của rooms, dining, services, facilities
+          isRoomsPage || isDiningPage || isServicePage || isFacilityPage
         }
       >
         {/* Trang chủ: Hiển thị Property Posts */}

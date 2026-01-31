@@ -63,3 +63,15 @@ a, button {
 ::-webkit-scrollbar-track {
   background: rgba(251, 228, 150, 0);
 }
+
+/* ===== INFO BOX EXPAND STYLES ===== */
+/* Khi InfoBox expand, các detail scroll containers cũng expand theo */
+.info-box-expanded [style*="overflow"] {
+  max-height: var(--info-box-expanded-height, 500px) !important;
+  transition: max-height 300ms ease-in-out;
+}
+
+/* Đảm bảo transition mượt mà khi collapse */
+.info-box-content [style*="overflow"] {
+  transition: max-height 300ms ease-in-out;
+}

@@ -52,9 +52,22 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
       return;
     }
     
+    // Check overflow của InfoBox content container
     const { scrollHeight, clientHeight } = contentRef.current;
-    // Nếu scrollHeight > clientHeight + threshold (10px) thì cần expand
-    const hasOverflow = scrollHeight > clientHeight + 10;
+    let hasOverflow = scrollHeight > clientHeight + 10;
+    
+    // Nếu InfoBox không overflow, check các child scroll containers (như RoomDetail, DiningDetail, etc.)
+    // Các detail component có scroll container riêng với class hoặc style overflow
+    if (!hasOverflow) {
+      const childScrollContainers = contentRef.current.querySelectorAll('[style*="overflow"]');
+      childScrollContainers.forEach((child) => {
+        const el = child as HTMLElement;
+        if (el.scrollHeight > el.clientHeight + 10) {
+          hasOverflow = true;
+        }
+      });
+    }
+    
     setNeedsExpand(hasOverflow);
   }, [isListPage]);
   
@@ -246,13 +259,16 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
       {/* Page Content */}
       <div 
         ref={contentRef}
-        className="info-box-content"
+        className={`info-box-content ${isExpanded ? 'info-box-expanded' : ''}`}
         style={{ 
           padding: screens.md ? '18px 15px 30px 30px' : '15px 10px 20px 20px', 
           maxHeight: isExpanded ? expandedMaxHeight : defaultMaxHeight, 
           overflowY: 'auto',
           transition: 'max-height 300ms ease-in-out',
-        }}>
+          // CSS variable để child components có thể dùng
+          '--info-box-expanded-height': `${expandedMaxHeight - 50}px`,
+          '--info-box-default-height': `${defaultMaxHeight - 50}px`,
+        } as React.CSSProperties}>
         {loading ? (
           <Skeleton active paragraph={{ rows: 4 }} />
         ) : hasChildren ? (
