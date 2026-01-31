@@ -496,7 +496,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                 block
                 style={{
                   height: 52,
-                  background: '#d4a855',
+                  background: primaryColor,
                   color: 'white',
                   textAlign: 'center',
                   fontWeight: 500,
@@ -507,8 +507,8 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                   marginTop: 0,
                   width: '100%',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#c49a4a'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#d4a855'}
+                onMouseEnter={(e) => e.currentTarget.style.opacity = '0.85'}
+                onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
               >
                 {t.booking}
               </Button>
