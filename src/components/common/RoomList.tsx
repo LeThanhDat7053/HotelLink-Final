@@ -55,20 +55,20 @@ export const RoomList: FC<RoomListProps> = memo(({
   const postStyle: CSSProperties = {
     float: 'left' as const,
     width: '100%',
-    margin: '12px 0 9px 0',
-    padding: '0 0 6px 0',
+    margin: screens.lg ? '16px 0 14px 0' : screens.md ? '14px 0 12px 0' : '12px 0 10px 0',
+    padding: screens.lg ? '0 0 14px 0' : screens.md ? '0 0 12px 0' : '0 0 10px 0',
     height: 'auto',
     borderBottom: '1px solid rgba(153, 113, 42, 0.5)',
     display: 'flex',
     flexDirection: 'row',
-    gap: screens.md ? 15 : 10,
+    gap: screens.lg ? 22 : screens.md ? 18 : screens.sm ? 16 : 14,
   };
 
   const thumbnailStyle: CSSProperties = {
     flexShrink: 0,
-    width: screens.md ? 100 : 80,
-    height: screens.md ? 70 : 56,
-    borderRadius: 6,
+    width: screens.xl ? 150 : screens.lg ? 135 : screens.md ? 120 : screens.sm ? 110 : 100,
+    height: screens.xl ? 105 : screens.lg ? 95 : screens.md ? 84 : screens.sm ? 77 : 70,
+    borderRadius: screens.md ? 10 : 8,
     overflow: 'hidden',
   };
 
@@ -82,10 +82,10 @@ export const RoomList: FC<RoomListProps> = memo(({
 
   const titleStyle: CSSProperties = {
     color: primaryColor,
-    fontSize: screens.md ? 15 : 13,
+    fontSize: screens.xl ? 20 : screens.lg ? 19 : screens.md ? 18 : screens.sm ? 17 : 16,
     fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
     margin: 0,
-    marginBottom: 4,
+    marginBottom: screens.md ? 8 : 6,
     fontWeight: 'normal',
     lineHeight: 1.3,
     cursor: 'pointer',
@@ -93,9 +93,9 @@ export const RoomList: FC<RoomListProps> = memo(({
   };
 
   const descriptionStyle: CSSProperties = {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: screens.md ? 13 : 11,
-    lineHeight: screens.md ? '18px' : '16px',
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: screens.xl ? 16 : screens.lg ? 15 : screens.md ? 15 : screens.sm ? 14 : 14,
+    lineHeight: screens.xl ? '24px' : screens.lg ? '22px' : screens.md ? '22px' : screens.sm ? '20px' : '20px',
     margin: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -178,7 +178,7 @@ export const RoomList: FC<RoomListProps> = memo(({
                 {room.name}
               </Title>
             </header>
-            <p style={descriptionStyle} className="room-description">
+            <p style={descriptionStyle} className="room-description list-item-description">
               {room.description}
             </p>
           </div>

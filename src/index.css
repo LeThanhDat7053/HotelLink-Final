@@ -65,13 +65,25 @@ a, button {
 }
 
 /* ===== INFO BOX EXPAND STYLES ===== */
-/* Khi InfoBox expand, các detail scroll containers cũng expand theo */
-.info-box-expanded [style*="overflow"] {
+/* Khi InfoBox expand, các detail scroll containers cũng expand theo (chỉ cho detail pages) */
+.info-box-expanded [style*="overflow"]:not(.list-item-description) {
   max-height: var(--info-box-expanded-height, 500px) !important;
+  overflow-y: scroll !important;
   transition: max-height 300ms ease-in-out;
 }
 
 /* Đảm bảo transition mượt mà khi collapse */
-.info-box-content [style*="overflow"] {
+.info-box-content [style*="overflow"]:not(.list-item-description) {
   transition: max-height 300ms ease-in-out;
+}
+
+/* Đảm bảo info-box-content luôn có thể scroll */
+.info-box-content {
+  overflow-y: scroll !important;
+}
+
+/* Phần mô tả trong list items - không cho scroll */
+.list-item-description {
+  overflow: hidden !important;
+  overflow-y: hidden !important;
 }

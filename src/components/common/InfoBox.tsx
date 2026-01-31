@@ -38,31 +38,32 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
   // Chỉ hiển thị nút close trên mobile
   const isMobile = !screens.md;
   
-  // Chiều cao mặc định và mở rộng
+  // Chiều cao mặc định (khi chưa expand)
   const defaultMaxHeight = screens.md ? 318 : 250;
-  // Khi expand: giới hạn theo màn hình (trừ header, footer, padding)
+  
+  // Chiều cao tối đa khi expand = chiều cao màn hình - header(80) - footer(65) - title area(~80) - padding(~35)
+  // Đảm bảo InfoBox không vượt quá màn hình
   const expandedMaxHeight = typeof window !== 'undefined' 
-    ? Math.min(window.innerHeight - (screens.md ? 180 : 160), 600) // Max 600px hoặc màn hình - 180px
+    ? window.innerHeight - (screens.md ? 180 : 160)
     : 500;
   
-  // Check xem content có overflow không (cần cuộn)
+  // Check xem content có overflow không (cần cuộn) → hiển thị nút expand
   const checkOverflow = useCallback(() => {
     if (!contentRef.current || !isListPage) {
       setNeedsExpand(false);
       return;
     }
     
-    // Check overflow của InfoBox content container
+    // Check overflow: scrollHeight > clientHeight nghĩa là có nội dung bị ẩn
     const { scrollHeight, clientHeight } = contentRef.current;
-    let hasOverflow = scrollHeight > clientHeight + 10;
+    let hasOverflow = scrollHeight > clientHeight + 5;
     
-    // Nếu InfoBox không overflow, check các child scroll containers (như RoomDetail, DiningDetail, etc.)
-    // Các detail component có scroll container riêng với class hoặc style overflow
+    // Nếu InfoBox không overflow, check các child scroll containers
     if (!hasOverflow) {
       const childScrollContainers = contentRef.current.querySelectorAll('[style*="overflow"]');
       childScrollContainers.forEach((child) => {
         const el = child as HTMLElement;
-        if (el.scrollHeight > el.clientHeight + 10) {
+        if (el.scrollHeight > el.clientHeight + 5) {
           hasOverflow = true;
         }
       });
@@ -199,7 +200,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
                 textDecoration: 'none',
               }}
             >
-              {/* Icon: Mũi tên đơn giản - xoay 180 độ khi expand */}
+              {/* Icon: Mũi tên đơn giản - ^ khi thu gọn (click để mở), v khi mở rộng (click để đóng) */}
               <svg 
                 width="18" 
                 height="18" 
@@ -210,7 +211,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 style={{
-                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
                   transition: 'transform 250ms ease',
                 }}
               >
@@ -261,7 +262,7 @@ export const InfoBox: FC<InfoBoxProps> = memo(({
         style={{ 
           padding: screens.md ? '18px 15px 30px 30px' : '15px 10px 20px 20px', 
           maxHeight: isExpanded ? expandedMaxHeight : defaultMaxHeight, 
-          overflowY: 'auto',
+          overflowY: 'scroll', // Luôn hiển thị scrollbar
           transition: 'max-height 300ms ease-in-out',
           // CSS variable để child components có thể dùng
           '--info-box-expanded-height': `${expandedMaxHeight - 50}px`,

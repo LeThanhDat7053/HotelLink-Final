@@ -139,15 +139,15 @@ export const OfferList: FC<OfferListProps> = memo(({
   const postStyle: CSSProperties = {
     float: 'left' as const,
     width: '100%',
-    margin: '12px 0 9px 0',
-    padding: '12px',
+    margin: screens.lg ? '16px 0 14px 0' : screens.md ? '14px 0 12px 0' : '12px 0 10px 0',
+    padding: screens.lg ? 18 : screens.md ? 16 : 14,
     height: 'auto',
     borderBottom: '1px solid rgba(153, 113, 42, 0.5)',
     background: 'rgba(0, 0, 0, 0.2)',
-    borderRadius: 8,
+    borderRadius: screens.md ? 12 : 10,
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: screens.md ? 12 : 10,
     cursor: onOfferClick ? 'pointer' : 'default',
     transition: 'all 0.3s ease',
   };
@@ -156,12 +156,12 @@ export const OfferList: FC<OfferListProps> = memo(({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: screens.md ? 16 : 14,
   };
 
   const titleStyle: CSSProperties = {
     color: primaryColor,
-    fontSize: screens.md ? 16 : 14,
+    fontSize: screens.xl ? 22 : screens.lg ? 20 : screens.md ? 19 : screens.sm ? 18 : 17,
     fontFamily: "'UTMCafeta', 'UTMNeoSansIntel', Arial, sans-serif",
     margin: 0,
     fontWeight: 'normal',
@@ -172,17 +172,17 @@ export const OfferList: FC<OfferListProps> = memo(({
   const discountBadgeStyle: CSSProperties = {
     background: primaryColor,
     color: '#000',
-    padding: '4px 12px',
-    borderRadius: 4,
+    padding: screens.md ? '6px 16px' : '5px 14px',
+    borderRadius: 6,
     fontWeight: 'bold',
-    fontSize: screens.md ? 14 : 12,
+    fontSize: screens.xl ? 17 : screens.lg ? 16 : screens.md ? 16 : screens.sm ? 15 : 14,
     whiteSpace: 'nowrap',
   };
 
   const descriptionStyle: CSSProperties = {
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontSize: screens.md ? 13 : 11,
-    lineHeight: screens.md ? '18px' : '16px',
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: screens.xl ? 16 : screens.lg ? 15 : screens.md ? 15 : screens.sm ? 14 : 14,
+    lineHeight: screens.xl ? '24px' : screens.lg ? '22px' : screens.md ? '22px' : screens.sm ? '20px' : '20px',
     margin: 0,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -276,7 +276,7 @@ export const OfferList: FC<OfferListProps> = memo(({
           </div>
 
           {/* Description */}
-          <p style={descriptionStyle} className="offer-description">
+          <p style={descriptionStyle} className="offer-description list-item-description">
             {offer.description}
           </p>
 
