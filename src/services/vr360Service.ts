@@ -10,7 +10,7 @@
  * với Bearer token authentication tự động
  */
 
-import api from '../../api';
+import api from '../api';
 import { API_ENDPOINTS } from '../constants/config';
 import type {
   VR360Link,
