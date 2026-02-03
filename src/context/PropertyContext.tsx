@@ -34,10 +34,11 @@ export const PropertyProvider: React.FC<{ children: ReactNode }> = ({ children }
 
       // Get property ID from env
       const propertyId = import.meta.env.VITE_PROPERTY_ID;
+      
       if (!propertyId) {
         throw new Error('VITE_PROPERTY_ID is not defined in .env');
       }
-
+      
       // Fetch property by ID directly
       const propertyData = await propertyService.getPropertyById(Number(propertyId));
       

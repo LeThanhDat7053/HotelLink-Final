@@ -20,7 +20,7 @@ export default function APITestPage() {
   const [testing, setTesting] = useState(false);
 
   // Test với property code từ .env
-  const propertyCode = import.meta.env.VITE_PROPERTY_CODE || 'fusion-suites-vung-tau';
+  const propertyCode = import.meta.env.VITE_PROPERTY_CODE || import.meta.env.VITE_TENANT_CODE || '';
 
   const runTests = async () => {
     setTesting(true);

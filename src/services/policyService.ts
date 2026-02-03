@@ -30,7 +30,7 @@ export function transformPolicyForUI(
  */
 export async function getPolicy(
   propertyId: number,
-  tenantCode: string = 'fusion'
+  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
 ): Promise<PolicyResponse> {
   const response = await api.get<PolicyResponse>('/vr-hotel/policies', {
     headers: {

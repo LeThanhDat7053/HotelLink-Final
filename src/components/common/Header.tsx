@@ -399,6 +399,7 @@ export const Header: FC<HeaderProps> = memo(({ isMenuExpanded = false, onMenuTog
                 menu={{ items: languageMenuItems }}
                 trigger={['hover']}
                 placement="bottomLeft"
+                overlayStyle={{ zIndex: 2100 }}
                 classNames={{ root: 'lang-dropdown-custom' }}
               >
                 <Button style={langButtonStyle}>

@@ -54,7 +54,8 @@ export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
   const location = useLocation();
 
   // Fetch data để check isDisplaying
-  const { content: regulationData, loading: regulationLoading } = useRegulation(property?.id || 0, locale, 'fusion');
+  const tenantCode = import.meta.env.VITE_TENANT_CODE || '';
+  const { content: regulationData, loading: regulationLoading } = useRegulation(property?.id || 0, locale, tenantCode);
   const { settings, loading: settingsLoading } = useVrHotelSettings(property?.id || null);
 
   // Chỉ hiển thị footer khi đã load xong data

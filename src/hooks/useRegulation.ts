@@ -19,7 +19,7 @@ interface UseRegulationResult {
 export function useRegulation(
   propertyId: number,
   locale: string,
-  tenantCode: string = 'fusion'
+  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
 ): UseRegulationResult {
   const [content, setContent] = useState<RegulationUIData | null>(null);
   const [vr360Link, setVr360Link] = useState<string | null>(null);

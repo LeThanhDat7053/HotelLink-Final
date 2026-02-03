@@ -19,7 +19,7 @@ interface UsePolicyResult {
 export function usePolicy(
   propertyId: number,
   locale: string,
-  tenantCode: string = 'fusion'
+  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
 ): UsePolicyResult {
   const [content, setContent] = useState<PolicyUIData | null>(null);
   const [vr360Link, setVr360Link] = useState<string | null>(null);

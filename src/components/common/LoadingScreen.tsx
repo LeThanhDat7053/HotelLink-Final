@@ -42,10 +42,11 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
   const hasPreloaded = useRef(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
   
-  // Hard code logo URL với media_id từ env - luôn có sẵn ngay lập tức
-  const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
-  const logoMediaId = import.meta.env.VITE_LOGO_MEDIA_ID || '177';
-  const fallbackLogoUrl = `${baseURL}/media/${logoMediaId}/view`;
+  // Logo URL từ env - không hardcode media_id
+  const baseURL = import.meta.env.VITE_API_BASE_URL || '';
+  const logoMediaId = import.meta.env.VITE_LOGO_MEDIA_ID || '';
+  // Chỉ tạo fallback URL nếu có logoMediaId
+  const fallbackLogoUrl = logoMediaId ? `${baseURL}/media/${logoMediaId}/view` : '';
   const logoUrl = propLogoUrl || fallbackLogoUrl;
   
   // Fetch settings từ API để lấy primary_color

@@ -20,11 +20,17 @@ const __dirname = path.dirname(__filename);
 // Load env variables
 config();
 
-// Config from .env
-const API_BASE_URL = process.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
-const TENANT_CODE = process.env.VITE_TENANT_CODE || 'phoenix';
-const PROPERTY_ID = process.env.VITE_PROPERTY_ID || '13';
-const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL || 'https://phoenix.trip360.vn/';
+// Config from .env (REQUIRED - must set in .env file)
+const API_BASE_URL = process.env.VITE_API_BASE_URL;
+const TENANT_CODE = process.env.VITE_TENANT_CODE;
+const PROPERTY_ID = process.env.VITE_PROPERTY_ID;
+const SITE_BASE_URL = process.env.VITE_SITE_BASE_URL;
+
+if (!API_BASE_URL || !TENANT_CODE || !PROPERTY_ID || !SITE_BASE_URL) {
+  console.error('❌ Missing required env variables. Please check .env file.');
+  console.error('Required: VITE_API_BASE_URL, VITE_TENANT_CODE, VITE_PROPERTY_ID, VITE_SITE_BASE_URL');
+  process.exit(1);
+}
 
 // console.log('📋 Config:');
 // console.log('  - API:', API_BASE_URL);
