@@ -16,19 +16,63 @@ export const isImageUrl = (url: string): boolean => {
     return true;
   }
   
+  // Các CDN/domain ảnh phổ biến
+  const imageCDNs = [
+    'googleusercontent.com',      // Google CDN
+    'googleapis.com',              // Google APIs
+    'cloudinary.com',              // Cloudinary
+    'cloudfront.net',              // AWS CloudFront
+    's3.amazonaws.com',            // AWS S3
+    'imgur.com',                   // Imgur
+    'flickr.com',                  // Flickr
+    'staticflickr.com',            // Flickr CDN
+    'unsplash.com',                // Unsplash
+    'images.unsplash.com',         // Unsplash CDN
+    'pexels.com',                  // Pexels
+    'images.pexels.com',           // Pexels CDN
+    'pixabay.com',                 // Pixabay
+    'cdn.pixabay.com',             // Pixabay CDN
+    'imagekit.io',                 // ImageKit
+    'imgix.net',                   // imgix
+    'res.cloudinary.com',          // Cloudinary resources
+  ];
+  
   // Các extension ảnh phổ biến
-  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.ico'];
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.ico', '.avif', '.jfif'];
   
   try {
-    // Parse URL để lấy pathname
+    // Parse URL để lấy hostname và pathname
     const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
     const pathname = urlObj.pathname.toLowerCase();
     
+    // Kiểm tra nếu domain là CDN ảnh
+    if (imageCDNs.some(cdn => hostname.includes(cdn))) {
+      return true;
+    }
+    
     // Kiểm tra extension
-    return imageExtensions.some(ext => pathname.endsWith(ext));
+    if (imageExtensions.some(ext => pathname.endsWith(ext))) {
+      return true;
+    }
+    
+    // Kiểm tra query params có chứa image indicators
+    const searchParams = urlObj.searchParams;
+    if (searchParams.has('w') || searchParams.has('h') || searchParams.has('width') || searchParams.has('height')) {
+      return true;
+    }
+    
+    return false;
   } catch {
     // Nếu không parse được URL, fallback kiểm tra string
     const lowerUrl = url.toLowerCase();
+    
+    // Kiểm tra CDN trong string
+    if (imageCDNs.some(cdn => lowerUrl.includes(cdn))) {
+      return true;
+    }
+    
+    // Kiểm tra extension trong string
     return imageExtensions.some(ext => lowerUrl.includes(ext));
   }
 };
