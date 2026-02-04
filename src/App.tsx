@@ -404,24 +404,37 @@ const AppLayout: FC = () => {
             </div>
           ) : vr360Url ? (
             mediaType === 'image' ? (
-              // Nếu là ảnh, dùng img tag với object-fit cover
-              <img
+              // Nếu là ảnh, dùng background-image để LUÔN FULL MÀN HÌNH
+              <div
                 key={vr360Url}
-                src={vr360Url}
-                alt={`${propertyName} Background`}
                 style={{ 
-                  position: 'absolute', 
+                  position: 'fixed', 
                   top: 0, 
                   left: 0, 
+                  right: 0,
+                  bottom: 0,
                   width: '100vw', 
                   height: '100vh',
-                  objectFit: 'cover',
-                  objectPosition: 'center',
+                  backgroundImage: `url(${vr360Url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
                   zIndex: 0,
                 }}
                 onLoad={() => {
                   setIframeLoaded(true);
                   forceComplete();
+                }}
+                ref={(el) => {
+                  if (el) {
+                    // Preload image và trigger complete khi load xong
+                    const img = new Image();
+                    img.src = vr360Url;
+                    img.onload = () => {
+                      setIframeLoaded(true);
+                      forceComplete();
+                    };
+                  }
                 }}
               />
             ) : mediaType === 'youtube' ? (

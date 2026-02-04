@@ -11,6 +11,11 @@
 export const isImageUrl = (url: string): boolean => {
   if (!url) return false;
   
+  // Kiểm tra nếu là URL từ media API (/media/{id}/view hoặc /media/file/{file_key})
+  if (url.includes('/media/') && (url.includes('/view') || url.includes('/file/'))) {
+    return true;
+  }
+  
   // Các extension ảnh phổ biến
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.ico'];
   
