@@ -155,7 +155,7 @@ export const ContactContent: FC<ContactContentProps> = memo(({
       {/* Social Media Links */}
       {(content.socialMedia?.facebook || content.socialMedia?.instagram || content.socialMedia?.twitter || content.socialMedia?.youtube) && (
         <div style={{ marginTop: 20 }}>
-          <span style={strongStyle}>Theo dõi chúng tôi:</span>
+          <span style={strongStyle}>{t.followUs}:</span>
           <Space size={10} style={{ marginTop: 10, display: 'flex', flexWrap: 'wrap' }}>
             {content.socialMedia?.facebook && (
               <a

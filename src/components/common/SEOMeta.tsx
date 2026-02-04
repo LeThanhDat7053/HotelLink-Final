@@ -1,17 +1,20 @@
 /**
  * SEOMeta Component
  * Component để quản lý meta tags cho SEO và social sharing
- * Hỗ trợ: Open Graph, Twitter Cards, Zalo sharing
+ * Hỗ trợ: Open Graph, Twitter Cards, Zalo sharing, Alternate Links (hreflang)
  */
 
 import { useEffect, type FC } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { getLocalizedPath } from '../../constants/routes';
+import { useLocation } from 'react-router-dom';
 
 export const SEOMeta: FC = () => {
   const { logoUrl, faviconUrl, seo } = useTheme();
   const { locale } = useLanguage();
+  const location = useLocation();
   
   // Force reload favicon khi API trả về data
   useEffect(() => {
@@ -31,12 +34,13 @@ export const SEOMeta: FC = () => {
   // Lấy SEO data từ API theo locale hiện tại
   const seoData = seo?.[locale];
   
-  // SEO data từ API
+  // Fallback: nếu locale hiện tại không có data, thử dùng 'vi', sau đó 'en', cuối cùng là locale đầu tiên có data
+  const fallbackSeoData = seoData || seo?.['vi'] || seo?.['en'] || (seo ? seo[Object.keys(seo)[0]] : null);
   
-  // Chỉ dùng API, không có fallback
-  const finalTitle = seoData?.meta_title || '';
-  const finalDescription = seoData?.meta_description || '';
-  const finalKeywords = seoData?.meta_keywords || '';
+  // SEO data từ API với fallback
+  const finalTitle = fallbackSeoData?.meta_title || '';
+  const finalDescription = fallbackSeoData?.meta_description || '';
+  const finalKeywords = fallbackSeoData?.meta_keywords || '';
   
   // Tạo full title với branding (nếu có title)
   const fullTitle = finalTitle ? (finalTitle.length > 50 ? finalTitle : `${finalTitle} | HotelLink`) : 'HotelLink';
@@ -50,6 +54,33 @@ export const SEOMeta: FC = () => {
   
   const url = window.location.href;
   const type = 'website';
+  
+  // ===== TẠO ALTERNATE LINKS CHO TẤT CẢ NGÔN NGỮ TỪ API =====
+  // Extract clean path (không có language prefix)
+  const extractCleanPath = (pathname: string): string => {
+    const langMatch = pathname.match(/^\/([a-zA-Z]{2,3}(?:-[a-zA-Z]{2})?)(?:\/(.*))?$/);
+    const validLocales = ['ar', 'de', 'en', 'es', 'fr', 'hi', 'id', 'it', 'ja', 'ko', 'ms', 'pt', 'ru', 'ta', 'th', 'tl', 'vi', 'yue', 'zh', 'zh-TW'];
+    if (langMatch && validLocales.includes(langMatch[1])) {
+      return langMatch[2] ? `/${langMatch[2]}` : '/';
+    }
+    return pathname;
+  };
+  
+  const cleanPath = extractCleanPath(location.pathname);
+  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  
+  // Lấy tất cả locale codes có trong SEO data từ API
+  const availableLocales = seo ? Object.keys(seo) : [];
+  
+  // Tạo alternate links cho từng locale
+  const alternateLinks = availableLocales.map(localeCode => {
+    const localizedPath = getLocalizedPath(cleanPath, localeCode);
+    const fullUrl = `${baseUrl}${localizedPath}`;
+    return {
+      locale: localeCode,
+      url: fullUrl
+    };
+  });
 
   return (
     <Helmet>
@@ -100,6 +131,26 @@ export const SEOMeta: FC = () => {
       
       {/* Canonical URL */}
       <link rel="canonical" href={url} />
+      
+      {/* ===== ALTERNATE LINKS (HREFLANG) CHO TẤT CẢ NGÔN NGỮ ===== */}
+      {/* Luôn hiển thị alternate links từ API, bất kể locale nào đang được chọn */}
+      {alternateLinks.map(({ locale: linkLocale, url: linkUrl }) => (
+        <link 
+          key={linkLocale}
+          rel="alternate" 
+          hrefLang={linkLocale} 
+          href={linkUrl} 
+        />
+      ))}
+      
+      {/* x-default alternate link (fallback cho search engines) */}
+      {alternateLinks.length > 0 && (
+        <link 
+          rel="alternate" 
+          hrefLang="x-default" 
+          href={alternateLinks.find(link => link.locale === 'vi')?.url || alternateLinks[0].url} 
+        />
+      )}
     </Helmet>
   );
 };
