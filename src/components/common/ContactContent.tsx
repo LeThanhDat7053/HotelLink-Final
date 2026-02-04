@@ -1,5 +1,5 @@
 import type { FC, CSSProperties } from 'react';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Spin, Alert, Space } from 'antd';
 import { InstagramOutlined, TwitterOutlined, YoutubeOutlined } from '@ant-design/icons';
 import { useTheme } from '../../context/ThemeContext';
@@ -14,6 +14,28 @@ interface ContactContentProps {
   error?: Error | null;
 }
 
+/**
+ * Helper function to generate Google Maps iframe from coordinates
+ * @param mapData - Either iframe HTML string or coordinates "lat, lng"
+ * @returns HTML iframe string
+ */
+const generateMapIframe = (mapData: string): string => {
+  // Check if it's already an iframe
+  if (mapData.includes('<iframe')) {
+    return mapData;
+  }
+
+  // Check if it's coordinates format: "lat, lng"
+  const coordsMatch = mapData.match(/^(-?\d+\.?\d*),?\s*(-?\d+\.?\d*)$/);
+  if (coordsMatch) {
+    const [, lat, lng] = coordsMatch;
+    // Generate Google Maps embed iframe from coordinates
+    return `<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15000!2d${lng}!3d${lat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  }
+
+  return '';
+};
+
 export const ContactContent: FC<ContactContentProps> = memo(({ 
   className = '',
   content,
@@ -23,6 +45,12 @@ export const ContactContent: FC<ContactContentProps> = memo(({
   const { primaryColor } = useTheme();
   const { locale } = useLanguage();
   const t = getMenuTranslations(locale);
+
+  // Generate map iframe based on mapCoordinates format
+  const mapIframe = useMemo(() => {
+    if (!content?.mapCoordinates) return null;
+    return generateMapIframe(content.mapCoordinates);
+  }, [content?.mapCoordinates]);
 
   // Container styles
   const containerStyle: CSSProperties = {
@@ -237,6 +265,22 @@ export const ContactContent: FC<ContactContentProps> = memo(({
             )}
           </Space>
         </div>
+      )}
+
+      {/* Clear float */}
+      <div style={{ clear: 'both' }}></div>
+
+      {/* Google Maps iframe */}
+      {mapIframe && (
+        <div 
+          style={{ 
+            marginTop: 50, 
+            width: '100%',
+            borderRadius: 8,
+            overflow: 'hidden'
+          }}
+          dangerouslySetInnerHTML={{ __html: mapIframe }}
+        />
       )}
     </div>
   );
