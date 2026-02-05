@@ -3,7 +3,7 @@
  * 
  * Fullscreen loading với logo từ API
  * Hiển thị khi chuyển trang với animation mượt mà
- * Background màu xám tối (bg-gray-800) để tối hơn
+ * Background: Lấy từ API settings.background_color
  * 
  * OPTIMIZATIONS:
  * - Giảm transition time cho faster feel
@@ -30,7 +30,7 @@ interface LoadingScreenProps {
 
 /**
  * LoadingScreen - Logo loading từ API với animation
- * Background: rgb(31, 41, 55) - tailwind bg-gray-800
+ * Background: Lấy từ API settings.background_color (fallback: rgb(31, 41, 55))
  */
 export const LoadingScreen: FC<LoadingScreenProps> = ({
   logoUrl: propLogoUrl = null,
@@ -49,9 +49,10 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
   const fallbackLogoUrl = logoMediaId ? `${baseURL}/media/${logoMediaId}/view` : '';
   const logoUrl = propLogoUrl || fallbackLogoUrl;
   
-  // Fetch settings từ API để lấy primary_color
+  // Fetch settings từ API để lấy primary_color và background_color
   const { settings } = useSettings();
   const primaryColor = settings?.primary_color || '#c2b07f'; // fallback
+  const backgroundColor = settings?.background_color || 'rgb(31, 41, 55)'; // fallback to gray-800
   
   // Preload logo ngay lập tức khi component mount
   useEffect(() => {
@@ -95,7 +96,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
         right: 0,
         bottom: 0,
         minHeight: '100vh',
-        backgroundColor: 'rgb(31, 41, 55)', // bg-gray-800
+        backgroundColor: backgroundColor,
         zIndex: 999999,
         display: 'flex',
         flexDirection: 'column',

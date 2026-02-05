@@ -556,6 +556,7 @@ export interface VRHotelIntroductionResponse {
 // ============= VR HOTEL SETTINGS =============
 export interface VrHotelSettingsResponse {
   primary_color: string;
+  background_color?: string;
   booking_url: string;
   messenger_url?: string;
   phone_number?: string;

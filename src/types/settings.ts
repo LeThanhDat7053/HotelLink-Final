@@ -41,6 +41,7 @@ export interface PagesSettings {
  */
 export interface VRHotelSettingsResponse {
   primary_color: string;
+  background_color?: string;
   booking_url?: string;
   messenger_url?: string;
   phone_number?: string;

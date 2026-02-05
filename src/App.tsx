@@ -7,7 +7,7 @@ import { Header, InfoBox, BottomBar, RoomsView, DiningView, FacilityView, Servic
 import { OfferView } from './components/common/OfferView';
 import { PropertyProvider, usePropertyData, LanguageProvider, usePropertyContext, ThemeProvider, useTheme } from './context';
 import { ThemeInjector } from './components/ThemeInjector';
-import { useIntroductionContent, usePropertyPosts, usePolicy, useRegulation, useContact, useLogo, useRouteLoading } from './hooks';
+import { useIntroductionContent, usePropertyPosts, usePolicy, useRegulation, useContact, useLogo, useRouteLoading, useSettings } from './hooks';
 import { useVrHotelSettings } from './hooks/useVR360';
 import { useLocale } from './context/LanguageContext';
 import { getMediaType, getYouTubeEmbedUrl } from './utils/mediaHelper';
@@ -56,6 +56,10 @@ const AppLayout: FC = () => {
   
   // Lấy logo từ API cho loading screen
   const { logoUrl } = useLogo();
+  
+  // Lấy background_color từ API settings (để match với loading screen)
+  const { settings } = useSettings();
+  const backgroundColor = settings?.background_color || 'rgb(31, 41, 55)'; // fallback
   
   // Route loading - hiển thị loading screen khi chuyển trang
   // Loading screen sẽ ẩn khi cả timer min và iframe đều đã xong
@@ -361,7 +365,7 @@ const AppLayout: FC = () => {
       style={{ 
         width: '100vw', 
         height: '100vh', 
-        backgroundColor: 'rgb(31, 41, 55)', // bg-gray-800 - giống LoadingScreen
+        backgroundColor: backgroundColor, // Từ API settings - match với LoadingScreen
         overflow: 'hidden', 
         position: 'relative' 
       }}
@@ -396,7 +400,7 @@ const AppLayout: FC = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              backgroundColor: 'rgb(31, 41, 55)' // bg-gray-800
+              backgroundColor: backgroundColor // Từ API settings
             }}>
               <Skeleton.Node active style={{ width: 200, height: 200 }}>
                 <span style={{ color: '#ccc' }}>Đang tải VR360...</span>
