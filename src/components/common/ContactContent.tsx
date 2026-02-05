@@ -267,14 +267,11 @@ export const ContactContent: FC<ContactContentProps> = memo(({
         </div>
       )}
 
-      {/* Clear float */}
-      <div style={{ clear: 'both' }}></div>
-
       {/* Google Maps iframe */}
       {mapIframe && (
         <div 
           style={{ 
-            marginTop: 50, 
+            marginTop: 30, 
             width: '100%',
             borderRadius: 8,
             overflow: 'hidden'

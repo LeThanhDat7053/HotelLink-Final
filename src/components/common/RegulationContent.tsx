@@ -54,6 +54,60 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
     whiteSpace: 'pre-line' as const,
   };
 
+  // Section title style
+  const sectionTitleStyle: CSSProperties = {
+    color: 'rgba(255, 255, 255, 0.95)',
+    fontSize: screens.md ? 15 : 14,
+    fontWeight: 600,
+    lineHeight: screens.md ? '24px' : '22px',
+    marginTop: 8,
+    marginBottom: 8,
+  };
+
+  // Bullet item style  
+  const bulletItemStyle: CSSProperties = {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: screens.md ? 14 : 12,
+    lineHeight: screens.md ? '22px' : '20px',
+    marginBottom: 4,
+    paddingLeft: 16,
+  };
+
+  /**
+   * Render detailed content với sections và bullet points
+   */
+  const renderDetailedContent = (text: string) => {
+    const sections = text.split('\n\n').filter(p => p.trim());
+    
+    return sections.map((section, sectionIndex) => {
+      const lines = section.split('\n').filter(l => l.trim());
+      
+      // Nếu section có nhiều dòng và dòng đầu kết thúc bằng :, đó là title
+      if (lines.length > 1 && lines[0].trim().endsWith(':')) {
+        const title = lines[0].trim();
+        const items = lines.slice(1);
+        
+        return (
+          <div key={sectionIndex} style={{ marginBottom: 16 }}>
+            <div style={sectionTitleStyle}>{title}</div>
+            {items.map((item, itemIndex) => (
+              <div key={itemIndex} style={bulletItemStyle}>
+                {item.trim()}
+              </div>
+            ))}
+          </div>
+        );
+      }
+      
+      // Nếu không, render như paragraph bình thường với pre-line
+      return (
+        <Paragraph key={sectionIndex} style={paragraphStyle}>
+          {section}
+        </Paragraph>
+      );
+    });
+  };
+
   // Loading state
   if (loading) {
     return (
@@ -92,12 +146,8 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
           </Paragraph>
         )}
 
-        {/* Detailed Content - split by paragraphs */}
-        {content.detailedContent && (
-          <Paragraph style={paragraphStyle}>
-            {content.detailedContent}
-          </Paragraph>
-        )}
+        {/* Detailed Content - with sections and bullet points */}
+        {content.detailedContent && renderDetailedContent(content.detailedContent)}
       </div>
 
       {/* Custom scrollbar styles */}
