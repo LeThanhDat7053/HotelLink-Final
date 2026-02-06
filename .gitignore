@@ -17,6 +17,10 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Server config (chứa API credentials - KHÔNG commit)
+server/config.php
+server/token_cache.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

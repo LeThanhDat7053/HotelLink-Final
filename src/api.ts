@@ -1,13 +1,13 @@
 import axios from "axios";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import { appConfig } from "./config";
 
-// ===== LẤY BIẾN MÔI TRƯỜNG =====
-// Note: Vite uses import.meta.env instead of process.env
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const API_USERNAME = import.meta.env.VITE_API_USERNAME;
-const API_PASSWORD = import.meta.env.VITE_API_PASSWORD;
-const TENANT_CODE = import.meta.env.VITE_TENANT_CODE;
-const PROPERTY_ID = import.meta.env.VITE_PROPERTY_ID;
+// API Configuration - Sử dụng config thống nhất
+const API_BASE_URL = appConfig.API_BASE_URL;
+const API_USERNAME = appConfig.API_USERNAME;
+const API_PASSWORD = appConfig.API_PASSWORD;
+const TENANT_CODE = appConfig.TENANT_CODE;
+const PROPERTY_ID = appConfig.PROPERTY_ID;
 
 // Mở rộng kiểu config để có thể đánh dấu request đã được thử lại
 interface AuthRequestConfig extends InternalAxiosRequestConfig {
@@ -23,24 +23,50 @@ let failedQueue: {
 }[] = [];
 
 // ===== AXIOS INSTANCE =====
+// Note: baseURL sẽ được set động trong request interceptor
 const api: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
   timeout: 15000,
 });
 
-// ===== LOGIN & LẤY TOKEN (SỬ DỤNG AXIOS GỐC) =====
-// Đảm bảo request login không chạy qua bất kỳ Interceptor nào của 'api'
+// ===== DETECT ENVIRONMENT =====
+// Kiểm tra xem đang chạy production (có api-proxy.php) hay dev local
+const isProduction = typeof window !== 'undefined' && window.__SERVER_TOKEN__;
+
+// ===== LOGIN & LẤY TOKEN =====
+// PRODUCTION: Gọi api-proxy.php để lấy token (server-side login)
+// DEV LOCAL: Login trực tiếp bằng credentials từ .env
 const loginAndGetToken = async (): Promise<string> => {
+  // PRODUCTION MODE: Dùng api-proxy.php
+  if (isProduction || (typeof window !== 'undefined' && window.location.hostname !== 'localhost')) {
+    console.log("[AUTH] Getting token from api-proxy.php (production mode)");
+    
+    try {
+      // Gọi api-proxy.php để lấy token (server sẽ login bằng config.php)
+      const response = await axios.post('/api-proxy.php?action=get-token');
+      
+      if (response.data.success && response.data.access_token) {
+        console.log(`[AUTH] Token obtained from ${response.data.source}`);
+        return response.data.access_token;
+      } else {
+        throw new Error('Failed to get token from api-proxy');
+      }
+    } catch (error) {
+      console.error("[AUTH FAILED] Cannot get token from api-proxy:", error);
+      throw error;
+    }
+  }
+
+  // DEV LOCAL MODE: Login trực tiếp bằng credentials
   if (!API_USERNAME || !API_PASSWORD || !API_BASE_URL || !TENANT_CODE) {
     throw new Error("Missing API credentials or Tenant Code");
   }
 
+  console.log("[AUTH] Logging in with credentials (dev mode)");
   const formData = new URLSearchParams();
   formData.append("username", API_USERNAME);
   formData.append("password", API_PASSWORD);
 
   try {
-    // SỬ DỤNG 'axios' GỐC: Request này HOÀN TOÀN BỎ QUA Interceptor của 'api'
     const response = await axios.post(
       `${API_BASE_URL}/auth/login`,
       formData.toString(),
@@ -56,7 +82,6 @@ const loginAndGetToken = async (): Promise<string> => {
     return newToken;
   } catch (error) {
     console.error("[AUTH FAILED] Không thể đăng nhập và lấy token:", error);
-    // Nếu request login thất bại, throw lỗi để các request đang chờ bị hủy bỏ
     throw error;
   }
 };
@@ -104,6 +129,9 @@ const ensureToken = async (): Promise<string> => {
 
 // ===== REQUEST INTERCEPTOR (Đã sửa để chỉ sử dụng token) =====
 api.interceptors.request.use(async (config) => {
+  // Set baseURL động từ env
+  config.baseURL = API_BASE_URL;
+  
   if (TENANT_CODE) {
     config.headers["x-tenant-code"] = TENANT_CODE;
   }

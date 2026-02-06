@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { policyService } from '../services/policyService';
 import type { PolicyUIData } from '../types/policy';
+import { appConfig } from '../config';
 
 interface UsePolicyResult {
   content: PolicyUIData | null;
@@ -19,7 +20,7 @@ interface UsePolicyResult {
 export function usePolicy(
   propertyId: number,
   locale: string,
-  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
+  tenantCode: string = appConfig.TENANT_CODE || ''
 ): UsePolicyResult {
   const [content, setContent] = useState<PolicyUIData | null>(null);
   const [vr360Link, setVr360Link] = useState<string | null>(null);

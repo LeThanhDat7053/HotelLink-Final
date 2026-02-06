@@ -12,6 +12,7 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import type { PropertyResponse } from '../types/api';
 import { propertyService } from '../services/propertyService';
+import { appConfig } from '../config';
 
 interface PropertyContextType {
   property: PropertyResponse | null;
@@ -33,7 +34,7 @@ export const PropertyProvider: React.FC<{ children: ReactNode }> = ({ children }
       setError(null);
 
       // Get property ID from env
-      const propertyId = import.meta.env.VITE_PROPERTY_ID;
+      const propertyId = appConfig.PROPERTY_ID;
       
       if (!propertyId) {
         throw new Error('VITE_PROPERTY_ID is not defined in .env');

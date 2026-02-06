@@ -8,6 +8,7 @@ import { usePropertyContext } from '../../context/PropertyContext';
 import { useRegulation } from '../../hooks/useRegulation';
 import { useVrHotelSettings } from '../../hooks/useVR360';
 import { getMenuTranslations } from '../../constants/translations';
+import { appConfig } from '../../config';
 import { getLocalizedPath } from '../../constants/routes';
 
 const { useBreakpoint } = Grid;
@@ -54,7 +55,7 @@ export const BottomBar: FC<BottomBarProps> = memo(({ className = '' }) => {
   const location = useLocation();
 
   // Fetch data để check isDisplaying
-  const tenantCode = import.meta.env.VITE_TENANT_CODE || '';
+  const tenantCode = appConfig.TENANT_CODE || '';
   const { content: regulationData, loading: regulationLoading } = useRegulation(property?.id || 0, locale, tenantCode);
   const { settings, loading: settingsLoading } = useVrHotelSettings(property?.id || null);
 

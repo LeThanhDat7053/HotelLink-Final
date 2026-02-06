@@ -1,5 +1,6 @@
 import api from '../api';
 import type { MediaFileResponse, MediaResponse, GetMediaParams } from '../types/api';
+import { appConfig } from '../config';
 
 /**
  * Media Service - Quản lý media files (upload ảnh, video)
@@ -43,7 +44,7 @@ export const mediaService = {
    */
   getMediaUrl(mediaId: number): string {
     // URL format: /media/{media_id}/view
-    return `${import.meta.env.VITE_API_BASE_URL}/media/${mediaId}/view`;
+    return `${appConfig.API_BASE_URL}/media/${mediaId}/view`;
   },
 
   /**
@@ -51,7 +52,7 @@ export const mediaService = {
    */
   getMediaUrlByFileKey(fileKey: string): string {
     // Có thể có endpoint khác cho file_key, tạm thời dùng format này
-    return `${import.meta.env.VITE_API_BASE_URL}/media/file/${fileKey}`;
+    return `${appConfig.API_BASE_URL}/media/file/${fileKey}`;
   },
 
   /**

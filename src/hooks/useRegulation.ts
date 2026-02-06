@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { regulationService } from '../services/regulationService';
 import type { RegulationUIData } from '../types/regulation';
+import { appConfig } from '../config';
 
 interface UseRegulationResult {
   content: RegulationUIData | null;
@@ -19,7 +20,7 @@ interface UseRegulationResult {
 export function useRegulation(
   propertyId: number,
   locale: string,
-  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
+  tenantCode: string = appConfig.TENANT_CODE || ''
 ): UseRegulationResult {
   const [content, setContent] = useState<RegulationUIData | null>(null);
   const [vr360Link, setVr360Link] = useState<string | null>(null);

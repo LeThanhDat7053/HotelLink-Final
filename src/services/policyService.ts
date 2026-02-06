@@ -3,6 +3,7 @@
  */
 
 import api from '../api';
+import { appConfig } from '../config';
 import type { PolicyResponse, PolicyUIData } from '../types/policy';
 
 /**
@@ -30,7 +31,7 @@ export function transformPolicyForUI(
  */
 export async function getPolicy(
   propertyId: number,
-  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
+  tenantCode: string = appConfig.TENANT_CODE || ''
 ): Promise<PolicyResponse> {
   const response = await api.get<PolicyResponse>('/vr-hotel/policies', {
     headers: {

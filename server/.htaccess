@@ -1,0 +1,26 @@
+# 1. Ưu tiên index.php trước
+DirectoryIndex index.php index.html
+
+# BẢO MẬT: Chặn truy cập trực tiếp vào config.php
+<FilesMatch "^config\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+RewriteEngine On
+RewriteBase /
+
+# 2. Cho phép api-proxy.php được truy cập trực tiếp (cần cho frontend)
+RewriteCond %{REQUEST_FILENAME} api-proxy\.php
+RewriteRule ^ - [L]
+
+# 3. Nếu là file assets thật (css, js, images) thì trả về luôn
+RewriteCond %{REQUEST_FILENAME} -f
+
+# TRỪ trường hợp là file index.html thì không được trả về trực tiếp, 
+# phải để index.php xử lý
+RewriteCond %{REQUEST_FILENAME} !index\.html
+RewriteRule ^ - [L]
+
+# 4. Tất cả những thứ còn lại đẩy về index.php
+RewriteRule ^ index.php [L]

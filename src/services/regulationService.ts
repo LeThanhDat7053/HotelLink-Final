@@ -3,6 +3,7 @@
  */
 
 import api from '../api';
+import { appConfig } from '../config';
 import type { RegulationResponse, RegulationUIData } from '../types/regulation';
 
 /**
@@ -30,7 +31,7 @@ export function transformRegulationForUI(
  */
 export async function getRegulation(
   propertyId: number,
-  tenantCode: string = import.meta.env.VITE_TENANT_CODE || ''
+  tenantCode: string = appConfig.TENANT_CODE || ''
 ): Promise<RegulationResponse> {
   const response = await api.get<RegulationResponse>('/vr-hotel/rules', {
     headers: {

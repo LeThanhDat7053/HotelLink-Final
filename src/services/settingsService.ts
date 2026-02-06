@@ -11,6 +11,7 @@
 
 import api from '../api';
 import type { VRHotelSettingsResponse } from '../types/settings';
+import { appConfig } from '../config';
 
 export const settingsService = {
   /**
@@ -38,7 +39,7 @@ export const settingsService = {
     try {
       // Trả về direct URL để xem media
       // Format: https://travel.link360.vn/api/v1/media/{id}/view
-      const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://travel.link360.vn/api/v1';
+      const baseURL = appConfig.API_BASE_URL || 'https://travel.link360.vn/api/v1';
       return `${baseURL}/media/${logoMediaId}/view`;
     } catch (error) {
       console.error('Failed to fetch logo URL:', error);

@@ -15,6 +15,7 @@ import type { FC } from 'react';
 import { createPortal } from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../../hooks/useSettings';
+import { appConfig } from '../../config';
 
 interface LoadingScreenProps {
   /**
@@ -43,7 +44,7 @@ export const LoadingScreen: FC<LoadingScreenProps> = ({
   const imgRef = useRef<HTMLImageElement | null>(null);
   
   // Logo URL từ env - không hardcode media_id
-  const baseURL = import.meta.env.VITE_API_BASE_URL || '';
+  const baseURL = appConfig.API_BASE_URL || '';
   const logoMediaId = import.meta.env.VITE_LOGO_MEDIA_ID || '';
   // Chỉ tạo fallback URL nếu có logoMediaId
   const fallbackLogoUrl = logoMediaId ? `${baseURL}/media/${logoMediaId}/view` : '';
