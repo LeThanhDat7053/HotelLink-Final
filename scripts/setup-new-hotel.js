@@ -105,7 +105,7 @@ function updatePackageJson(hotelName) {
   
   // Update name (convert to kebab-case)
   const kebabName = hotelName.toLowerCase().replace(/\s+/g, '-');
-  packageJson.name = `fontend-hotellink-${kebabName}`;
+  packageJson.name = `frontend-hotellinkvr360-${kebabName}`;
   
   fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2), 'utf-8');
   

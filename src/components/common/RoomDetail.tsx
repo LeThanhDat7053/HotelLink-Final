@@ -319,9 +319,13 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
           {room.description}
         </Paragraph>
 
-        {/* Price & Booking - Chỉ hiển thị khi giá > 0 */}
-        {room.price > 0 && (
-          <div style={priceContainerStyle}>
+        {/* Price & Booking */}
+        <div style={{
+          ...priceContainerStyle,
+          justifyContent: room.price > 0 ? 'space-between' : 'center',
+        }}>
+          {/* Price - Chỉ hiển thị khi giá > 0 */}
+          {room.price > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <Text style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 14 : 12, margin: 0 }}>
                 {t.pricePerNight}
@@ -331,37 +335,39 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
                 <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: screens.md ? 16 : 14, marginLeft: 4 }}>/{t.night}</span>
               </Text>
             </div>
-            <Button 
-              type="primary"
-              size="large"
-              onClick={handleBooking}
-              style={{ 
-                background: `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
-                borderColor: primaryColor,
-                color: '#000',
-                fontWeight: 700,
-                fontSize: screens.md ? 18 : 16,
-                padding: screens.md ? '12px 36px' : '10px 28px',
-                height: 'auto',
-                borderRadius: 10,
-                boxShadow: `0 4px 12px ${primaryColor}50`,
-                transition: 'all 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                const btn = e.currentTarget as HTMLElement;
-                btn.style.transform = 'translateY(-2px)';
-                btn.style.boxShadow = `0 6px 20px ${primaryColor}70`;
-              }}
-              onMouseLeave={(e) => {
-                const btn = e.currentTarget as HTMLElement;
-                btn.style.transform = 'translateY(0)';
-                btn.style.boxShadow = `0 4px 12px ${primaryColor}50`;
-              }}
-            >
-              {t.bookNow}
-            </Button>
-          </div>
-        )}
+          )}
+          {/* Button - Luôn hiển thị, full width khi không có giá */}
+          <Button 
+            type="primary"
+            size="large"
+            onClick={handleBooking}
+            style={{ 
+              background: `linear-gradient(135deg, ${primaryColor} 0%, ${primaryColor}dd 100%)`,
+              borderColor: primaryColor,
+              color: '#000',
+              fontWeight: 700,
+              fontSize: screens.md ? 18 : 16,
+              padding: screens.md ? '12px 36px' : '10px 28px',
+              height: 'auto',
+              borderRadius: 10,
+              boxShadow: `0 4px 12px ${primaryColor}50`,
+              transition: 'all 0.3s ease',
+              width: room.price > 0 ? 'auto' : '100%',
+            }}
+            onMouseEnter={(e) => {
+              const btn = e.currentTarget as HTMLElement;
+              btn.style.transform = 'translateY(-2px)';
+              btn.style.boxShadow = `0 6px 20px ${primaryColor}70`;
+            }}
+            onMouseLeave={(e) => {
+              const btn = e.currentTarget as HTMLElement;
+              btn.style.transform = 'translateY(0)';
+              btn.style.boxShadow = `0 4px 12px ${primaryColor}50`;
+            }}
+          >
+            {t.bookNow}
+          </Button>
+        </div>
 
         {/* Room Info */}
         <div className="room-info">
