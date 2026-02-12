@@ -47,6 +47,7 @@ export const RegulationContent: FC<RegulationContentProps> = memo(({
     ...regulationListStyle,
     marginBottom: 16,
     fontStyle: 'italic',
+    whiteSpace: 'pre-wrap',
   };
 
   const paragraphStyle: CSSProperties = {

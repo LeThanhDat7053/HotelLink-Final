@@ -81,7 +81,7 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 rounded-b-lg">
           <h3 className="text-white font-semibold text-lg">{link.title}</h3>
           {link.description && (
-            <p className="text-white text-sm opacity-90">{link.description}</p>
+            <p className="text-white text-sm opacity-90 whitespace-pre-wrap">{link.description}</p>
           )}
         </div>
       </div>
@@ -157,7 +157,7 @@ export const VR360Viewer: React.FC<VR360ViewerProps> = ({
       <div className="absolute top-4 left-4 right-4 bg-white bg-opacity-90 rounded-lg p-3 shadow-lg">
         <h3 className="font-semibold text-gray-800">{link.title}</h3>
         {link.description && (
-          <p className="text-sm text-gray-600 mt-1">{link.description}</p>
+          <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{link.description}</p>
         )}
       </div>
     </div>

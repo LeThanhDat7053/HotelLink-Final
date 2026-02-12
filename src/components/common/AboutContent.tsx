@@ -49,6 +49,7 @@ export const AboutContent: FC<AboutContentProps> = memo(({
     lineHeight: '22px',
     textAlign: 'justify' as const,
     marginBottom: 12,
+    whiteSpace: 'pre-wrap',
   };
 
   // Loading state - cả property và introduction

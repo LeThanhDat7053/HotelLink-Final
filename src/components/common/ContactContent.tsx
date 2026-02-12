@@ -76,6 +76,7 @@ export const ContactContent: FC<ContactContentProps> = memo(({
     marginTop: 16,
     color: 'rgba(255, 255, 255, 0.8)',
     lineHeight: '22px',
+    whiteSpace: 'pre-wrap',
   };
 
   // Link styles

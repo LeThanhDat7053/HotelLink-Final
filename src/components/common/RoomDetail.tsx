@@ -157,6 +157,7 @@ export const RoomDetail: FC<RoomDetailProps> = memo(({
     textAlign: 'justify' as const,
     margin: 0,
     marginBottom: 16,
+    whiteSpace: 'pre-wrap', // Giữ nguyên xuống dòng và khoảng trắng từ backend
   };
 
   const priceContainerStyle: CSSProperties = {
